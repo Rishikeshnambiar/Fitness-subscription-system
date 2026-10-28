@@ -3,23 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "@/lib/db";
 import { Coupon, ICouponDocument } from "@/models/Coupon";
-import { z } from "zod";
-
-export const couponSchema = z.object({
-  code: z
-    .string()
-    .min(3, "Code must be at least 3 characters")
-    .max(20, "Code cannot exceed 20 characters")
-    .regex(/^[A-Z0-9_-]+$/, "Code must be uppercase alphanumeric"),
-  discountType: z.enum(["FLAT", "PERCENTAGE"]),
-  discountValue: z.coerce.number().min(1, "Discount value must be positive"),
-  minPurchaseAmount: z.coerce.number().min(0).default(0),
-  maxUsage: z.coerce.number().min(1).default(100),
-  expiresAt: z.string().or(z.date()),
-  isActive: z.boolean().default(true),
-});
-
-export type CouponFormData = z.infer<typeof couponSchema>;
+import { couponSchema, type CouponFormData } from "@/lib/validations";
 
 const DEFAULT_COUPONS = [
   {
