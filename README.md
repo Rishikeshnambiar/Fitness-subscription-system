@@ -1,51 +1,57 @@
 # 🏋️ HyperGym Fitness Subscription Management System
 
 > **AgarkarMedia Technical Product Manager Assessment — Round 1**  
-> **Production Stack**: Next.js 16 (App Router), TypeScript 5, Tailwind CSS 4, React 19, Clerk Auth, MongoDB Atlas + Mongoose, React Three Fiber (3D), Motion.
+> **Production Stack**: Next.js 16 (App Router), TypeScript 5, Tailwind CSS 4, React 19, Clerk Auth, MongoDB Atlas + Mongoose, React Three Fiber (3D), Motion.  
+> **Entity & Client Details**: AgarkarMedia Pvt. Ltd. (GSTIN: `27AAWCA1536C1ZP` | SAC: `999723`)
 
 ---
 
-## 🌟 Executive Overview & Design Vision
+## 🌟 Executive Overview & Design Direction
 
-**HyperGym** is a luxury fitness subscription management platform featuring a high-conversion 3D aesthetic ("never-before-seen" fitness metaverse), granular RBAC (Member & Administrator consoles), server-side financial calculation engines, and snapshot-backed billing.
+**HyperGym** is an enterprise-grade fitness subscription platform crafted with an executive dark-luxury design system inspired by **Apple Fitness+, Equinox, and Whoop**. It rejects generic SaaS neon gradients in favor of an obsidian/zinc palette (`#09090b`), titanium typography, and a single **Athletic Emerald (`#10b981`)** performance accent.
 
-### Key Pillars
-- **3D Immersive Hero Scene**: Floating dumbbells, kettlebells, and protein shakers orbiting in zero-gravity with interactive mouse parallax (React Three Fiber + Drei).
-- **Dark Luxury Base**: `#0a0a0f` deep space black with Electric Cyan (`#00f0ff`), Neon Magenta (`#ff006e`), and Molten Gold (`#ffd700`) accents.
-- **Evaluator Demo Toolbar**: Floating bottom-right control pill enabling instantaneous role switching (Member ⇄ Administrator) and 3-day expiry simulation without manual database edits.
-- **Immutable Plan Snapshot Architecture**: Historical transactions and invoices are frozen at the exact millisecond of purchase, ensuring future admin price edits or plan deactivations never distort accounting ledgers.
+### Key Architectural Pillars
+- **3D Immersive Hero Atmosphere**: Precision-modeled dumbbells, kettlebells, and plates floating with smooth zero-gravity mouse parallax (React Three Fiber + Drei) using studio lighting and ACESFilmic tone mapping.
+- **Dark Luxury Aesthetic**: Executive obsidian surface cards, subtle zinc borders, and refined emerald status badges.
+- **Evaluator Demo Toolbar**: Floating bottom-right control module allowing immediate role switching (`ADMIN` ⇄ `USER`), live MongoDB connectivity checks, and 3-day expiry simulation without manual database seeding.
+- **Immutable Plan Snapshot Architecture**: Historical transactions and invoices are frozen at the exact millisecond of purchase, ensuring future admin price modifications or plan deactivations never alter financial ledgers.
+- **Standout Product Manager Differentiators**:
+  1. **Interactive Membership ROI & Unit Economics Calculator**: Real-time cost-per-session slider (1–6 days/week) benchmarked against ₹650 single-session boutique drop-ins with dynamic annual savings metrics.
+  2. **Official GST Tax Invoice Engine**: Formatted for **AgarkarMedia Pvt. Ltd.** (`GSTIN: 27AAWCA1536C1ZP`), complete with SAC 999723, state code 27 (Maharashtra), CGST/SGST breakdowns, and dedicated print/PDF stylesheets.
+  3. **Transaction Ledger CSV Export**: One-click download of all subscription payments with admin override audit notes for finance reconciliation.
 
 ---
 
-## 🏗️ Architecture & System Design
+## 🏗️ Project Architecture & Directory Structure
 
 ```
 src/
 ├── app/
-│   ├── (public)/                   # Landing Page (3D Hero, Plans, Stats, About)
-│   ├── (auth)/                     # Split-screen Clerk SignIn & SignUp
+│   ├── (public)/                   # Landing Page (3D Hero, Plans, ROI Calculator, Stats, About)
+│   ├── (auth)/                     # Clerk Branded SignIn & SignUp with Demo Fallback
 │   ├── (user)/
-│   │   ├── dashboard/              # Active plan card, 3-day expiry alert, upgrade grid
-│   │   ├── checkout/[planId]/      # Full vs installment (50–90%) checkout with coupon engine
-│   │   └── billing/                # Transaction ledger with printable snapshot invoice modal
+│   │   ├── dashboard/              # Active plan card, 3-day expiry warning, renewal grid
+│   │   ├── checkout/[planId]/      # Full payment vs partial installment (50–90%) + coupon engine
+│   │   └── billing/                # Transaction history with printable GST tax invoice
 │   ├── (admin)/admin/
 │   │   ├── dashboard/              # Executive KPI Command Center & Revenue Metrics
 │   │   ├── plans/                  # Plan Manager CRUD + Version increment triggers
-│   │   ├── coupons/                # Coupon Engine (FLAT / PERCENTAGE discounts)
-│   │   └── transactions/           # Global ledger + Atomic partial-to-completed override
+│   │   ├── coupons/                # Coupon Manager (FLAT / PERCENTAGE discounts)
+│   │   └── transactions/           # Global ledger + CSV export + Atomic partial-to-completed override
 │   ├── api/webhooks/clerk/         # Svix-verified Clerk webhook handler
 │   └── auth-callback/              # Post-login RBAC router
 ├── components/
-│   ├── three/                      # 3D Canvas, Floating equipment, Particle field
-│   ├── landing/                    # Kinetic typography, Stats counter, Testimonials
-│   ├── checkout/                   # Slide-over checkout drawer, Live pricing calculator
-│   ├── billing/                    # Printable snapshot tax invoice modal
-│   ├── admin/                      # Plan CRUD modal, Coupon form, Transaction table
-│   └── demo/                       # Evaluator Demo Toolbar
+│   ├── three/                      # 3D Canvas, Floating Equipment, Particle Sparkle Field
+│   ├── landing/                    # HeroSection, PlanPreview, ROI Calculator, Testimonials
+│   ├── checkout/                   # CheckoutClient, Upfront installment slider, Coupon validator
+│   ├── billing/                    # BillingClient, AgarkarMedia GST Tax Invoice Modal
+│   ├── admin/                      # PlanManagerClient, CouponManagerClient, TransactionManagerClient
+│   └── demo/                       # EvaluatorToolbar with Database Health Badge
 ├── lib/
-│   ├── db.ts                       # Cached Mongoose singleton connection
+│   ├── db.ts                       # Cached Mongoose singleton connection with Atlas pooling
 │   ├── pricing.ts                  # Pure financial math (Gross, Plan Discount, Coupon, Installment)
 │   ├── invoice.ts                  # INV-YYYYMM-XXXX generator
+│   ├── validations.ts              # Zod schemas for plan and coupon form validation
 │   └── actions/                    # Next.js Server Actions (plans, coupons, checkout, billing, admin)
 └── models/                         # Mongoose schemas: SubscriptionPlan, User, Transaction, Coupon
 ```
@@ -55,7 +61,7 @@ src/
 ## 📸 Deliverable: Immutable Plan Snapshot Strategy
 
 ### The Problem
-In subscription platforms, administrators frequently update base monthly prices, adjust plan-level discounts, or archive obsolete tiers. If transactions or invoices only store a foreign key reference (`planId`), historical invoices dynamically recalculate at current prices—causing legal compliance failures, GST tax discrepancy audits, and user confusion.
+In subscription platforms, administrators frequently update base monthly prices, adjust plan-level discounts, or archive obsolete tiers. If transactions or invoices only store a foreign key reference (`planId`), historical invoices dynamically recalculate at current prices—causing legal compliance failures, GST tax discrepancy audits, and customer disputes.
 
 ### The Solution: Embedded Snapshot Pattern
 When a subscriber completes checkout (full or partial installment), the application takes an **immutable point-in-time snapshot** and embeds it directly into the `Transaction` document:
@@ -63,14 +69,15 @@ When a subscriber completes checkout (full or partial installment), the applicat
 ```typescript
 // Embedded Plan Snapshot in Transaction Schema
 planSnapshot: {
-  name: "Pro Hypertrophy",            // Exact name at checkout
+  name: "Athlete Pro",                 // Exact plan name at checkout
   durationMonths: 3,                   // Term duration
-  baseMonthlyPrice: 2199,              // Rate at purchase time
+  baseMonthlyPrice: 2199,              // Rate locked at purchase time
   planDiscountPercentage: 12,          // Plan-level discount %
   grossAmount: 6597,                   // duration × basePrice
   planDiscountAmount: 792,             // Gross × discount %
   couponCode: "WELCOME10",             // Applied coupon
-  couponDiscountAmount: 581            // Subtotal × coupon %
+  couponDiscountAmount: 581,           // Subtotal × coupon %
+  snapshotVersion: 1                   // Version counter
 }
 ```
 
@@ -114,27 +121,28 @@ stateDiagram-v2
 This repository strictly follows the planned GitFlow strategy:
 - `main`: Production-ready release branch
 - `develop`: Integration branch
-- `feature/*`: Dedicated scoped feature branches merged with `--no-ff`
+- `feature/*`: Dedicated scoped feature branches merged with clean commit histories:
+  - `feature/db-schemas`: Mongoose models (`SubscriptionPlan`, `User`, `Transaction`, `Coupon`)
+  - `feature/auth`: Clerk v7 auth with zero-config evaluator fallback
+  - `feature/public-pages`: 3D Hero, ROI Calculator, and About page
+  - `feature/admin-crud`: Plan Manager & Coupon Manager CRUD
+  - `feature/billing`: Checkout with full/partial payments & coupon validator
+  - `feature/user-dashboard`: 3-Day expiry alert, active subscription view
+  - `feature/admin-oversight`: Global transaction ledger & partial-to-completed override
+  - `feature/evaluator-toolbar`: Floating role switcher & database health badge
 
 ---
 
 ## 🚀 Quickstart & Setup Guide
 
-### 1. Prerequisites
-- Node.js 20+
-- pnpm 10+ (`npm i -g pnpm`)
-
-### 2. Installation
+### 1. Installation
 ```bash
-# Clone the repository
 git clone <repo-url>
 cd "Fitness subscription system"
-
-# Install dependencies
 pnpm install
 ```
 
-### 3. Environment Variables
+### 2. Environment Variables
 Copy `.env.example` to `.env.local`:
 ```bash
 cp .env.example .env.local
@@ -142,7 +150,7 @@ cp .env.example .env.local
 
 Configure your credentials:
 ```env
-# MongoDB Atlas
+# MongoDB Atlas Connection URI
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/hypergym?retryWrites=true&w=majority
 
 # Clerk Authentication (Optional for demo mode — Evaluator Toolbar works out of the box!)
@@ -151,9 +159,11 @@ CLERK_SECRET_KEY=sk_test_...
 CLERK_WEBHOOK_SECRET=whsec_...
 ```
 
-### 4. Running the Application
+### 3. Running the Application
 ```bash
-# Start Next.js development server
+pnpm build
+pnpm start
+# or for local development:
 pnpm dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -167,19 +177,21 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Click **"Sign In as Member"** or **"Sign In as Admin"**.
 - Alternatively, use the **Evaluator Toolbar** (bottom-right floating pill) on any page to switch roles instantly.
 
-### 2. Testing 3-Day Expiry Banner
+### 2. Testing 3-Day Expiry Alert
 - Click **Demo Controls** in the bottom-right corner.
-- Click **"Simulate 3-Day Expiry Alert"**.
-- The page reloads with the red urgent expiration banner and countdown on `/dashboard`.
+- Click **"Simulate 3-Day Expiry Banner"**.
+- The page immediately renders the urgent amber warning banner and expiration countdown on `/dashboard`.
 
 ### 3. Testing Partial Payment & Admin Override
-1. Open `/checkout/pro`.
+1. Open `/checkout/plan_pro_3m` or choose Athlete Pro from the pricing cards.
 2. Toggle to **"Installment Plan"**, adjust the slider to 50%, and click **Pay & Activate**.
 3. Go to `/billing` to view the invoice in `PARTIAL` status with remaining balance due.
-4. Switch to **Admin View** using the Evaluator Toolbar.
-5. Go to `/admin/transactions` and locate the partial invoice.
-6. Click **"Override to COMPLETED"**, enter audit clearance notes, and confirm.
-7. Return to Member view: the invoice is now `COMPLETED` and the user's balance due is ₹0.
+4. Click **"Tax Invoice"** to preview the official **AgarkarMedia Pvt. Ltd.** tax receipt (GSTIN: `27AAWCA1536C1ZP`). Click **"Print / Save PDF"**.
+5. Switch to **Admin View** using the Evaluator Toolbar.
+6. Go to `/admin/transactions` and locate the partial invoice.
+7. Click **"Override to COMPLETED"**, enter audit clearance notes, and confirm.
+8. Click **"Export Ledger (CSV)"** to test finance export.
+9. Return to Member view: the invoice is now `COMPLETED` and the user's balance due is ₹0.
 
 ### 4. Testing Coupon Codes
 Try the following pre-seeded promotional codes during checkout:
@@ -192,12 +204,14 @@ Try the following pre-seeded promotional codes during checkout:
 ## 📜 Assessment Deliverables Checklist
 
 - [x] **Next.js 14+ / 16 App Router** with TypeScript and Tailwind CSS
-- [x] **Mongoose MongoDB Schemas**: SubscriptionPlan, User, Transaction, Coupon
-- [x] **Clerk Auth & Svix Webhook** synchronization with RBAC middleware
-- [x] **3D Immersive Aesthetic**: React Three Fiber zero-gravity hero
+- [x] **Mongoose MongoDB Schemas**: `SubscriptionPlan`, `User` (with nested `subscription`), `Transaction` (with frozen `planSnapshot`), `Coupon`
+- [x] **Clerk Auth & Svix Webhook** synchronization with RBAC middleware and Zero-Config Evaluator Demo fallback
+- [x] **3D Immersive Hero Aesthetic**: React Three Fiber zero-gravity fitness scene
 - [x] **Full & Partial Payment Engine**: 50%–90% installment slider
 - [x] **Coupon Engine**: Flat & percentage validation with minimum cart rules
 - [x] **Member Dashboard**: 3-Day expiry alert, activation state, upgrade grid
-- [x] **Printable Tax Invoices**: Immutable point-in-time plan snapshots
-- [x] **Admin Management**: Plan CRUD, Coupon CRUD, Versioning, and Atomic Override
+- [x] **Printable Tax Invoices**: Immutable point-in-time plan snapshots under AgarkarMedia Pvt. Ltd. GSTIN `27AAWCA1536C1ZP`
+- [x] **Admin Management**: Plan CRUD, Coupon CRUD, Versioning, and Atomic Override to COMPLETED
+- [x] **Interactive ROI & Cost Per Workout Calculator**: Live dynamic financial comparison model
+- [x] **Transaction Ledger CSV Export**: Auditor-ready CSV download
 - [x] **Git Branching Strategy**: Full GitFlow execution with clean commit history

@@ -14,45 +14,41 @@ interface Testimonial {
   rating: number;
   badge: string;
   initials: string;
-  gradient: string;
 }
 
 const testimonials: Testimonial[] = [
   {
     id: "vikram",
     author: "Vikram Malhotra",
-    role: "Tech Lead & Amateur Triathlete",
+    role: "Engineering Director & Triathlete",
     location: "Indiranagar, Bengaluru",
     quote:
-      "HyperGym completely transformed my relationship with fitness. The flexible 24/7 access accommodates my demanding engineering schedule, while the biometric tracking helped me drop 9kg and smash my first half-marathon personal best.",
+      "HyperGym completely transformed my training consistency. The 24/7 access fits around intensive product sprint schedules, and the bi-weekly DEXA telemetry helped me optimize power-to-weight ratio for my marathon personal record.",
     rating: 5,
-    badge: "Pro Plan • 14kg Lost",
+    badge: "Athlete Pro • PR Smashed",
     initials: "VM",
-    gradient: "from-[#00f0ff] to-[#0072ff]",
   },
   {
     id: "ananya",
     author: "Ananya Sharma",
-    role: "Product Designer & Powerlifter",
+    role: "Principal Product Designer & Powerlifter",
     location: "Bandra West, Mumbai",
     quote:
-      "The equipment standard is unlike anything else in India. The calibrated plates, recovery cold plunge, and sauna facilities are pristine. The trainers actually analyze your biomechanics rather than handing out generic templates.",
+      "The Eleiko barbell standards and contrast recovery suites are world-class. It is refreshing to train in a high-performance space where biomechanics, progressive overload, and clean equipment are prioritized without gimmicks.",
     rating: 5,
-    badge: "Elite Plan • PR +45kg",
+    badge: "Executive Elite • +45kg PR",
     initials: "AS",
-    gradient: "from-[#ff006e] to-[#d946ef]",
   },
   {
     id: "rohan",
     author: "Rohan Deshmukh",
-    role: "Angel Investor & Fitness Enthusiast",
+    role: "Venture Partner & Lifelong Lifter",
     location: "Jubilee Hills, Hyderabad",
     quote:
-      "From seamless digital membership management to effortless guest privileges, HyperGym is the gold standard of luxury wellness. It feels more like a private high-performance athletic club than a typical commercial gym.",
+      "From transparent digital membership renewal to flexible milestone payment checkout, HyperGym sets the benchmark for luxury athletic infrastructure. It feels like an executive private training club.",
     rating: 5,
-    badge: "Elite Plan • 2+ Yrs Member",
+    badge: "Athlete Pro • 2-Year Member",
     initials: "RD",
-    gradient: "from-[#ffd700] to-[#ff6b00]",
   },
 ];
 
@@ -68,12 +64,12 @@ const containerVariants: Variants = {
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.6,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -95,38 +91,30 @@ export default function TestimonialSlider({ className }: TestimonialSliderProps)
   return (
     <section
       className={cn(
-        "relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#0a0a0f] overflow-hidden",
+        "relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-zinc-950 overflow-hidden border-t border-zinc-900",
         className
       )}
     >
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/3 left-1/4 -translate-x-1/2 w-[600px] h-[500px] bg-[#ff006e]/5 rounded-full blur-[170px] pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-[600px] h-[500px] bg-[#00f0ff]/5 rounded-full blur-[170px] pointer-events-none" />
-
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center max-w-3xl mx-auto mb-14 sm:mb-16"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[rgba(255,0,110,0.08)] border border-[rgba(255,0,110,0.2)] text-[#ff006e] text-xs sm:text-sm font-medium mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#ffd700]" />
-            <span>Real Stories • Real Transformations</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-medium mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Member Performance Records</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-heading font-extrabold tracking-tight text-[#f0f0f5] mb-5">
-            What Our Members{" "}
-            <span className="bg-gradient-to-r from-[#00f0ff] via-[#d946ef] to-[#ff006e] bg-clip-text text-transparent">
-              Say
-            </span>
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight text-zinc-100 mb-4">
+            Validated by Athletes and Leaders.
           </h2>
 
-          <p className="text-base sm:text-lg text-[#8888a0] leading-relaxed">
-            Discover how founders, athletes, creators, and everyday achievers level
-            up their physical and mental vitality at HyperGym.
+          <p className="text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+            Discover how founders, athletes, and professionals sustain physical conditioning through HyperGym&apos;s digital training ecosystem.
           </p>
 
           {/* Mobile Scroll Controls */}
@@ -134,97 +122,70 @@ export default function TestimonialSlider({ className }: TestimonialSliderProps)
             <button
               onClick={() => scroll("left")}
               aria-label="Scroll testimonials left"
-              className="p-2 rounded-full bg-[#1a1a2e] border border-white/10 text-[#8888a0] active:text-[#f0f0f5]"
+              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => scroll("right")}
               aria-label="Scroll testimonials right"
-              className="p-2 rounded-full bg-[#1a1a2e] border border-white/10 text-[#8888a0] active:text-[#f0f0f5]"
+              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </motion.div>
 
-        {/* Testimonials: Scrollable row on mobile, 3-column grid on desktop */}
+        {/* Testimonials Grid */}
         <motion.div
           ref={scrollContainerRef}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
-          className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 md:pb-0 md:grid md:grid-cols-3 md:overflow-visible no-scrollbar"
+          className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 md:pb-0 md:grid md:grid-cols-3 md:overflow-visible no-scrollbar"
         >
           {testimonials.map((t) => (
             <motion.div
               key={t.id}
               variants={cardVariants}
-              whileHover={{
-                y: -6,
-                transition: { duration: 0.25 },
-              }}
-              className="min-w-[85vw] sm:min-w-[420px] md:min-w-0 snap-center group"
+              className="min-w-[85vw] sm:min-w-[400px] md:min-w-0 snap-center rounded-2xl bg-zinc-900/60 border border-zinc-800 p-7 flex flex-col justify-between backdrop-blur-xl hover:border-zinc-700 transition-colors"
             >
-              {/* Subtle Gradient Border wrapper */}
-              <div className="h-full p-[1px] rounded-3xl bg-gradient-to-br from-white/15 via-white/5 to-[#00f0ff]/20 group-hover:from-[#00f0ff]/50 group-hover:to-[#ff006e]/50 transition-all duration-500 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-                {/* Inner Card */}
-                <div className="relative h-full flex flex-col justify-between rounded-[23px] bg-[#1a1a2e]/70 backdrop-blur-2xl p-7 sm:p-8 overflow-hidden">
-                  {/* Decorative Quote Icon */}
-                  <div className="absolute top-6 right-6 pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity duration-300">
-                    <Quote className="w-12 h-12 text-[#00f0ff]" />
+              <div>
+                {/* Top Row: Stars + Badge */}
+                <div className="flex items-center justify-between gap-2 mb-5">
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-3.5 h-3.5 fill-emerald-400 text-emerald-400"
+                      />
+                    ))}
                   </div>
 
-                  <div>
-                    {/* Top Row: 5 Stars + Badge */}
-                    <div className="flex items-center justify-between gap-2 mb-6">
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: t.rating }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className="w-4 h-4 fill-[#ffd700] text-[#ffd700]"
-                          />
-                        ))}
-                      </div>
+                  <span className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300">
+                    {t.badge}
+                  </span>
+                </div>
 
-                      <span className="text-[11px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[#00f0ff]">
-                        {t.badge}
-                      </span>
-                    </div>
+                {/* Quote Text */}
+                <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+              </div>
 
-                    {/* Quote Text */}
-                    <p className="text-sm sm:text-base text-[#f0f0f5] leading-relaxed mb-6 font-normal">
-                      &ldquo;{t.quote}&rdquo;
-                    </p>
-                  </div>
-
-                  {/* Author Row */}
-                  <div className="flex items-center gap-3.5 pt-4 border-t border-[rgba(255,255,255,0.06)]">
-                    {/* Avatar with Gradient Ring */}
-                    <div
-                      className={cn(
-                        "w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr shrink-0",
-                        t.gradient
-                      )}
-                    >
-                      <div className="w-full h-full rounded-full bg-[#0a0a0f] flex items-center justify-center text-xs font-bold text-[#f0f0f5]">
-                        {t.initials}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-semibold text-[#f0f0f5] tracking-tight">
-                        {t.author}
-                      </h4>
-                      <div className="text-xs text-[#8888a0]">
-                        {t.role}
-                      </div>
-                      <div className="text-[11px] text-[#8888a0]/70">
-                        {t.location}
-                      </div>
-                    </div>
-                  </div>
+              {/* Author Profile */}
+              <div className="pt-4 border-t border-zinc-800 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 text-emerald-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                  {t.initials}
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold text-zinc-100">
+                    {t.author}
+                  </h4>
+                  <p className="text-[11px] text-zinc-400">
+                    {t.role} • {t.location}
+                  </p>
                 </div>
               </div>
             </motion.div>

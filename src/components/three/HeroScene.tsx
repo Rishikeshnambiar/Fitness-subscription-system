@@ -11,7 +11,6 @@ import { ParticleField } from './ParticleField';
 export interface HeroSceneProps {
   className?: string;
   children?: React.ReactNode;
-  showGradientOverlays?: boolean;
 }
 
 /**
@@ -19,11 +18,9 @@ export interface HeroSceneProps {
  */
 function SceneRig() {
   const lightRef = useRef<THREE.PointLight>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (lightRef.current) {
-      // Subtle follow of cursor for dynamic highlights on metallic surfaces
       const targetX = state.pointer.x * 2.5;
       const targetY = state.pointer.y * 2.0;
       lightRef.current.position.x = THREE.MathUtils.lerp(
@@ -37,157 +34,80 @@ function SceneRig() {
         0.05
       );
     }
-
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.005;
-    }
   });
 
   return (
-    <>
-      {/* Interactive dynamic cursor highlight point light */}
-      <pointLight
-        ref={lightRef}
-        position={[0, 1, 4]}
-        intensity={2.5}
-        distance={8}
-        color="#ffffff"
-        decay={2}
-      />
-      {/* Invisible anchor mesh holding the required THREE.Mesh ref */}
-      <mesh ref={meshRef} visible={false}>
-        <boxGeometry args={[0.01, 0.01, 0.01]} />
-        <meshBasicMaterial />
-      </mesh>
-    </>
+    <pointLight
+      ref={lightRef}
+      position={[0, 1.5, 4.5]}
+      intensity={3.0}
+      distance={10}
+      color="#ffffff"
+      decay={2}
+    />
   );
 }
 
 /**
- * SceneContent - Houses the lights, environment map, floating equipment, and particles.
+ * SceneContent - Clean studio lighting with titanium metallic reflections.
  */
 function SceneContent() {
   return (
     <>
-      {/* Atmosphere Fog */}
-      <fog attach="fog" args={['#040508', 6, 22]} />
+      {/* Studio Fog */}
+      <fog attach="fog" args={['#09090b', 7, 24]} />
 
       {/* Ambient Lighting */}
-      <ambientLight intensity={0.45} />
+      <ambientLight intensity={0.5} />
 
-      {/* Key Directional Sunlight */}
+      {/* Primary Key Light (Soft White Studio Light) */}
       <directionalLight
-        position={[6, 9, 6]}
-        intensity={1.8}
+        position={[6, 8, 6]}
+        intensity={2.2}
         color="#ffffff"
       />
 
-      {/* Cool Fill Directional Light */}
+      {/* Cool Fill Light */}
       <directionalLight
-        position={[-6, -4, -3]}
-        intensity={0.65}
-        color="#384b66"
+        position={[-6, -3, -2]}
+        intensity={0.8}
+        color="#64748b"
       />
 
-      {/* Point Lights with Project Accent Palette */}
-      {/* 1. Cyan Accent Light (illuminates Dumbbell at top right) */}
+      {/* Subtle Athletic Emerald Rim Light */}
       <pointLight
-        position={[3.5, 2.0, 3.0]}
-        intensity={6.0}
-        distance={10}
-        color="#00f0ff"
-        decay={2}
-      />
-
-      {/* 2. Magenta Accent Light (illuminates Kettlebell at bottom left) */}
-      <pointLight
-        position={[-3.5, -0.8, 3.0]}
-        intensity={6.0}
-        distance={10}
-        color="#ff006e"
-        decay={2}
-      />
-
-      {/* 3. Gold Accent Light (illuminates Barbell Plate at bottom right) */}
-      <pointLight
-        position={[2.6, -2.2, 3.0]}
-        intensity={5.2}
-        distance={9}
-        color="#ffd700"
-        decay={2}
-      />
-
-      {/* 4. Deep Violet Rim Light (creates silhouette separation) */}
-      <pointLight
-        position={[0, 4.0, -4.0]}
-        intensity={3.2}
+        position={[0, 3.5, -4.0]}
+        intensity={2.0}
         distance={12}
-        color="#8b5cf6"
+        color="#10b981"
         decay={2}
       />
 
-      {/* Cursor tracking rig */}
+      {/* Interactive cursor light */}
       <SceneRig />
 
-      {/* Ambient Particle Field (~200 glowing accent particles with depth-of-field) */}
-      <ParticleField totalCount={200} />
+      {/* Micro-particle atmosphere */}
+      <ParticleField totalCount={80} />
 
-      {/* Procedural 3D Gym Equipment */}
+      {/* 3D Equipment */}
       <FloatingEquipment />
 
-      {/* Studio Environment for Realistic Metallic Reflections */}
+      {/* High-fidelity studio reflections */}
       <Suspense fallback={null}>
-        <Environment preset="city" />
+        <Environment preset="studio" />
       </Suspense>
     </>
   );
 }
 
-/**
- * HeroScene - The 3D hero scene component for the fitness platform landing page.
- * Renders passive procedural 3D gym equipment floating in space with ambient particles,
- * metallic reflection environments, and cinematic accent lighting.
- */
-export function HeroScene({
-  className = '',
-  children,
-  showGradientOverlays = true,
-}: HeroSceneProps) {
+export function HeroScene({ className = '', children }: HeroSceneProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1.2, ease: 'easeOut' }}
-      className={`absolute inset-0 w-full h-full overflow-hidden ${className}`}
-      style={{
-        // Gradient background color for the scene container
-        background:
-          'radial-gradient(ellipse 90% 70% at 50% 30%, #0d1222 0%, #070912 45%, #030407 100%)',
-      }}
+      transition={{ duration: 0.8 }}
+      className={`absolute inset-0 w-full h-full overflow-hidden bg-[#09090b] ${className}`}
     >
-      {/* Background ambient neon glow spheres */}
-      {showGradientOverlays && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-          {/* Cyan Glow (top-right dumbbell focus) */}
-          <div
-            className="absolute top-1/6 right-1/8 w-96 h-96 rounded-full blur-[120px] opacity-25 pointer-events-none"
-            style={{ backgroundColor: '#00f0ff' }}
-          />
-
-          {/* Magenta Glow (bottom-left kettlebell focus) */}
-          <div
-            className="absolute bottom-1/5 left-1/10 w-96 h-96 rounded-full blur-[130px] opacity-20 pointer-events-none"
-            style={{ backgroundColor: '#ff006e' }}
-          />
-
-          {/* Gold Glow (bottom-right plate focus) */}
-          <div
-            className="absolute bottom-1/8 right-1/6 w-80 h-80 rounded-full blur-[110px] opacity-15 pointer-events-none"
-            style={{ backgroundColor: '#ffd700' }}
-          />
-        </div>
-      )}
-
       {/* R3F Canvas - fills container absolutely */}
       <Canvas
         camera={{ position: [0, 0, 8], fov: 45, near: 0.1, far: 100 }}
@@ -199,18 +119,16 @@ export function HeroScene({
           alpha: true,
           powerPreference: 'high-performance',
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.1,
+          toneMappingExposure: 1.05,
         }}
         className="absolute inset-0 w-full h-full"
       >
         <SceneContent />
       </Canvas>
 
-      {/* Vignette / bottom fade overlay for smooth transition into next page sections */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#030407] via-transparent to-transparent opacity-70" />
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_transparent_40%,_#030407_100%)] opacity-50" />
+      {/* Smooth vignette overlay */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#09090b] via-transparent to-transparent opacity-80" />
 
-      {/* Optional Children Layer (e.g. Hero headlines, badges, CTA buttons) */}
       {children && (
         <div className="relative z-10 w-full h-full pointer-events-auto">
           {children}

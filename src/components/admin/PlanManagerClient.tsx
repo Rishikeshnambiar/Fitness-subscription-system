@@ -116,27 +116,27 @@ export default function PlanManagerClient({ initialPlans }: PlanManagerClientPro
       {/* Action Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-bold text-[#f0f0f5]">
+          <h1 className="text-2xl font-heading font-bold text-zinc-100">
             Plan Management
           </h1>
-          <p className="text-xs text-[#8888a0] mt-1">
-            Configure tiered fitness memberships, upfront installment rules, and pricing snapshots.
+          <p className="text-xs text-zinc-400 mt-1">
+            Configure tiered fitness memberships, upfront installment rules, and snapshot versions.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#0099ff] text-[#0a0a0f] font-semibold text-xs hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all flex items-center gap-1.5 self-start sm:self-auto"
+          className="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs transition-all flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
         >
           <Plus className="w-4 h-4" /> Create New Plan
         </button>
       </div>
 
-      {/* Plans List Table/Cards */}
-      <div className="rounded-2xl bg-[#12121a] border border-white/5 overflow-hidden">
+      {/* Plans List Table */}
+      <div className="rounded-2xl bg-zinc-900/60 border border-zinc-800/80 overflow-hidden shadow-lg backdrop-blur-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-white/[0.02] border-b border-white/5 text-[11px] font-mono uppercase tracking-wider text-[#8888a0]">
+            <thead className="bg-zinc-900/90 border-b border-zinc-800 text-[11px] font-mono uppercase tracking-wider text-zinc-400">
               <tr>
                 <th className="py-3.5 px-4">Plan Name & Details</th>
                 <th className="py-3.5 px-4">Duration</th>
@@ -147,49 +147,49 @@ export default function PlanManagerClient({ initialPlans }: PlanManagerClientPro
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-zinc-800/60">
               {plans.map((plan) => (
-                <tr key={plan._id} className="hover:bg-white/[0.01] transition-colors">
+                <tr key={plan._id} className="hover:bg-zinc-800/20 transition-colors">
                   <td className="py-4 px-4">
-                    <div className="font-semibold text-[#f0f0f5] flex items-center gap-2">
+                    <div className="font-semibold text-zinc-200 flex items-center gap-2">
                       <span>{plan.name}</span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-[#8888a0]">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
                         v{plan.version || 1}
                       </span>
                       {plan.isPopular && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#00f0ff]/10 text-[#00f0ff]">
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                           POPULAR
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-[#8888a0] max-w-xs truncate mt-0.5">
+                    <div className="text-xs text-zinc-400 max-w-xs truncate mt-0.5">
                       {plan.description}
                     </div>
                   </td>
-                  <td className="py-4 px-4 font-mono text-xs text-[#f0f0f5]">
+                  <td className="py-4 px-4 font-mono text-xs text-zinc-300">
                     {plan.durationMonths} Month{plan.durationMonths > 1 ? "s" : ""}
                   </td>
-                  <td className="py-4 px-4 font-mono font-bold text-[#00f0ff]">
+                  <td className="py-4 px-4 font-mono font-bold text-zinc-100">
                     ₹{plan.baseMonthlyPrice.toLocaleString("en-IN")}
                   </td>
-                  <td className="py-4 px-4 font-mono text-xs text-[#ffd700]">
+                  <td className="py-4 px-4 font-mono text-xs text-emerald-400">
                     {plan.discountPercentage}% OFF
                   </td>
                   <td className="py-4 px-4">
                     {plan.allowPartialPayment ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono text-[#00e676]">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400">
                         <Check className="w-3 h-3" /> Min {plan.minUpfrontPercentage}%
                       </span>
                     ) : (
-                      <span className="text-[11px] text-[#8888a0]">Full Only</span>
+                      <span className="text-[11px] text-zinc-400">Full Only</span>
                     )}
                   </td>
                   <td className="py-4 px-4">
                     <span
-                      className={`inline-block text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full ${
+                      className={`inline-block text-[10px] font-semibold uppercase px-2.5 py-0.5 rounded-full ${
                         plan.isActive
-                          ? "bg-[#00e676]/10 text-[#00e676]"
-                          : "bg-white/5 text-[#8888a0]"
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          : "bg-zinc-800 text-zinc-400"
                       }`}
                     >
                       {plan.isActive ? "Active" : "Archived"}
@@ -199,14 +199,14 @@ export default function PlanManagerClient({ initialPlans }: PlanManagerClientPro
                     <div className="inline-flex items-center gap-2">
                       <button
                         onClick={() => openEditModal(plan)}
-                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#f0f0f5] transition-colors"
+                        className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors border border-zinc-700"
                         title="Edit Plan"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleToggleActive(plan._id)}
-                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#8888a0] hover:text-white transition-colors"
+                        className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors border border-zinc-700"
                         title={plan.isActive ? "Archive Plan" : "Activate Plan"}
                       >
                         {plan.isActive ? (
@@ -226,15 +226,15 @@ export default function PlanManagerClient({ initialPlans }: PlanManagerClientPro
 
       {/* Modal Dialog */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg rounded-2xl bg-[#12121a] border border-white/10 shadow-2xl p-6 text-[#f0f0f5] max-h-[90vh] overflow-y-auto space-y-5">
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
-              <h2 className="text-lg font-heading font-bold text-[#f0f0f5]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-lg rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl p-6 text-zinc-200 max-h-[90vh] overflow-y-auto space-y-5">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+              <h2 className="text-lg font-heading font-bold text-zinc-100">
                 {editingPlan ? `Edit Plan (Version ${editingPlan.version || 1})` : "Create Subscription Plan"}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 text-[#8888a0] hover:text-white transition-colors"
+                className="p-1 text-zinc-400 hover:text-zinc-100 transition-colors rounded-lg hover:bg-zinc-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -242,7 +242,7 @@ export default function PlanManagerClient({ initialPlans }: PlanManagerClientPro
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div className="space-y-1">
-                <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
+                <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
                   Plan Display Name
                 </label>
                 <input
@@ -250,134 +250,133 @@ export default function PlanManagerClient({ initialPlans }: PlanManagerClientPro
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Pro Hypertrophy 90-Day"
-                  className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
+                  placeholder="e.g. Athlete Pro Hypertrophy"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
-                  Plan Description
+                <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
+                  Plan Description / Tagline
                 </label>
                 <textarea
-                  required
                   rows={2}
+                  required
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Brief summary of target athletic goals"
-                  className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
+                  placeholder="Comprehensive athletic access across all metro clubs."
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
+                  <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
                     Duration (Months)
                   </label>
-                  <select
+                  <input
+                    type="number"
+                    min={1}
+                    max={24}
+                    required
                     value={durationMonths}
                     onChange={(e) => setDurationMonths(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-[#1a1a2e] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
-                  >
-                    <option value={1}>1 Month</option>
-                    <option value={3}>3 Months</option>
-                    <option value={6}>6 Months</option>
-                    <option value={12}>12 Months</option>
-                  </select>
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500 font-mono"
+                  />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
+                  <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
                     Base Monthly Price (₹)
                   </label>
                   <input
                     type="number"
+                    min={100}
                     required
-                    min={1}
                     value={baseMonthlyPrice}
                     onChange={(e) => setBaseMonthlyPrice(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
+                  <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
                     Plan Discount (%)
                   </label>
                   <input
                     type="number"
                     min={0}
-                    max={100}
+                    max={90}
                     value={discountPercentage}
                     onChange={(e) => setDiscountPercentage(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
+                  <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
                     Min Upfront Installment (%)
                   </label>
                   <input
                     type="number"
                     min={10}
-                    max={100}
+                    max={90}
                     value={minUpfrontPercentage}
                     onChange={(e) => setMinUpfrontPercentage(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 pt-1">
-                <label className="flex items-center gap-2 cursor-pointer text-xs text-[#f0f0f5]">
+              <div className="flex items-center gap-6 pt-2">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={allowPartialPayment}
                     onChange={(e) => setAllowPartialPayment(e.target.checked)}
-                    className="rounded bg-white/5 border-white/20 text-[#00f0ff]"
+                    className="rounded accent-emerald-500"
                   />
-                  <span>Allow Partial Payments</span>
+                  <span className="text-zinc-300">Allow Partial Milestone Payment</span>
                 </label>
 
-                <label className="flex items-center gap-2 cursor-pointer text-xs text-[#f0f0f5]">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={isPopular}
                     onChange={(e) => setIsPopular(e.target.checked)}
-                    className="rounded bg-white/5 border-white/20 text-[#00f0ff]"
+                    className="rounded accent-emerald-500"
                   />
-                  <span>Mark as Most Popular</span>
+                  <span className="text-zinc-300">Highlight as Popular</span>
                 </label>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[#8888a0] uppercase tracking-wider text-[10px] font-semibold">
-                  Key Features (One per line or comma-separated)
+                <label className="text-zinc-400 uppercase tracking-wider text-[10px] font-semibold">
+                  Features (one per line)
                 </label>
                 <textarea
                   rows={3}
                   value={featuresText}
                   onChange={(e) => setFeaturesText(e.target.value)}
-                  placeholder="24/7 Access&#10;Sauna Privileges&#10;Biometric Tracking"
-                  className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00f0ff]"
+                  placeholder="Sauna & Cold Plunge access&#10;2 Monthly 1-on-1 coaching sessions&#10;DEXA scan included"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/5">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="py-2 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-[#8888a0] text-xs font-semibold transition-colors"
+                  className="py-2 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="py-2 px-5 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#0099ff] text-[#0a0a0f] text-xs font-semibold hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all disabled:opacity-50"
+                  className="py-2 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : editingPlan ? "Update Plan" : "Create Plan"}
                 </button>

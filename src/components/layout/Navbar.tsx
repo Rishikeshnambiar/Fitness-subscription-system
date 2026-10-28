@@ -52,19 +52,13 @@ export default function Navbar({
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <motion.div
-                whileHover={{ rotate: 15, scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="relative"
-              >
-                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-[#00f0ff] to-[#ff006e] flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.3)]">
-                  <Dumbbell className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </div>
-              </motion.div>
-              <span className="text-xl md:text-2xl font-heading font-bold tracking-tight">
-                <span className="text-[#f0f0f5]">Hyper</span>
-                <span className="gradient-text-cyan">Gym</span>
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/50 transition-colors shadow-sm">
+                <Dumbbell className="w-4 h-4" />
+              </div>
+              <span className="text-lg md:text-xl font-heading font-bold tracking-tight text-zinc-100 flex items-center gap-1">
+                <span>HyperGym</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block ml-0.5" />
               </span>
             </Link>
 
@@ -74,10 +68,9 @@ export default function Navbar({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative px-4 py-2 text-sm font-medium text-[#8888a0] hover:text-[#f0f0f5] transition-colors duration-300 group"
+                  className="px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60 rounded-lg transition-colors"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-[#00f0ff] to-[#ff006e] group-hover:w-3/4 transition-all duration-300 rounded-full" />
                 </Link>
               ))}
             </div>
@@ -89,30 +82,24 @@ export default function Navbar({
                   href={dashboardHref}
                   className={cn(
                     buttonVariants({ size: "default" }),
-                    "bg-gradient-to-r from-[#00f0ff] to-[#0099ff] text-[#0a0a0f] font-semibold hover:shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all duration-300"
+                    "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs rounded-lg transition-all shadow-sm"
                   )}
                 >
-                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
                   Dashboard
                 </Link>
               ) : (
                 <>
                   <Link
                     href="/sign-in"
-                    className={cn(
-                      buttonVariants({ variant: "ghost", size: "default" }),
-                      "text-[#8888a0] hover:text-[#f0f0f5] hover:bg-[rgba(255,255,255,0.05)]"
-                    )}
+                    className="text-xs font-medium text-zinc-400 hover:text-zinc-100 px-3 py-1.5 rounded-lg hover:bg-zinc-900/60 transition-colors flex items-center gap-1.5"
                   >
-                    <LogIn className="w-4 h-4 mr-2" />
+                    <LogIn className="w-3.5 h-3.5" />
                     Sign In
                   </Link>
                   <Link
                     href="/sign-up"
-                    className={cn(
-                      buttonVariants({ size: "default" }),
-                      "bg-gradient-to-r from-[#00f0ff] to-[#ff006e] text-white font-semibold hover:shadow-[0_0_25px_rgba(0,240,255,0.4)] hover:scale-105 transition-all duration-300"
-                    )}
+                    className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs px-4 py-2 rounded-lg transition-all shadow-sm flex items-center gap-1.5"
                   >
                     Get Started
                   </Link>
@@ -194,12 +181,9 @@ export default function Navbar({
                   <Link
                     href={dashboardHref}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      buttonVariants({ size: "lg" }),
-                      "bg-gradient-to-r from-[#00f0ff] to-[#0099ff] text-[#0a0a0f] font-semibold w-full justify-center"
-                    )}
+                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-semibold text-xs flex items-center justify-center gap-2"
                   >
-                    <LayoutDashboard className="w-5 h-5 mr-2" />
+                    <LayoutDashboard className="w-4 h-4" />
                     Dashboard
                   </Link>
                 ) : (
@@ -207,21 +191,15 @@ export default function Navbar({
                     <Link
                       href="/sign-in"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        buttonVariants({ variant: "outline", size: "lg" }),
-                        "w-full border-[rgba(255,255,255,0.1)] text-[#f0f0f5] justify-center"
-                      )}
+                      className="w-full py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-medium text-xs flex items-center justify-center gap-2"
                     >
-                      <LogIn className="w-5 h-5 mr-2" />
+                      <LogIn className="w-4 h-4" />
                       Sign In
                     </Link>
                     <Link
                       href="/sign-up"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        buttonVariants({ size: "lg" }),
-                        "bg-gradient-to-r from-[#00f0ff] to-[#ff006e] text-white font-semibold w-full justify-center"
-                      )}
+                      className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-semibold text-xs flex items-center justify-center gap-2 shadow-sm"
                     >
                       Get Started
                     </Link>

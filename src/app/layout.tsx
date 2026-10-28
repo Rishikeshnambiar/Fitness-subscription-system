@@ -1,27 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkWrapper } from "@/components/providers/ClerkWrapper";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -54,10 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} dark`}
+      className="dark"
       suppressHydrationWarning
     >
-      <body className="min-h-screen antialiased">
+      <body className="min-h-screen bg-zinc-950 text-zinc-100 antialiased font-sans selection:bg-emerald-500/20 selection:text-emerald-400">
         <ClerkWrapper>
           <TooltipProvider delay={300}>
             {children}
@@ -66,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               richColors
               closeButton
               toastOptions={{
-                className: "glass-card",
+                className: "bg-zinc-900 border border-zinc-800 text-zinc-100",
               }}
             />
           </TooltipProvider>

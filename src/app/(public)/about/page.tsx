@@ -10,64 +10,64 @@ import {
   Target,
   Shield,
   Clock,
+  Sparkles,
+  Building2,
+  CheckCircle2,
 } from "lucide-react";
+import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 
 const values = [
   {
     icon: Trophy,
-    title: "Excellence First",
+    title: "Uncompromising Standards",
     description:
-      "We set the highest standards in fitness training and never compromise on quality.",
-    color: "#ffd700",
+      "We benchmark our equipment, trainers, and recovery protocols against international Olympic training facilities.",
   },
   {
     icon: Heart,
-    title: "Member-Centric",
+    title: "Biometric Precision",
     description:
-      "Every decision we make starts with our members' well-being and goals in mind.",
-    color: "#ff006e",
+      "Every workout and nutrition program is continuously calibrated using continuous DEXA and lactate telemetry.",
   },
   {
     icon: Zap,
-    title: "Innovation",
+    title: "Technological Edge",
     description:
-      "We leverage cutting-edge technology and science to deliver transformative results.",
-    color: "#00f0ff",
+      "Our members track every set, rep, and milestone with real-time analytics synced across all 12 metro clubs.",
   },
   {
     icon: Users,
-    title: "Community",
+    title: "Elite Community",
     description:
-      "We build a supportive ecosystem where every member thrives and inspires others.",
-    color: "#00e676",
+      "Train alongside motivated athletes, executives, and specialists who share a relentless commitment to physical excellence.",
   },
 ];
 
 const facilities = [
   {
     icon: Dumbbell,
-    title: "World-Class Equipment",
+    title: "Eleiko Olympic Systems",
     stat: "500+",
-    description: "Premium machines and free weights from top global brands",
+    description: "Certified competition bars, calibrated bumper plates, and motorized platforms.",
   },
   {
     icon: Target,
-    title: "Personal Training",
+    title: "Tier-3 Performance Coaches",
     stat: "50+",
-    description: "Certified expert trainers with specialized expertise",
+    description: "NSCA and CSCS certified coaches dedicated to your progressive overload.",
   },
   {
     icon: Shield,
-    title: "Hygiene & Safety",
-    stat: "A+",
-    description: "Medical-grade sanitization and 24/7 security monitoring",
+    title: "Contrast Recovery Suite",
+    stat: "3°C / 90°C",
+    description: "Medical-grade ice bath immersion tanks and authentic Finnish dry-heat saunas.",
   },
   {
     icon: Clock,
-    title: "Always Open",
-    stat: "24/7",
-    description: "Access your fitness journey any time, day or night",
+    title: "Continuous Biometric Access",
+    stat: "24/7/365",
+    description: "Keyless NFC access across all club branches with round-the-clock facility monitoring.",
   },
 ];
 
@@ -82,149 +82,118 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
 export default function AboutPage() {
   return (
-    <>
+    <div className="bg-zinc-950 text-zinc-100 min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,240,255,0.03)] via-transparent to-transparent" />
+      <section className="relative pt-36 pb-24 overflow-hidden border-b border-zinc-900/60">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-emerald-500/[0.04] rounded-full blur-[140px] pointer-events-none" />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="text-center max-w-3xl mx-auto"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[rgba(0,240,255,0.08)] border border-[rgba(0,240,255,0.15)] text-[#00f0ff] text-sm font-medium mb-8"
-            >
-              <Dumbbell className="w-4 h-4" />
-              Our Mission & Values
-            </motion.div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold mb-6">
-              Redefining Fitness{" "}
-              <span className="gradient-text-cyan">For Everyone</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-medium mb-6">
+              <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>AgarkarMedia Fitness Technologies</span>
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-zinc-100 mb-6">
+              Engineering the Next Era of Human Performance.
             </h1>
-            <p className="text-lg text-[#8888a0] leading-relaxed">
-              At HyperGym, we believe fitness is not just about exercise — it&apos;s
-              a lifestyle transformation. Our platform combines cutting-edge
-              technology with proven training methodologies to deliver
-              results that speak for themselves.
+            
+            <p className="text-base sm:text-lg text-zinc-400 leading-relaxed">
+              HyperGym was built to eliminate the friction between ambition and physical transformation.
+              We combine precision athletic architecture with transparent, flexible digital subscription management.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Values Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-4">
-              What <span className="gradient-text-cyan">Drives Us</span>
-            </h2>
-            <p className="text-[#8888a0] max-w-2xl mx-auto">
-              Our core values shape every aspect of the HyperGym experience
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {values.map((value) => (
-              <motion.div
-                key={value.title}
-                variants={itemVariants}
-                className="glass-card-hover p-6 text-center group"
-              >
-                <div
-                  className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                  style={{
-                    background: `${value.color}15`,
-                    boxShadow: `0 0 20px ${value.color}20`,
-                  }}
-                >
-                  <value.icon
-                    className="w-7 h-7"
-                    style={{ color: value.color }}
-                  />
-                </div>
-                <h3 className="text-lg font-heading font-semibold mb-2 text-[#f0f0f5]">
-                  {value.title}
-                </h3>
-                <p className="text-sm text-[#8888a0] leading-relaxed">
-                  {value.description}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-zinc-100 mb-3">
+            Core Architectural Principles
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto">
+            How we design our training environments, transparent billing models, and coaching relationships.
+          </p>
         </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {values.map((value) => (
+            <motion.div
+              key={value.title}
+              variants={itemVariants}
+              className="rounded-2xl bg-zinc-900/50 border border-zinc-800/80 p-6 backdrop-blur-xl hover:border-zinc-700 transition-colors"
+            >
+              <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5">
+                <value.icon className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-semibold text-zinc-100 mb-2">
+                {value.title}
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {value.description}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto" />
-
       {/* Facilities Section */}
-      <section className="py-20">
+      <section className="py-24 bg-zinc-900/30 border-y border-zinc-900/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-4">
-              World-Class{" "}
-              <span className="gradient-text-magenta">Facilities</span>
+          <div className="text-center mb-16">
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-zinc-100 mb-3">
+              Facility Infrastructure
             </h2>
-            <p className="text-[#8888a0] max-w-2xl mx-auto">
-              State-of-the-art infrastructure designed for peak performance
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto">
+              Purpose-built spaces designed for progressive overload and accelerated metabolic recovery.
             </p>
-          </motion.div>
+          </div>
 
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0.2 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {facilities.map((facility) => (
               <motion.div
                 key={facility.title}
                 variants={itemVariants}
-                className="glass-card-hover p-6 text-center"
+                className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-6 text-center"
               >
-                <div className="w-12 h-12 rounded-xl bg-[rgba(0,240,255,0.08)] mx-auto mb-4 flex items-center justify-center">
-                  <facility.icon className="w-6 h-6 text-[#00f0ff]" />
+                <div className="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 mx-auto mb-4 flex items-center justify-center text-zinc-200">
+                  <facility.icon className="w-5 h-5 text-emerald-400" />
                 </div>
-                <div className="text-3xl font-heading font-bold gradient-text-cyan mb-2">
+                <div className="text-2xl font-heading font-extrabold text-zinc-100 font-mono mb-1">
                   {facility.stat}
                 </div>
-                <h3 className="text-base font-semibold mb-1 text-[#f0f0f5]">
+                <h3 className="text-xs font-semibold text-zinc-200 mb-2">
                   {facility.title}
                 </h3>
-                <p className="text-sm text-[#8888a0]">
+                <p className="text-xs text-zinc-400 leading-relaxed">
                   {facility.description}
                 </p>
               </motion.div>
@@ -233,43 +202,26 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto" />
-
       {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="glass-card p-10 sm:p-16 text-center relative overflow-hidden"
+      <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-10 sm:p-14 text-center backdrop-blur-xl">
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-zinc-100 mb-4">
+            Begin Your Conditioning Protocol Today.
+          </h2>
+          <p className="text-sm text-zinc-400 mb-8 max-w-md mx-auto">
+            Choose your membership tier, select full or milestone payments, and experience the highest standard in athletic conditioning.
+          </p>
+          <Link
+            href="/#plans"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs transition-all shadow-sm"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(0,240,255,0.05)] to-[rgba(255,0,110,0.05)]" />
-            <div className="relative">
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-4">
-                Ready to{" "}
-                <span className="gradient-text-hero">Transform?</span>
-              </h2>
-              <p className="text-[#8888a0] mb-8 max-w-xl mx-auto">
-                Join thousands of members who have already started their journey
-                with HyperGym. Your transformation begins today.
-              </p>
-              <motion.a
-                href="/sign-up"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#ff006e] text-white font-semibold text-lg shadow-[0_0_30px_rgba(0,240,255,0.3)] hover:shadow-[0_0_50px_rgba(0,240,255,0.5)] transition-shadow duration-300"
-              >
-                <Zap className="w-5 h-5" />
-                Start Your Journey
-              </motion.a>
-            </div>
-          </motion.div>
+            <Zap className="w-4 h-4" />
+            Explore Membership Tiers
+          </Link>
         </div>
       </section>
 
       <Footer />
-    </>
+    </div>
   );
 }
