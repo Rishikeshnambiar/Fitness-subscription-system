@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -13,34 +13,25 @@ const isPublicRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isUserRoute = createRouteMatcher(["/dashboard(.*)", "/checkout(.*)", "/billing(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
-  // Check if evaluator demo role cookie is set
+// Handler for when Clerk keys are provided
+const clerkHandler = clerkMiddleware(async (auth, req) => {
   const demoRole = req.cookies.get("hypergym_demo_role")?.value;
 
   if (demoRole === "ADMIN") {
-    // Demo admin can access any route
     return NextResponse.next();
   }
 
   if (demoRole === "USER") {
-    // Demo user can access user routes, but not admin routes
     if (isAdminRoute(req)) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     return NextResponse.next();
   }
 
-  // If public route, allow immediately
   if (isPublicRoute(req)) {
     return NextResponse.next();
   }
 
-  // If Clerk publishable key is not set, allow graceful pass-through in development
-  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
-    return NextResponse.next();
-  }
-
-  // Protect private routes
   if (isAdminRoute(req) || isUserRoute(req)) {
     await auth.protect();
   }
@@ -48,11 +39,28 @@ export default clerkMiddleware(async (auth, req) => {
   return NextResponse.next();
 });
 
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  const hasClerkKeys = Boolean(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
+  );
+
+  // If Clerk keys are not configured yet, use fallback mode so the app doesn't crash
+  if (!hasClerkKeys) {
+    const demoRole = req.cookies.get("hypergym_demo_role")?.value;
+
+    if (demoRole === "USER" && req.nextUrl.pathname.startsWith("/admin")) {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  return clerkHandler(req, event);
+}
+
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };

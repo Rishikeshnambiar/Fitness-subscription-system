@@ -33,6 +33,9 @@ export async function getOrCreateCurrentUser(clerkData?: {
 
   if (!targetClerkId) {
     try {
+      if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || !process.env.CLERK_SECRET_KEY) {
+        return null;
+      }
       const user = await currentUser();
       if (!user) return null;
       targetClerkId = user.id;
@@ -100,6 +103,9 @@ export async function getSessionUser(): Promise<AppUserSession | null> {
   }
 
   try {
+    if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || !process.env.CLERK_SECRET_KEY) {
+      return null;
+    }
     const { userId } = await auth();
     if (!userId) return null;
 
