@@ -360,7 +360,7 @@ export default function PlanPreview({
                     </button>
                   ) : (
                     <Link
-                      href={`/sign-up?plan=${plan.id}&billing=${billingCycle}`}
+                      href={`/checkout/${plan.id}`}
                       className={cn(
                         "w-full py-3.5 px-6 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2",
                         isPro

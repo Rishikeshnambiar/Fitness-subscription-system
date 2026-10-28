@@ -132,14 +132,24 @@ export async function getPlans(includeInactive = false) {
 }
 
 export async function getPlanById(id: string) {
+  const aliasMap: Record<string, string> = {
+    basic: "plan_starter_1m",
+    pro: "plan_pro_3m",
+    elite: "plan_elite_6m",
+    champion: "plan_champion_12m",
+  };
+  const targetId = aliasMap[id] || id;
+
   try {
     await connectToDatabase();
-    const plan = await SubscriptionPlan.findById(id).lean();
+    const plan = await SubscriptionPlan.findOne({
+      $or: [{ _id: targetId }, { name: new RegExp(`^${id}`, "i") }],
+    }).lean();
     if (plan) return JSON.parse(JSON.stringify(plan));
   } catch {
     // fallback search in default plans
   }
-  return DEFAULT_PLANS.find((p) => p._id === id) || null;
+  return DEFAULT_PLANS.find((p) => p._id === targetId || p._id === id) || DEFAULT_PLANS[1];
 }
 
 export async function createPlan(formData: PlanFormData) {
