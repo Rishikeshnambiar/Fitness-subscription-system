@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ShieldCheck, UserCheck, Clock, RefreshCw, X, ChevronUp, Sparkles } from "lucide-react";
+import { ShieldCheck, UserCheck, Clock, RefreshCw, X, ChevronUp, Sparkles, Database } from "lucide-react";
 import { toast } from "sonner";
+import { resetAndSeedDemoData } from "@/lib/actions/demo.actions";
 
 export default function EvaluatorToolbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,6 +97,16 @@ export default function EvaluatorToolbar() {
             >
               <Clock className="w-3.5 h-3.5" />
               Simulate 3-Day Expiry Alert
+            </button>
+            <button
+              onClick={async () => {
+                const res = await resetAndSeedDemoData();
+                toast.success(res.message);
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 border border-[#00f0ff]/30 text-[#00f0ff] text-xs font-medium flex items-center justify-center gap-2 transition-all"
+            >
+              <Database className="w-3.5 h-3.5" />
+              Sync / Seed Catalog Data
             </button>
           </div>
 
