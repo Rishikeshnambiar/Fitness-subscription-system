@@ -158,7 +158,7 @@ export function HeroScene({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.2, ease: 'easeOut' }}
-      className={`relative w-full h-full min-h-[500px] overflow-hidden ${className}`}
+      className={`absolute inset-0 w-full h-full overflow-hidden ${className}`}
       style={{
         // Gradient background color for the scene container
         background:

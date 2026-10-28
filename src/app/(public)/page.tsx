@@ -15,21 +15,8 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <>
-      {/* Hero Section with 3D Background */}
-      <section className="relative min-h-screen overflow-hidden">
-        {/* 3D Scene Layer (behind content) */}
-        <div className="absolute inset-0 z-0">
-          <HeroSceneWrapper />
-        </div>
-
-        {/* Content Layer (above 3D scene) */}
-        <div className="relative z-10">
-          <HeroSection />
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <StatsCounter />
+      {/* 3D Immersive Hero Section */}
+      <HeroSection sceneSlot={<HeroSceneWrapper />} />
 
       {/* Plans Preview Section */}
       <section id="plans">
