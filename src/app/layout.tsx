@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkWrapper } from "@/components/providers/ClerkWrapper";
 import "./globals.css";
 
 const inter = Inter({
@@ -57,17 +58,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="min-h-screen antialiased">
-        <TooltipProvider delay={300}>
-          {children}
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            toastOptions={{
-              className: "glass-card",
-            }}
-          />
-        </TooltipProvider>
+        <ClerkWrapper>
+          <TooltipProvider delay={300}>
+            {children}
+            <Toaster
+              position="top-right"
+              richColors
+              closeButton
+              toastOptions={{
+                className: "glass-card",
+              }}
+            />
+          </TooltipProvider>
+        </ClerkWrapper>
       </body>
     </html>
   );
