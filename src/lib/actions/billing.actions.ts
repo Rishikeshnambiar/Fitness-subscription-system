@@ -59,7 +59,9 @@ export async function getUserTransactions() {
 
   try {
     await connectToDatabase();
-    const transactions = await Transaction.find({ userId: session.id })
+    const transactions = await Transaction.find({
+      $or: [{ userId: session.id }, { userId: session.clerkId }],
+    })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -126,6 +128,8 @@ export async function settleRemainingBalance(transactionId: string) {
         $set: {
           "activeSubscription.balanceDue": 0,
           "activeSubscription.status": "ACTIVE",
+          "subscription.balanceDue": 0,
+          "subscription.status": "ACTIVE",
         },
       }
     );

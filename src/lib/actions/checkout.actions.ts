@@ -127,21 +127,24 @@ export async function processCheckout(payload: CheckoutPayload) {
       };
     }
 
-    // 2. Update User's Active Subscription
+    // 2. Update User's Active Subscription & Assessment Field "subscription"
     try {
+      const subscriptionObject = {
+        planId: plan._id,
+        planNameSnapshot: plan.name,
+        status: paymentStatus === "COMPLETED" ? "ACTIVE" : "PENDING_COMPLETION",
+        startDate,
+        endDate,
+        balanceDue: remainingBalance,
+        lastTransactionId: transaction._id,
+      };
+
       await User.findOneAndUpdate(
         { clerkId: session.clerkId },
         {
           $set: {
-            activeSubscription: {
-              planId: plan._id,
-              planNameSnapshot: plan.name,
-              status: paymentStatus === "COMPLETED" ? "ACTIVE" : "PENDING_COMPLETION",
-              startDate,
-              endDate,
-              balanceDue: remainingBalance,
-              lastTransactionId: transaction._id,
-            },
+            activeSubscription: subscriptionObject,
+            subscription: subscriptionObject,
           },
         }
       );

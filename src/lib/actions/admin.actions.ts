@@ -99,11 +99,18 @@ export async function adminOverrideTransaction(
     tx.overriddenAt = new Date();
     await tx.save();
 
-    // Update User activeSubscription balanceDue to 0
-    await User.findByIdAndUpdate(tx.userId, {
+    // Update User subscription & activeSubscription balanceDue to 0
+    const mongooseMod = await import("mongoose");
+    const userQuery = mongooseMod.default.isValidObjectId(tx.userId)
+      ? { $or: [{ _id: tx.userId }, { clerkId: tx.userId }] }
+      : { clerkId: tx.userId };
+
+    await User.findOneAndUpdate(userQuery, {
       $set: {
         "activeSubscription.balanceDue": 0,
         "activeSubscription.status": "ACTIVE",
+        "subscription.balanceDue": 0,
+        "subscription.status": "ACTIVE",
       },
     });
 

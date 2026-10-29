@@ -5,90 +5,101 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 
-export interface EquipmentPieceProps {
-  position?: [number, number, number];
-  rotation?: [number, number, number];
-  scale?: number | [number, number, number];
+export type EquipmentType = 'dumbbell' | 'kettlebell' | 'plate';
+
+interface EquipmentViewerProps {
+  activeType?: EquipmentType;
 }
 
 /**
- * Procedural 3D Dumbbell — Precision Matte Urethane with Knurled Chrome Steel Handle
+ * Procedural Olympic Hex Dumbbell
+ * High-precision knurled steel bar with dual-stage beveled urethane heads and calibration ring
  */
-export function Dumbbell({
-  position = [2.4, 0.8, -0.2],
-  rotation = [0.35, -0.4, 0.25],
-  scale = 0.9,
-}: EquipmentPieceProps) {
-  const groupRef = useRef<THREE.Group>(null);
+export function ShowcaseDumbbell() {
+  const meshRef = useRef<THREE.Group>(null);
 
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.25;
-      groupRef.current.rotation.z += delta * 0.08;
-
-      const targetX = state.pointer.x * 0.35;
-      const targetY = state.pointer.y * 0.35;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        targetY + 0.3,
-        0.05
-      );
-      groupRef.current.position.y = THREE.MathUtils.lerp(
-        groupRef.current.position.y,
-        position[1] + targetY * 0.2,
-        0.05
-      );
+  useFrame((_, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.4;
     }
   });
 
   return (
-    <Float speed={1.8} rotationIntensity={0.5} floatIntensity={0.8} floatingRange={[-0.15, 0.15]}>
-      <group ref={groupRef} position={position} rotation={rotation} scale={scale}>
-        {/* Central Steel Handle */}
+    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.5} floatingRange={[-0.1, 0.1]}>
+      <group ref={meshRef} rotation={[0.3, 0.2, 0.15]} scale={1.15}>
+        {/* Central Steel Handle with Ergonomic Taper */}
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.065, 0.065, 1.45, 32]} />
-          <meshStandardMaterial color="#d4d4d8" metalness={0.96} roughness={0.15} />
+          <cylinderGeometry args={[0.075, 0.08, 1.5, 48]} />
+          <meshStandardMaterial
+            color="#e4e4e7"
+            metalness={0.98}
+            roughness={0.18}
+          />
         </mesh>
 
-        {/* Handle Knurling Rings */}
-        {[-0.22, 0, 0.22].map((xOffset, idx) => (
+        {/* Diamond Knurling Grips (3-Band Precision Pattern) */}
+        {[-0.32, 0, 0.32].map((xOffset, idx) => (
           <mesh key={idx} position={[xOffset, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.07, 0.07, 0.16, 32]} />
-            <meshStandardMaterial color="#a1a1aa" metalness={0.9} roughness={0.3} />
+            <cylinderGeometry args={[0.082, 0.082, 0.22, 32]} />
+            <meshStandardMaterial
+              color="#a1a1aa"
+              metalness={0.95}
+              roughness={0.35}
+            />
           </mesh>
         ))}
 
-        {/* Left Weight Stack */}
-        <group position={[-0.52, 0, 0]}>
-          <mesh rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.54, 0.54, 0.14, 48]} />
-            <meshStandardMaterial color="#18181b" metalness={0.6} roughness={0.4} />
+        {/* Shaft Collars (Chrome stops) */}
+        {[-0.6, 0.6].map((xOffset, idx) => (
+          <mesh key={idx} position={[xOffset, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.13, 0.13, 0.06, 32]} />
+            <meshStandardMaterial color="#f4f4f5" metalness={0.98} roughness={0.1} />
           </mesh>
-          {/* Subtle Emerald Accent Rim */}
+        ))}
+
+        {/* Left Urethane Head */}
+        <group position={[-0.82, 0, 0]}>
+          {/* Main Hex/Beveled Heavy Head */}
           <mesh rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.545, 0.545, 0.03, 48]} />
-            <meshStandardMaterial color="#10b981" metalness={0.85} roughness={0.25} />
+            <cylinderGeometry args={[0.62, 0.62, 0.38, 6]} />
+            <meshStandardMaterial color="#141416" metalness={0.4} roughness={0.5} />
           </mesh>
-          <mesh position={[-0.15, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.44, 0.44, 0.12, 48]} />
-            <meshStandardMaterial color="#27272a" metalness={0.65} roughness={0.35} />
+          {/* Beveled Outer Cap */}
+          <mesh position={[-0.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.54, 0.62, 0.08, 6]} />
+            <meshStandardMaterial color="#1c1c20" metalness={0.5} roughness={0.4} />
+          </mesh>
+          {/* Emerald Calibration Band */}
+          <mesh position={[0.18, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.625, 0.625, 0.03, 6]} />
+            <meshStandardMaterial color="#10b981" metalness={0.85} roughness={0.2} emissive="#059669" emissiveIntensity={0.2} />
+          </mesh>
+          {/* Center Weight Indicator Hub */}
+          <mesh position={[-0.245, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.26, 0.26, 0.02, 32]} />
+            <meshStandardMaterial color="#27272a" metalness={0.8} roughness={0.3} />
           </mesh>
         </group>
 
-        {/* Right Weight Stack */}
-        <group position={[0.52, 0, 0]}>
+        {/* Right Urethane Head */}
+        <group position={[0.82, 0, 0]}>
           <mesh rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.54, 0.54, 0.14, 48]} />
-            <meshStandardMaterial color="#18181b" metalness={0.6} roughness={0.4} />
+            <cylinderGeometry args={[0.62, 0.62, 0.38, 6]} />
+            <meshStandardMaterial color="#141416" metalness={0.4} roughness={0.5} />
           </mesh>
-          {/* Subtle Emerald Accent Rim */}
-          <mesh rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.545, 0.545, 0.03, 48]} />
-            <meshStandardMaterial color="#10b981" metalness={0.85} roughness={0.25} />
+          <mesh position={[0.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.62, 0.54, 0.08, 6]} />
+            <meshStandardMaterial color="#1c1c20" metalness={0.5} roughness={0.4} />
           </mesh>
-          <mesh position={[0.15, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.44, 0.44, 0.12, 48]} />
-            <meshStandardMaterial color="#27272a" metalness={0.65} roughness={0.35} />
+          {/* Emerald Calibration Band */}
+          <mesh position={[-0.18, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.625, 0.625, 0.03, 6]} />
+            <meshStandardMaterial color="#10b981" metalness={0.85} roughness={0.2} emissive="#059669" emissiveIntensity={0.2} />
+          </mesh>
+          {/* Center Weight Indicator Hub */}
+          <mesh position={[0.245, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.26, 0.26, 0.02, 32]} />
+            <meshStandardMaterial color="#27272a" metalness={0.8} roughness={0.3} />
           </mesh>
         </group>
       </group>
@@ -97,111 +108,51 @@ export function Dumbbell({
 }
 
 /**
- * Procedural 3D Kettlebell — Textured Cast Iron with Polished Steel Handle
+ * Procedural Competition Kettlebell
+ * Cast iron spherical bell with machine-milled flat bottom and brushed stainless competition horn
  */
-export function Kettlebell({
-  position = [-2.4, -0.4, 0.2],
-  rotation = [0.2, 0.45, -0.15],
-  scale = 0.9,
-}: EquipmentPieceProps) {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.22;
-      const targetX = state.pointer.x * 0.3;
-      const targetY = state.pointer.y * 0.3;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        -targetY * 0.3 + 0.15,
-        0.05
-      );
-      groupRef.current.position.y = THREE.MathUtils.lerp(
-        groupRef.current.position.y,
-        position[1] + targetY * 0.15,
-        0.05
-      );
-    }
-  });
-
-  return (
-    <Float speed={1.6} rotationIntensity={0.45} floatIntensity={0.7} floatingRange={[-0.12, 0.12]}>
-      <group ref={groupRef} position={position} rotation={rotation} scale={scale}>
-        {/* Main Body */}
-        <mesh position={[0, 0, 0]} scale={[1, 0.95, 1]}>
-          <sphereGeometry args={[0.72, 48, 48]} />
-          <meshStandardMaterial color="#18181b" metalness={0.7} roughness={0.4} />
-        </mesh>
-
-        {/* Stable Base */}
-        <mesh position={[0, -0.64, 0]}>
-          <cylinderGeometry args={[0.42, 0.46, 0.1, 32]} />
-          <meshStandardMaterial color="#09090b" metalness={0.8} roughness={0.45} />
-        </mesh>
-
-        {/* Subtle Athletic Emerald Ring */}
-        <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.728, 0.025, 24, 64]} />
-          <meshStandardMaterial color="#10b981" metalness={0.85} roughness={0.2} />
-        </mesh>
-
-        {/* Handle */}
-        <mesh position={[0, 0.76, 0]}>
-          <torusGeometry args={[0.4, 0.08, 32, 48]} />
-          <meshStandardMaterial color="#e4e4e7" metalness={0.94} roughness={0.16} />
-        </mesh>
-      </group>
-    </Float>
-  );
-}
-
-/**
- * Procedural 3D Barbell Competition Bumper Plate — Matte Black with Chrome Center Hub
- */
-export function BarbellPlate({
-  position = [1.8, -1.2, 0.5],
-  rotation = [0.85, 0.4, -0.6],
-  scale = 0.85,
-}: EquipmentPieceProps) {
-  const groupRef = useRef<THREE.Group>(null);
+export function ShowcaseKettlebell() {
+  const meshRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.z += delta * 0.18;
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.35;
     }
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.9} floatingRange={[-0.15, 0.15]}>
-      <group ref={groupRef} position={position} rotation={rotation} scale={scale}>
-        {/* Outer Heavy Rubber Rim */}
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.95, 0.95, 0.14, 64]} />
-          <meshStandardMaterial color="#18181b" metalness={0.5} roughness={0.45} />
+    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.5} floatingRange={[-0.1, 0.1]}>
+      <group ref={meshRef} rotation={[0.15, 0.3, -0.05]} scale={1.2}>
+        {/* Main Cast Iron Bell Sphere */}
+        <mesh position={[0, -0.15, 0]} scale={[1, 0.98, 1]}>
+          <sphereGeometry args={[0.82, 64, 64]} />
+          <meshStandardMaterial color="#17171a" metalness={0.7} roughness={0.42} />
         </mesh>
 
-        {/* Outer Edge Bevel */}
-        <mesh position={[0, 0, 0.07]}>
-          <torusGeometry args={[0.94, 0.035, 20, 64]} />
-          <meshStandardMaterial color="#27272a" metalness={0.6} roughness={0.35} />
+        {/* Milled Flat Base */}
+        <mesh position={[0, -0.88, 0]}>
+          <cylinderGeometry args={[0.48, 0.52, 0.12, 48]} />
+          <meshStandardMaterial color="#0e0e11" metalness={0.8} roughness={0.35} />
         </mesh>
 
-        {/* Chrome Stainless Steel Center Hub */}
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.32, 0.32, 0.16, 48]} />
-          <meshStandardMaterial color="#e4e4e7" metalness={0.96} roughness={0.12} />
+        {/* Equatorial Calibration Recess & Emerald Inlay */}
+        <mesh position={[0, -0.15, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.825, 0.028, 24, 64]} />
+          <meshStandardMaterial color="#10b981" metalness={0.9} roughness={0.2} emissive="#059669" emissiveIntensity={0.25} />
         </mesh>
 
-        {/* Center Olympic Barbell Hole */}
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.16, 0.16, 0.18, 32]} />
-          <meshStandardMaterial color="#09090b" metalness={0.9} roughness={0.3} />
-        </mesh>
+        {/* Bell-to-Handle Transition Mounts */}
+        {[-0.32, 0.32].map((xOffset, idx) => (
+          <mesh key={idx} position={[xOffset, 0.6, 0]}>
+            <cylinderGeometry args={[0.09, 0.11, 0.22, 32]} />
+            <meshStandardMaterial color="#27272a" metalness={0.9} roughness={0.25} />
+          </mesh>
+        ))}
 
-        {/* Subtle Emerald Calibration Stripe */}
-        <mesh position={[0, 0, 0.072]}>
-          <torusGeometry args={[0.74, 0.015, 16, 64]} />
-          <meshStandardMaterial color="#10b981" metalness={0.85} roughness={0.2} />
+        {/* Competition Stainless Steel Horn Handle */}
+        <mesh position={[0, 0.88, 0]}>
+          <torusGeometry args={[0.42, 0.085, 32, 64]} />
+          <meshStandardMaterial color="#f4f4f5" metalness={0.97} roughness={0.14} />
         </mesh>
       </group>
     </Float>
@@ -209,14 +160,79 @@ export function BarbellPlate({
 }
 
 /**
- * All Floating Equipment Group
+ * Procedural Calibrated Olympic Bumper Plate
+ * 450mm Olympic diameter with high-density vulcanized rubber outer rim and mirror chrome center hub
  */
-export function FloatingEquipment() {
+export function ShowcaseBumperPlate() {
+  const meshRef = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.45;
+      meshRef.current.rotation.x = Math.sin(Date.now() * 0.001) * 0.1 + 0.2;
+    }
+  });
+
   return (
-    <group>
-      <Dumbbell />
-      <Kettlebell />
-      <BarbellPlate />
+    <Float speed={1.8} rotationIntensity={0.35} floatIntensity={0.5} floatingRange={[-0.1, 0.1]}>
+      <group ref={meshRef} rotation={[0.4, 0.3, -0.2]} scale={1.25}>
+        {/* Outer Heavy Vulcanized Urethane Rim */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[1.15, 1.15, 0.18, 64]} />
+          <meshStandardMaterial color="#141417" metalness={0.45} roughness={0.48} />
+        </mesh>
+
+        {/* Outer Rim Lip Profile */}
+        <mesh position={[0, 0, 0.09]}>
+          <torusGeometry args={[1.13, 0.035, 24, 64]} />
+          <meshStandardMaterial color="#202024" metalness={0.6} roughness={0.35} />
+        </mesh>
+        <mesh position={[0, 0, -0.09]}>
+          <torusGeometry args={[1.13, 0.035, 24, 64]} />
+          <meshStandardMaterial color="#202024" metalness={0.6} roughness={0.35} />
+        </mesh>
+
+        {/* Inner Recessed Face */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.88, 0.88, 0.14, 64]} />
+          <meshStandardMaterial color="#18181c" metalness={0.55} roughness={0.4} />
+        </mesh>
+
+        {/* Emerald Calibration Ring (Olympic Standard Identification) */}
+        <mesh position={[0, 0, 0.075]}>
+          <torusGeometry args={[0.88, 0.02, 16, 64]} />
+          <meshStandardMaterial color="#10b981" metalness={0.9} roughness={0.2} emissive="#059669" emissiveIntensity={0.3} />
+        </mesh>
+        <mesh position={[0, 0, -0.075]}>
+          <torusGeometry args={[0.88, 0.02, 16, 64]} />
+          <meshStandardMaterial color="#10b981" metalness={0.9} roughness={0.2} emissive="#059669" emissiveIntensity={0.3} />
+        </mesh>
+
+        {/* Mirror Chrome Center Hub */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.38, 0.38, 0.22, 48]} />
+          <meshStandardMaterial color="#ffffff" metalness={0.99} roughness={0.08} />
+        </mesh>
+
+        {/* 50.4mm Olympic Sleeve Bore */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.18, 0.18, 0.24, 32]} />
+          <meshStandardMaterial color="#09090b" metalness={0.95} roughness={0.2} />
+        </mesh>
+      </group>
+    </Float>
+  );
+}
+
+/**
+ * Main Interactive Viewer Component
+ */
+export function FloatingEquipment({ activeType = 'dumbbell' }: EquipmentViewerProps) {
+  return (
+    <group position={[0, 0, 0]}>
+      {activeType === 'dumbbell' && <ShowcaseDumbbell />}
+      {activeType === 'kettlebell' && <ShowcaseKettlebell />}
+      {activeType === 'plate' && <ShowcaseBumperPlate />}
     </group>
   );
 }

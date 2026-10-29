@@ -2,13 +2,13 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import type { UserRole, SubscriptionStatus } from "@/types";
 
 export interface IUserSubscription {
-  planId: mongoose.Types.ObjectId;
+  planId: any;
   status: SubscriptionStatus;
   startDate: Date;
   endDate: Date;
   balanceDue: number;
   planNameSnapshot?: string;
-  lastTransactionId?: mongoose.Types.ObjectId;
+  lastTransactionId?: any;
 }
 
 export interface IUserDocument extends Document {
@@ -26,7 +26,7 @@ export interface IUserDocument extends Document {
 
 const SubscriptionEmbeddedSchema = new Schema(
   {
-    planId: { type: Schema.Types.ObjectId, ref: "SubscriptionPlan", required: true },
+    planId: { type: Schema.Types.Mixed, required: true },
     status: {
       type: String,
       enum: ["ACTIVE", "EXPIRED", "PENDING_COMPLETION", "NONE"],
@@ -36,7 +36,7 @@ const SubscriptionEmbeddedSchema = new Schema(
     endDate: { type: Date, required: true },
     balanceDue: { type: Number, default: 0, min: 0 },
     planNameSnapshot: { type: String, default: "" },
-    lastTransactionId: { type: Schema.Types.ObjectId, ref: "Transaction" },
+    lastTransactionId: { type: Schema.Types.Mixed },
   },
   { _id: false }
 );

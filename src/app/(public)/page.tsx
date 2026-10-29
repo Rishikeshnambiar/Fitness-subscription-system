@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import HeroSceneWrapper from "@/components/three/HeroSceneWrapper";
 import HeroSection from "@/components/landing/HeroSection";
 import PlanPreview from "@/components/landing/PlanPreview";
-import StatsCounter from "@/components/landing/StatsCounter";
 import TestimonialSlider from "@/components/landing/TestimonialSlider";
 import Footer from "@/components/layout/Footer";
 
@@ -14,20 +12,20 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <>
-      {/* 3D Immersive Hero Section */}
-      <HeroSection sceneSlot={<HeroSceneWrapper />} />
+    <div className="bg-zinc-950 text-zinc-100 min-h-screen">
+      {/* Interactive 3D Showcase Hero Section */}
+      <HeroSection />
 
-      {/* Plans Preview Section */}
+      {/* Plans, Milestone Installment & ROI Unit Economics Section */}
       <section id="plans">
         <PlanPreview />
       </section>
 
-      {/* Testimonials Section */}
+      {/* Performance Records & Testimonials */}
       <TestimonialSlider />
 
-      {/* Footer */}
+      {/* Executive Legal & Audit Footer */}
       <Footer />
-    </>
+    </div>
   );
 }

@@ -2,8 +2,8 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import type { PaymentStatus } from "@/types";
 
 export interface ITransactionDocument extends Document {
-  userId: mongoose.Types.ObjectId;
-  planId: mongoose.Types.ObjectId;
+  userId: any;
+  planId: any;
   invoiceNumber: string;
   totalAmount: number;
   amountPaid: number;
@@ -43,8 +43,8 @@ const PlanSnapshotSchema = new Schema(
 
 const TransactionSchema = new Schema<ITransactionDocument>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-    planId: { type: Schema.Types.ObjectId, ref: "SubscriptionPlan", required: true },
+    userId: { type: Schema.Types.Mixed, required: true, index: true },
+    planId: { type: Schema.Types.Mixed, required: true },
     invoiceNumber: { type: String, required: true, unique: true, index: true },
     totalAmount: { type: Number, required: true, min: 0 },
     amountPaid: { type: Number, required: true, min: 0 },

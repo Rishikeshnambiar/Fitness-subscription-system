@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Dumbbell, LogIn, LayoutDashboard } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Menu, X, Dumbbell, LogIn, LayoutDashboard, Calculator, ShieldCheck } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -13,9 +13,10 @@ interface NavbarProps {
 }
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/#plans", label: "Plans" },
-  { href: "/about", label: "About" },
+  { href: "/", label: "Overview" },
+  { href: "/#plans", label: "Memberships" },
+  { href: "/#roi-calculator", label: "Unit Economics" },
+  { href: "/about", label: "Mission & Facilities" },
 ];
 
 export default function Navbar({
@@ -39,13 +40,13 @@ export default function Navbar({
   return (
     <>
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           isScrolled
-            ? "bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[rgba(255,255,255,0.06)] shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+            ? "bg-zinc-950/85 backdrop-blur-xl border-b border-zinc-900 shadow-lg"
             : "bg-transparent"
         )}
       >
@@ -56,19 +57,24 @@ export default function Navbar({
               <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/50 transition-colors shadow-sm">
                 <Dumbbell className="w-4 h-4" />
               </div>
-              <span className="text-lg md:text-xl font-heading font-bold tracking-tight text-zinc-100 flex items-center gap-1">
-                <span>HyperGym</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block ml-0.5" />
-              </span>
+              <div className="flex flex-col">
+                <span className="text-base md:text-lg font-heading font-black tracking-tight text-zinc-100 flex items-center gap-1 leading-none">
+                  <span>HYPERGYM</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-0.5 animate-pulse" />
+                </span>
+                <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mt-0.5">
+                  ATHLETIC PROTOCOL
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden md:flex items-center gap-1 p-1 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60 rounded-lg transition-colors"
+                  className="px-3.5 py-1.5 text-xs font-mono font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/70 rounded-lg transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -82,26 +88,26 @@ export default function Navbar({
                   href={dashboardHref}
                   className={cn(
                     buttonVariants({ size: "default" }),
-                    "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs rounded-lg transition-all shadow-sm"
+                    "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono font-bold text-xs rounded-xl transition-all shadow-sm"
                   )}
                 >
                   <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
-                  Dashboard
+                  DASHBOARD
                 </Link>
               ) : (
                 <>
                   <Link
                     href="/sign-in"
-                    className="text-xs font-medium text-zinc-400 hover:text-zinc-100 px-3 py-1.5 rounded-lg hover:bg-zinc-900/60 transition-colors flex items-center gap-1.5"
+                    className="text-xs font-mono font-medium text-zinc-400 hover:text-zinc-100 px-3.5 py-2 rounded-xl hover:bg-zinc-900 border border-transparent hover:border-zinc-800 transition-colors flex items-center gap-1.5"
                   >
                     <LogIn className="w-3.5 h-3.5" />
-                    Sign In
+                    SIGN IN
                   </Link>
                   <Link
                     href="/sign-up"
-                    className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs px-4 py-2 rounded-lg transition-all shadow-sm flex items-center gap-1.5"
+                    className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5"
                   >
-                    Get Started
+                    GET STARTED
                   </Link>
                 </>
               )}
@@ -109,16 +115,15 @@ export default function Navbar({
 
             {/* Mobile Menu Button */}
             <motion.button
-              whileTap={{ scale: 0.9 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-[#8888a0] hover:text-[#f0f0f5] transition-colors"
+              className="md:hidden p-2 text-zinc-400 hover:text-zinc-100 transition-colors rounded-lg bg-zinc-900 border border-zinc-800"
               aria-label="Toggle menu"
-              id="mobile-menu-toggle"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               )}
             </motion.button>
           </div>
@@ -132,7 +137,7 @@ export default function Navbar({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.25 }}
             className="fixed inset-0 z-40 md:hidden"
           >
             {/* Backdrop */}
@@ -140,7 +145,7 @@ export default function Navbar({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-[#0a0a0f]/95 backdrop-blur-xl"
+              className="absolute inset-0 bg-zinc-950/95 backdrop-blur-xl"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -149,63 +154,51 @@ export default function Navbar({
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ delay: 0.1 }}
               className="relative pt-24 px-6 flex flex-col gap-2"
             >
-              {navLinks.map((link, index) => (
-                <motion.div
+              {navLinks.map((link) => (
+                <Link
                   key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + index * 0.05 }}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-3 px-4 text-base font-mono text-zinc-300 hover:text-zinc-100 hover:bg-zinc-900 rounded-xl transition-colors"
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-3 px-4 text-lg font-medium text-[#8888a0] hover:text-[#f0f0f5] hover:bg-[rgba(255,255,255,0.03)] rounded-xl transition-all duration-300"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
+                  {link.label}
+                </Link>
               ))}
 
-              <div className="section-divider my-4" />
+              <div className="h-px bg-zinc-900 my-4" />
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-col gap-3 mt-2"
-              >
+              <div className="flex flex-col gap-3">
                 {isAuthenticated ? (
                   <Link
                     href={dashboardHref}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-semibold text-xs flex items-center justify-center gap-2"
+                    className="w-full py-3 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-mono font-bold text-xs flex items-center justify-center gap-2"
                   >
                     <LayoutDashboard className="w-4 h-4" />
-                    Dashboard
+                    DASHBOARD
                   </Link>
                 ) : (
                   <>
                     <Link
                       href="/sign-in"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="w-full py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-medium text-xs flex items-center justify-center gap-2"
+                      className="w-full py-3 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-mono text-xs flex items-center justify-center gap-2"
                     >
                       <LogIn className="w-4 h-4" />
-                      Sign In
+                      SIGN IN
                     </Link>
                     <Link
                       href="/sign-up"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-semibold text-xs flex items-center justify-center gap-2 shadow-sm"
+                      className="w-full py-3 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
                     >
-                      Get Started
+                      GET STARTED
                     </Link>
                   </>
                 )}
-              </motion.div>
+              </div>
             </motion.nav>
           </motion.div>
         )}

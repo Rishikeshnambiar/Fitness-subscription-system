@@ -3,26 +3,27 @@
 import { Suspense, useRef } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import { motion } from 'motion/react';
-import { FloatingEquipment } from './FloatingEquipment';
+import { FloatingEquipment, type EquipmentType } from './FloatingEquipment';
 import { ParticleField } from './ParticleField';
 
 export interface HeroSceneProps {
   className?: string;
+  activeEquipment?: EquipmentType;
   children?: React.ReactNode;
 }
 
 /**
- * Animated scene lighting controller reacting subtly to cursor
+ * Animated scene lighting controller reacting to cursor
  */
 function SceneRig() {
   const lightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
     if (lightRef.current) {
-      const targetX = state.pointer.x * 2.5;
-      const targetY = state.pointer.y * 2.0;
+      const targetX = state.pointer.x * 3.0;
+      const targetY = state.pointer.y * 2.5;
       lightRef.current.position.x = THREE.MathUtils.lerp(
         lightRef.current.position.x,
         targetX,
@@ -30,7 +31,7 @@ function SceneRig() {
       );
       lightRef.current.position.y = THREE.MathUtils.lerp(
         lightRef.current.position.y,
-        targetY + 1,
+        targetY + 1.2,
         0.05
       );
     }
@@ -39,9 +40,9 @@ function SceneRig() {
   return (
     <pointLight
       ref={lightRef}
-      position={[0, 1.5, 4.5]}
-      intensity={3.0}
-      distance={10}
+      position={[0, 1.8, 4.5]}
+      intensity={2.8}
+      distance={12}
       color="#ffffff"
       decay={2}
     />
@@ -49,48 +50,64 @@ function SceneRig() {
 }
 
 /**
- * SceneContent - Clean studio lighting with titanium metallic reflections.
+ * SceneContent - Studio lighting with metallic reflections, contact shadows & OrbitControls
  */
-function SceneContent() {
+function SceneContent({ activeEquipment = 'dumbbell' }: { activeEquipment?: EquipmentType }) {
   return (
     <>
-      {/* Studio Fog */}
-      <fog attach="fog" args={['#09090b', 7, 24]} />
+      <ambientLight intensity={0.6} />
 
-      {/* Ambient Lighting */}
-      <ambientLight intensity={0.5} />
-
-      {/* Primary Key Light (Soft White Studio Light) */}
+      {/* Primary Key Light */}
       <directionalLight
-        position={[6, 8, 6]}
-        intensity={2.2}
+        position={[5, 8, 5]}
+        intensity={2.4}
         color="#ffffff"
       />
 
-      {/* Cool Fill Light */}
+      {/* Rim light with Athletic Emerald tint */}
       <directionalLight
-        position={[-6, -3, -2]}
-        intensity={0.8}
-        color="#64748b"
+        position={[-6, 4, -4]}
+        intensity={1.8}
+        color="#10b981"
       />
 
-      {/* Subtle Athletic Emerald Rim Light */}
+      {/* Bottom fill bounce */}
       <pointLight
-        position={[0, 3.5, -4.0]}
-        intensity={2.0}
-        distance={12}
-        color="#10b981"
-        decay={2}
+        position={[0, -2.5, 2]}
+        intensity={0.8}
+        distance={8}
+        color="#64748b"
       />
 
       {/* Interactive cursor light */}
       <SceneRig />
 
-      {/* Micro-particle atmosphere */}
-      <ParticleField totalCount={80} />
+      {/* Subtle particle micro-atmosphere */}
+      <ParticleField totalCount={60} />
 
-      {/* 3D Equipment */}
-      <FloatingEquipment />
+      {/* Interactive 3D Equipment Piece */}
+      <FloatingEquipment activeType={activeEquipment} />
+
+      {/* Contact Shadow on Virtual Pedestal */}
+      <ContactShadows
+        position={[0, -1.8, 0]}
+        opacity={0.65}
+        scale={6}
+        blur={2}
+        far={4}
+        color="#000000"
+      />
+
+      {/* Smooth OrbitControls: Enables user to drag, spin & inspect in 360° */}
+      <OrbitControls
+        enableZoom={false}
+        enablePan={false}
+        autoRotate
+        autoRotateSpeed={1.0}
+        dampingFactor={0.06}
+        maxPolarAngle={Math.PI / 1.7}
+        minPolarAngle={Math.PI / 2.7}
+      />
 
       {/* High-fidelity studio reflections */}
       <Suspense fallback={null}>
@@ -100,17 +117,16 @@ function SceneContent() {
   );
 }
 
-export function HeroScene({ className = '', children }: HeroSceneProps) {
+export function HeroScene({ className = '', activeEquipment = 'dumbbell', children }: HeroSceneProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className={`absolute inset-0 w-full h-full overflow-hidden bg-[#09090b] ${className}`}
+      transition={{ duration: 0.6 }}
+      className={`relative w-full h-full overflow-hidden ${className}`}
     >
-      {/* R3F Canvas - fills container absolutely */}
       <Canvas
-        camera={{ position: [0, 0, 8], fov: 45, near: 0.1, far: 100 }}
+        camera={{ position: [0, 0, 5.2], fov: 42, near: 0.1, far: 100 }}
         performance={{ min: 0.5 }}
         frameloop="always"
         dpr={[1, 2]}
@@ -119,18 +135,15 @@ export function HeroScene({ className = '', children }: HeroSceneProps) {
           alpha: true,
           powerPreference: 'high-performance',
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.05,
+          toneMappingExposure: 1.1,
         }}
-        className="absolute inset-0 w-full h-full"
+        className="w-full h-full cursor-grab active:cursor-grabbing"
       >
-        <SceneContent />
+        <SceneContent activeEquipment={activeEquipment} />
       </Canvas>
 
-      {/* Smooth vignette overlay */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#09090b] via-transparent to-transparent opacity-80" />
-
       {children && (
-        <div className="relative z-10 w-full h-full pointer-events-auto">
+        <div className="absolute inset-0 pointer-events-none z-10">
           {children}
         </div>
       )}

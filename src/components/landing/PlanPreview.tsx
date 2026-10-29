@@ -13,6 +13,9 @@ import {
   Calculator,
   TrendingUp,
   Percent,
+  Layers,
+  Clock,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +26,7 @@ interface PlanFeature {
 
 interface PlanItem {
   id: "basic" | "pro" | "elite";
+  code: string;
   name: string;
   tagline: string;
   popular?: boolean;
@@ -33,11 +37,13 @@ interface PlanItem {
   features: PlanFeature[];
   ctaText: string;
   icon: typeof Shield;
+  supportsMilestone: boolean;
 }
 
 const plans: PlanItem[] = [
   {
     id: "basic",
+    code: "TIER 01",
     name: "Foundation",
     tagline: "Essential access for consistent personal conditioning",
     monthlyPrice: 1499,
@@ -45,6 +51,7 @@ const plans: PlanItem[] = [
     duration: "month",
     icon: Shield,
     ctaText: "Select Foundation",
+    supportsMilestone: false,
     features: [
       { text: "Full gym floor & Olympic lifting zone access", included: true },
       { text: "Smart locker & rainfall shower suites", included: true },
@@ -56,6 +63,7 @@ const plans: PlanItem[] = [
   },
   {
     id: "pro",
+    code: "TIER 02",
     name: "Athlete Pro",
     tagline: "Unrestricted multi-facility access with recovery suites",
     popular: true,
@@ -65,6 +73,7 @@ const plans: PlanItem[] = [
     badge: "Most Selected",
     icon: Zap,
     ctaText: "Start Pro Trial",
+    supportsMilestone: true,
     features: [
       { text: "All Foundation tier privileges included", included: true },
       { text: "24/7 unlimited access across all 12 metro clubs", included: true },
@@ -76,6 +85,7 @@ const plans: PlanItem[] = [
   },
   {
     id: "elite",
+    code: "TIER 03",
     name: "Executive Elite",
     tagline: "The pinnacle athletic lifestyle and dedicated master coaching",
     monthlyPrice: 4999,
@@ -84,6 +94,7 @@ const plans: PlanItem[] = [
     badge: "VIP Club",
     icon: Crown,
     ctaText: "Join Executive Elite",
+    supportsMilestone: true,
     features: [
       { text: "All Athlete Pro benefits with universal tier access", included: true },
       { text: "Dedicated Tier-3 Master Trainer (weekly 1-on-1)", included: true },
@@ -100,19 +111,19 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
+      staggerChildren: 0.1,
       delayChildren: 0.1,
     },
   },
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 25 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.55,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -128,10 +139,17 @@ export default function PlanPreview({
   className,
 }: PlanPreviewProps) {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+  const [selectedBenchmarkTier, setSelectedBenchmarkTier] = useState<"basic" | "pro" | "elite">("pro");
   const [workoutsPerWeek, setWorkoutsPerWeek] = useState<number>(4);
 
   // Financial ROI Math
-  const activePlanPrice = billingCycle === "annual" ? 1999 : 2499; // Pro plan benchmark
+  const activePlanPrice =
+    selectedBenchmarkTier === "basic"
+      ? billingCycle === "annual" ? 1199 : 1499
+      : selectedBenchmarkTier === "pro"
+      ? billingCycle === "annual" ? 1999 : 2499
+      : billingCycle === "annual" ? 3999 : 4999;
+
   const monthlyWorkouts = workoutsPerWeek * 4.33;
   const costPerWorkout = Math.round(activePlanPrice / Math.max(1, monthlyWorkouts));
   const boutiqueDayPassCost = 650; // standard market drop-in rate in INR
@@ -142,34 +160,30 @@ export default function PlanPreview({
     <section
       id="plans"
       className={cn(
-        "relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-zinc-950 overflow-hidden border-t border-zinc-900/60",
+        "relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-zinc-950 overflow-hidden border-t border-zinc-900",
         className
       )}
     >
-      {/* Subtle radial ambient background */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none" />
-
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.55 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-medium mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Structured Membership Tiers</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-mono mb-4">
+            <Layers className="w-3.5 h-3.5 text-emerald-400" />
+            <span>MEMBERSHIP ARCHITECTURE // FLEXIBLE SETTLEMENT</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight text-zinc-100 mb-4">
-            Transparent Investment in Your Longevity.
+          <h2 className="text-3xl sm:text-5xl font-heading font-black tracking-tight text-zinc-100 mb-4">
+            Transparent Pricing. Guaranteed Snapshots.
           </h2>
 
           <p className="text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-            Choose the membership tier aligned with your athletic objectives.
-            All plans include GST, zero lock-in contracts, and partial installment options.
+            Choose your commitment tenure. All plans include 18% GST tax invoices, immutable historical rate protection, and 50% milestone installment options.
           </p>
 
           {/* Billing Toggle (Monthly / Annual) */}
@@ -178,27 +192,27 @@ export default function PlanPreview({
               type="button"
               onClick={() => setBillingCycle("monthly")}
               className={cn(
-                "px-5 py-2 rounded-lg text-xs font-medium transition-all duration-200",
+                "px-5 py-2 rounded-lg text-xs font-mono transition-all duration-200",
                 billingCycle === "monthly"
                   ? "bg-zinc-800 text-zinc-100 shadow-sm font-semibold"
                   : "text-zinc-400 hover:text-zinc-200"
               )}
             >
-              Monthly Billing
+              MONTHLY RECURRING
             </button>
             <button
               type="button"
               onClick={() => setBillingCycle("annual")}
               className={cn(
-                "px-5 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1.5",
+                "px-5 py-2 rounded-lg text-xs font-mono transition-all duration-200 flex items-center gap-2",
                 billingCycle === "annual"
                   ? "bg-zinc-800 text-zinc-100 shadow-sm font-semibold"
                   : "text-zinc-400 hover:text-zinc-200"
               )}
             >
-              <span>Annual Billing</span>
+              <span>ANNUAL COMMITMENT</span>
               <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Save 20%
+                SAVE 20%
               </span>
             </button>
           </div>
@@ -219,6 +233,8 @@ export default function PlanPreview({
                 ? plan.annualMonthlyPrice
                 : plan.monthlyPrice;
             const Icon = plan.icon;
+            const upfrontAmount = Math.round(currentPrice * 0.5);
+            const balanceAmount = currentPrice - upfrontAmount;
 
             return (
               <motion.div
@@ -228,14 +244,16 @@ export default function PlanPreview({
                   "relative flex flex-col justify-between rounded-2xl p-7 transition-all duration-300",
                   "bg-zinc-900/60 backdrop-blur-xl",
                   isPro
-                    ? "border-2 border-emerald-500/60 shadow-xl shadow-emerald-950/20 lg:-translate-y-2 bg-gradient-to-b from-zinc-900/90 to-zinc-900/50"
+                    ? "border-2 border-emerald-500/70 shadow-2xl shadow-emerald-950/20 lg:-translate-y-2 bg-gradient-to-b from-zinc-900/95 to-zinc-900/60"
+                    : plan.id === "elite"
+                    ? "border border-zinc-700 hover:border-zinc-500"
                     : "border border-zinc-800/80 hover:border-zinc-700"
                 )}
               >
                 {/* Most Popular Badge for Pro */}
                 {isPro && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 px-3.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider text-emerald-950 bg-emerald-400 shadow-md">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider text-emerald-950 bg-emerald-400 shadow-md">
                       <Zap className="w-3 h-3 fill-current" />
                       {plan.badge}
                     </span>
@@ -257,12 +275,12 @@ export default function PlanPreview({
                         <Icon className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-heading font-semibold text-zinc-100">
+                        <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
+                          {plan.code}
+                        </div>
+                        <h3 className="text-xl font-heading font-bold text-zinc-100">
                           {plan.name}
                         </h3>
-                        <span className="text-xs text-zinc-500 font-mono">
-                          {billingCycle === "annual" ? "Annual Commitment" : "Monthly Recurring"}
-                        </span>
                       </div>
                     </div>
                   </div>
@@ -272,25 +290,45 @@ export default function PlanPreview({
                   </p>
 
                   {/* Price Tag */}
-                  <div className="flex items-baseline gap-1.5 mb-2 pb-6 border-b border-zinc-800/80">
+                  <div className="flex items-baseline gap-1.5 mb-4 pb-4 border-b border-zinc-800/80">
                     <span className="text-sm font-medium text-zinc-400">₹</span>
-                    <span className="text-4xl font-heading font-extrabold text-zinc-100 tracking-tight font-mono">
+                    <span className="text-4xl font-heading font-black text-zinc-100 tracking-tight font-mono">
                       {currentPrice.toLocaleString("en-IN")}
                     </span>
-                    <span className="text-xs font-normal text-zinc-400">
+                    <span className="text-xs font-normal text-zinc-400 font-mono">
                       / month
                     </span>
                     {billingCycle === "annual" && (
-                      <span className="ml-auto text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                        Billed Annually
+                      <span className="ml-auto text-[10px] font-mono font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                        BILLED YEARLY
                       </span>
                     )}
                   </div>
 
+                  {/* Milestone Installment Tag for Partial Eligible Tiers */}
+                  {plan.supportsMilestone ? (
+                    <div className="mb-5 p-2.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 text-[11px] font-mono">
+                      <div className="flex items-center justify-between text-zinc-400 mb-1">
+                        <span className="flex items-center gap-1 text-emerald-400">
+                          <CreditCard className="w-3 h-3" /> Milestone Option
+                        </span>
+                        <span className="text-zinc-200 font-bold">50% Flex</span>
+                      </div>
+                      <div className="text-[10px] text-zinc-400">
+                        Pay <span className="text-zinc-200 font-bold">₹{upfrontAmount.toLocaleString("en-IN")}</span> today • Settle <span className="text-zinc-200 font-bold">₹{balanceAmount.toLocaleString("en-IN")}</span> on Day 30
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mb-5 p-2.5 rounded-xl bg-zinc-950/40 border border-zinc-800/50 text-[11px] font-mono text-zinc-400 flex items-center justify-between">
+                      <span>Settlement Term:</span>
+                      <span className="text-zinc-300">100% Upfront Only</span>
+                    </div>
+                  )}
+
                   {/* Features List */}
-                  <div className="py-4">
-                    <div className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-3.5">
-                      Included with {plan.name}:
+                  <div className="py-2">
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-3.5">
+                      Included Privileges:
                     </div>
                     <ul className="space-y-3">
                       {plan.features.map((feature) => (
@@ -333,9 +371,9 @@ export default function PlanPreview({
                       type="button"
                       onClick={() => onSelectPlan(plan.id)}
                       className={cn(
-                        "w-full py-3 px-5 rounded-xl font-medium text-xs transition-all duration-200 flex items-center justify-center gap-2",
+                        "w-full py-3 px-5 rounded-xl font-mono text-xs transition-all duration-200 flex items-center justify-center gap-2",
                         isPro
-                          ? "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold shadow-sm"
+                          ? "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold shadow-sm"
                           : "bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700/80"
                       )}
                     >
@@ -346,9 +384,9 @@ export default function PlanPreview({
                     <Link
                       href={`/checkout/${plan.id}`}
                       className={cn(
-                        "w-full py-3 px-5 rounded-xl font-medium text-xs transition-all duration-200 flex items-center justify-center gap-2",
+                        "w-full py-3 px-5 rounded-xl font-mono text-xs transition-all duration-200 flex items-center justify-center gap-2",
                         isPro
-                          ? "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold shadow-sm"
+                          ? "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold shadow-sm"
                           : "bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700/80"
                       )}
                     >
@@ -356,8 +394,8 @@ export default function PlanPreview({
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   )}
-                  <p className="text-[11px] text-center text-zinc-400 mt-2.5">
-                    Supports 100% full or 50% partial milestone checkout
+                  <p className="text-[10px] font-mono text-center text-zinc-400 mt-2.5">
+                    100% Tax Deductible (SAC 999723 • GSTIN 27AAWCA1536C1ZP)
                   </p>
                 </div>
               </motion.div>
@@ -367,11 +405,12 @@ export default function PlanPreview({
 
         {/* STANDOUT TPM FEATURE: Interactive Membership ROI & Cost Per Workout Calculator */}
         <motion.div
+          id="roi-calculator"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          className="rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-6 sm:p-8 max-w-4xl mx-auto shadow-lg"
+          className="rounded-3xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-xl p-6 sm:p-8 max-w-4xl mx-auto shadow-xl"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-zinc-800/80">
             <div className="flex items-center gap-3">
@@ -379,20 +418,35 @@ export default function PlanPreview({
                 <Calculator className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
-                  Membership ROI & Unit Economics
+                <h3 className="text-base font-heading font-bold text-zinc-100 flex items-center gap-2">
+                  Unit Economics & Membership ROI
                   <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800 text-emerald-400 border border-zinc-700">
-                    Live Model
+                    DYNAMIC MODEL
                   </span>
                 </h3>
                 <p className="text-xs text-zinc-400">
-                  Calculate your true cost-per-session versus ad-hoc boutique drop-in rates (₹650/session).
+                  Calculate your true per-session cost against standard boutique drop-in rates (₹650/session).
                 </p>
               </div>
             </div>
-            <div className="text-right">
-              <span className="text-xs text-zinc-400 block">Benchmark Tier</span>
-              <span className="text-xs font-semibold text-zinc-200">Athlete Pro (₹{activePlanPrice}/mo)</span>
+
+            {/* Benchmark Tier Selector */}
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-mono">
+              {(["basic", "pro", "elite"] as const).map((tier) => (
+                <button
+                  key={tier}
+                  type="button"
+                  onClick={() => setSelectedBenchmarkTier(tier)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-lg uppercase text-[10px] transition-colors",
+                    selectedBenchmarkTier === tier
+                      ? "bg-zinc-800 text-emerald-400 font-bold"
+                      : "text-zinc-400 hover:text-zinc-200"
+                  )}
+                >
+                  {tier}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -401,9 +455,9 @@ export default function PlanPreview({
               <div className="flex justify-between items-center mb-3">
                 <label
                   htmlFor="roi-workouts-slider"
-                  className="text-xs font-medium text-zinc-300"
+                  className="text-xs font-medium text-zinc-300 font-mono"
                 >
-                  Your Planned Frequency:
+                  YOUR PLANNED FREQUENCY:
                 </label>
                 <span className="text-sm font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20">
                   {workoutsPerWeek} Days / Week
@@ -426,14 +480,14 @@ export default function PlanPreview({
                 <span>6 days (Elite)</span>
               </div>
 
-              <div className="mt-5 p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800 text-xs text-zinc-400 space-y-1.5">
+              <div className="mt-5 p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800 text-xs text-zinc-400 space-y-1.5 font-mono">
                 <div className="flex justify-between">
                   <span>Sessions per month:</span>
-                  <span className="text-zinc-200 font-mono">{Math.round(monthlyWorkouts)} sessions</span>
+                  <span className="text-zinc-200 font-semibold">{Math.round(monthlyWorkouts)} sessions</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Standard Drop-In Market Equivalent:</span>
-                  <span className="text-zinc-200 font-mono">₹{(Math.round(monthlyWorkouts) * boutiqueDayPassCost).toLocaleString("en-IN")}</span>
+                  <span>Market Ad-Hoc Equivalent:</span>
+                  <span className="text-zinc-200 font-semibold">₹{(Math.round(monthlyWorkouts) * boutiqueDayPassCost).toLocaleString("en-IN")}</span>
                 </div>
               </div>
             </div>
@@ -441,25 +495,25 @@ export default function PlanPreview({
             {/* Live KPI Cards */}
             <div className="grid grid-cols-2 gap-3.5">
               <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/90 text-center">
-                <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block mb-1">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-semibold block mb-1">
                   Cost Per Session
                 </span>
                 <span className="text-2xl font-mono font-bold text-zinc-100">
                   ₹{costPerWorkout}
                 </span>
-                <span className="text-[10px] text-emerald-400 block mt-1">
-                  vs ₹650 drop-in
+                <span className="text-[10px] text-emerald-400 block mt-1 font-mono">
+                  vs ₹650 boutique pass
                 </span>
               </div>
 
               <div className="p-4 rounded-xl bg-zinc-950/80 border border-emerald-500/30 text-center relative overflow-hidden">
-                <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block mb-1">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-semibold block mb-1">
                   Estimated Annual Savings
                 </span>
                 <span className="text-2xl font-mono font-bold text-emerald-400">
                   ₹{annualSavings.toLocaleString("en-IN")}
                 </span>
-                <span className="text-[10px] text-zinc-400 block mt-1 flex items-center justify-center gap-1">
+                <span className="text-[10px] text-zinc-400 block mt-1 flex items-center justify-center gap-1 font-mono">
                   <TrendingUp className="w-2.5 h-2.5 text-emerald-400" />
                   Positive ROI
                 </span>
