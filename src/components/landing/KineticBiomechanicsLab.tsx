@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
 import {
   Activity,
   Zap,
@@ -13,520 +12,429 @@ import {
   ArrowRight,
   ShieldCheck,
   TrendingUp,
-  Cpu,
   Layers,
+  Heart,
+  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type LabMode = "movement" | "transformation";
-type MovementType = "squat" | "deadlift" | "bench" | "clean";
+type GuideMode = "workouts" | "transformation";
+type ExerciseType = "squat" | "deadlift" | "bench" | "press";
 
-interface MovementDef {
-  id: MovementType;
+interface ExerciseDef {
+  id: ExerciseType;
   name: string;
-  category: string;
+  focusArea: string;
   defaultLoadKg: number;
   minLoadKg: number;
   maxLoadKg: number;
-  primaryMovers: { name: string; activation: number; color: string }[];
-  targetZone: string;
-  cnsFatigueRating: "Moderate" | "High" | "Maximum Central";
-  description: string;
-  matchingPlanId: string;
-  matchingPlanName: string;
+  musclesWorked: { name: string; percentage: number }[];
+  benefit: string;
+  estCaloriesBurned: string;
+  recommendedPlanId: string;
+  recommendedPlanName: string;
 }
 
-const MOVEMENTS: MovementDef[] = [
+const EXERCISES: ExerciseDef[] = [
   {
     id: "squat",
-    name: "Olympic High-Bar Squat",
-    category: "Lower Body Axial Drive",
-    defaultLoadKg: 140,
-    minLoadKg: 40,
-    maxLoadKg: 240,
-    primaryMovers: [
-      { name: "Quadriceps (Vastus Lateralis & Medialis)", activation: 94, color: "#10b981" },
-      { name: "Gluteus Maximus & Medius", activation: 86, color: "#34d399" },
-      { name: "Erector Spinae & Spinal Stabilizers", activation: 72, color: "#38bdf8" },
-      { name: "Core & Intra-Abdominal Wall", activation: 68, color: "#818cf8" },
+    name: "Barbell Back Squat",
+    focusArea: "Legs & Glutes",
+    defaultLoadKg: 80,
+    minLoadKg: 30,
+    maxLoadKg: 160,
+    musclesWorked: [
+      { name: "Quadriceps (Front Thighs)", percentage: 90 },
+      { name: "Glutes (Hip Shaping)", percentage: 85 },
+      { name: "Hamstrings (Back of Thighs)", percentage: 70 },
+      { name: "Core & Abdominals", percentage: 65 },
     ],
-    targetZone: "Quads & Glute Complex",
-    cnsFatigueRating: "High",
-    description: "Deep knee flexion and hip extension under axial load drives massive bilateral hypertrophy and lower kinetic chain force.",
-    matchingPlanId: "plan_pro_3m",
-    matchingPlanName: "Pro Performance (3-Mo)",
+    benefit: "Builds lower body firmness, tones legs and glutes, and boosts metabolism.",
+    estCaloriesBurned: "420 - 550 kcal / session",
+    recommendedPlanId: "plan_pro_3m",
+    recommendedPlanName: "Pro Performance (3-Month)",
   },
   {
     id: "deadlift",
-    name: "Conventional Pull from Floor",
-    category: "Posterior Chain Force",
-    defaultLoadKg: 180,
-    minLoadKg: 60,
-    maxLoadKg: 280,
-    primaryMovers: [
-      { name: "Hamstrings (Biceps Femoris)", activation: 92, color: "#10b981" },
-      { name: "Gluteus Complex & Hip Hinge", activation: 96, color: "#34d399" },
-      { name: "Trapezius & Rhomboids", activation: 88, color: "#38bdf8" },
-      { name: "Latissimus Dorsi & Spinal Erectors", activation: 82, color: "#818cf8" },
+    name: "Conventional Deadlift",
+    focusArea: "Back, Posterior & Full Body",
+    defaultLoadKg: 100,
+    minLoadKg: 40,
+    maxLoadKg: 200,
+    musclesWorked: [
+      { name: "Glutes & Hamstrings", percentage: 95 },
+      { name: "Upper & Lower Back", percentage: 90 },
+      { name: "Core & Spinal Support", percentage: 80 },
+      { name: "Grip & Forearms", percentage: 75 },
     ],
-    targetZone: "Full Posterior Kinetic Chain",
-    cnsFatigueRating: "Maximum Central",
-    description: "Maximum ground-reaction force production through violent hip extension and total posterior rigidity.",
-    matchingPlanId: "plan_elite_6m",
-    matchingPlanName: "Elite Strength (6-Mo)",
+    benefit: "Improves posture, strengthens back muscles, and burns maximum total calories.",
+    estCaloriesBurned: "480 - 620 kcal / session",
+    recommendedPlanId: "plan_elite_6m",
+    recommendedPlanName: "Elite Strength (6-Month)",
   },
   {
     id: "bench",
-    name: "Incline Barbell Press",
-    category: "Upper Anterior Kinetic Drive",
-    defaultLoadKg: 100,
-    minLoadKg: 40,
-    maxLoadKg: 180,
-    primaryMovers: [
-      { name: "Clavicular Pectoralis (Upper Chest)", activation: 91, color: "#10b981" },
-      { name: "Anterior Deltoids", activation: 84, color: "#34d399" },
-      { name: "Triceps Brachii (Lateral & Medial Head)", activation: 78, color: "#38bdf8" },
-      { name: "Serratus Anterior", activation: 64, color: "#818cf8" },
+    name: "Incline Chest Press",
+    focusArea: "Chest, Shoulders & Arms",
+    defaultLoadKg: 60,
+    minLoadKg: 20,
+    maxLoadKg: 130,
+    musclesWorked: [
+      { name: "Upper Chest (Pectorals)", percentage: 90 },
+      { name: "Shoulders (Deltoids)", percentage: 80 },
+      { name: "Back of Arms (Triceps)", percentage: 75 },
+      { name: "Chest Definition", percentage: 70 },
     ],
-    targetZone: "Pectoral & Deltoid Girdle",
-    cnsFatigueRating: "Moderate",
-    description: "Angles the pressing plane to target upper clavicular fibers while demanding shoulder stabilization.",
-    matchingPlanId: "plan_pro_3m",
-    matchingPlanName: "Pro Performance (3-Mo)",
+    benefit: "Sculpts defined upper chest and shoulders while tightening arms.",
+    estCaloriesBurned: "320 - 420 kcal / session",
+    recommendedPlanId: "plan_starter_1m",
+    recommendedPlanName: "Starter Velocity (1-Month)",
   },
   {
-    id: "clean",
-    name: "Power Clean & Push Press",
-    category: "Triple Extension Explosiveness",
-    defaultLoadKg: 90,
-    minLoadKg: 40,
-    maxLoadKg: 160,
-    primaryMovers: [
-      { name: "Triple Extension (Ankles, Knees, Hips)", activation: 98, color: "#10b981" },
-      { name: "Lateral & Anterior Deltoids", activation: 92, color: "#34d399" },
-      { name: "Upper Trapezius & Upper Back", activation: 94, color: "#38bdf8" },
-      { name: "Core Kinetic Transfer Unit", activation: 89, color: "#818cf8" },
+    id: "press",
+    name: "Athletic Push Press",
+    focusArea: "Shoulders, Power & Core",
+    defaultLoadKg: 50,
+    minLoadKg: 20,
+    maxLoadKg: 110,
+    musclesWorked: [
+      { name: "Shoulders & Upper Body", percentage: 92 },
+      { name: "Core Bracing & Abs", percentage: 85 },
+      { name: "Leg Drive Propulsion", percentage: 80 },
+      { name: "Overall Stamina", percentage: 78 },
     ],
-    targetZone: "Total Body Neuromuscular Speed",
-    cnsFatigueRating: "Maximum Central",
-    description: "Translates raw strength into rate of force development (RFD) across the entire skeletal kinetic chain.",
-    matchingPlanId: "plan_champion_12m",
-    matchingPlanName: "Champion Annual (12-Mo)",
+    benefit: "Develops shoulder tone, full-body coordination, and athletic agility.",
+    estCaloriesBurned: "380 - 500 kcal / session",
+    recommendedPlanId: "plan_champion_12m",
+    recommendedPlanName: "Champion Annual (12-Month)",
   },
 ];
 
 export default function KineticBiomechanicsLab() {
-  const [labMode, setLabMode] = useState<LabMode>("movement");
-  const [selectedMovement, setSelectedMovement] = useState<MovementType>("squat");
-  const [loadKg, setLoadKg] = useState<number>(140);
-  const [transformWeek, setTransformWeek] = useState<number>(8);
+  const [mode, setMode] = useState<GuideMode>("workouts");
+  const [selectedExercise, setSelectedExercise] = useState<ExerciseType>("squat");
+  const [weightKg, setWeightKg] = useState<number>(80);
+  const [week, setWeek] = useState<number>(8);
 
-  const activeMovement = useMemo(() => {
-    return MOVEMENTS.find((m) => m.id === selectedMovement) || MOVEMENTS[0];
-  }, [selectedMovement]);
+  const activeExercise = useMemo(() => {
+    return EXERCISES.find((e) => e.id === selectedExercise) || EXERCISES[0];
+  }, [selectedExercise]);
 
-  // Handle movement selection with appropriate load
-  const handleSelectMovement = (id: MovementType) => {
-    setSelectedMovement(id);
-    const mov = MOVEMENTS.find((m) => m.id === id);
-    if (mov) setLoadKg(mov.defaultLoadKg);
+  const handleSelectExercise = (id: ExerciseType) => {
+    setSelectedExercise(id);
+    const ex = EXERCISES.find((e) => e.id === id);
+    if (ex) setWeightKg(ex.defaultLoadKg);
   };
 
-  // Kinetic Physics & Neuromuscular Calculations
-  const biomechanics = useMemo(() => {
-    const mass = loadKg;
-    const gravity = 9.81;
-    const acceleration = 1.6; // estimated bar acceleration in concentric phase
-    const peakForceNewtons = Math.round(mass * (gravity + acceleration));
-    const workJoules = Math.round(peakForceNewtons * 0.75); // ~0.75m bar travel distance
-
-    // Neuromuscular motor unit recruitment percentage
-    const maxCapacity = activeMovement.maxLoadKg;
-    const recruitmentRatio = Math.min(0.98, Math.max(0.45, (mass / maxCapacity) * 0.95));
-    const motorRecruitmentPct = Math.round(recruitmentRatio * 100);
-
-    // CNS Recovery Window (hours)
-    let cnsRecoveryHours = 24;
-    if (mass > activeMovement.maxLoadKg * 0.75) cnsRecoveryHours = 48;
-    if (mass > activeMovement.maxLoadKg * 0.88) cnsRecoveryHours = 72;
-
-    // Strain Heat Status
-    let strainTier: { label: string; color: string; desc: string } = {
-      label: "Sub-Maximal Hypertrophy",
-      color: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
-      desc: "Optimized for muscle protein synthesis with rapid glycogen replenishing.",
-    };
-
-    if (motorRecruitmentPct >= 85) {
-      strainTier = {
-        label: "Peak Neuromuscular Load",
-        color: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-        desc: "High motor unit recruitment triggering myofibrillar micro-trauma.",
+  // Human-friendly training intensity level
+  const intensityTier = useMemo(() => {
+    const ratio = weightKg / activeExercise.maxLoadKg;
+    if (ratio < 0.45) {
+      return {
+        level: "Beginner / Form & Conditioning",
+        color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+        message: "Ideal for mastering technique and building muscular endurance.",
+      };
+    } else if (ratio < 0.75) {
+      return {
+        level: "Intermediate / Muscle Tone & Definition",
+        color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        message: "Optimal sweet-spot for visible toning, muscle shape, and fat burn.",
+      };
+    } else {
+      return {
+        level: "Advanced / Maximum Strength & Power",
+        color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+        message: "Heavy athletic loading for building serious strength and power.",
       };
     }
-    if (motorRecruitmentPct >= 92) {
-      strainTier = {
-        label: "Maximal Kinetic Threshold",
-        color: "text-rose-400 border-rose-500/30 bg-rose-500/10",
-        desc: "Near-failure neural strain. Requires 48–72h supercompensation recovery.",
-      };
-    }
+  }, [weightKg, activeExercise]);
+
+  // 12-Week Transformation Projections (Easy to understand milestones)
+  const transformationMilestones = useMemo(() => {
+    const progress = week / 12;
+    const bodyFat = Number((24.0 - progress * 12.0).toFixed(1)); // 24% to 12%
+    const muscleGained = Number((progress * 3.4).toFixed(1)); // +0 to +3.4 kg
+    const energyLevel = Math.round(60 + progress * 35); // 60% to 95%
+    const strengthIncrease = Math.round(progress * 38); // +0% to +38%
 
     return {
-      peakForceNewtons,
-      workJoules,
-      motorRecruitmentPct,
-      cnsRecoveryHours,
-      strainTier,
+      bodyFat,
+      muscleGained,
+      energyLevel,
+      strengthIncrease,
     };
-  }, [loadKg, activeMovement]);
-
-  // 12-Week Transformation Morphing Calculations
-  const transformation = useMemo(() => {
-    const progress = transformWeek / 12; // 0 to 1
-    const bodyFatPct = Number((24.0 - progress * 13.2).toFixed(1)); // 24.0% down to 10.8%
-    const muscleGainKg = Number((progress * 3.8).toFixed(1)); // 0 to +3.8kg
-    const rmrKcal = Math.round(1840 + progress * 210); // +210 kcal/day basal burn
-    const visceralGrade = Math.max(1, Math.round(5 - progress * 4)); // Grade 5 down to Grade 1
-
-    return {
-      bodyFatPct,
-      muscleGainKg,
-      rmrKcal,
-      visceralGrade,
-    };
-  }, [transformWeek]);
+  }, [week]);
 
   return (
-    <section id="biometrics" className="py-24 border-t border-zinc-800/80 bg-zinc-950/40 relative">
+    <section id="biometrics" className="py-20 sm:py-24 border-t border-zinc-800/80 bg-zinc-950/40 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-zinc-800 pb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 mb-3">
-              <Cpu className="w-3.5 h-3.5" /> Biomechanical Intelligence
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 font-mono mb-3">
+              <Sparkles className="w-3.5 h-3.5" /> INTERACTIVE WORKOUT & RESULTS GUIDE
             </div>
             <h2 className="text-3xl sm:text-4xl font-heading font-black text-zinc-100 tracking-tight">
-              Kinetic Muscle Activation & Transformation Lab
+              See How Your Workouts Shape Your Body
             </h2>
             <p className="text-sm text-zinc-400 mt-2 max-w-2xl leading-relaxed">
-              Explore real-time electromyography (EMG) motor unit recruitment under dynamic barbell loads, or simulate projected 12-week body recomposition.
+              Explore which muscles are targeted by core gym exercises, or slide through our 12-week transformation projection to see what results you can expect.
             </p>
           </div>
 
-          {/* Mode Switcher Pills */}
+          {/* Mode Switcher */}
           <div className="flex items-center p-1.5 rounded-2xl bg-zinc-900 border border-zinc-800 self-start md:self-auto">
             <button
-              onClick={() => setLabMode("movement")}
+              onClick={() => setMode("workouts")}
               className={cn(
                 "py-2 px-4 rounded-xl text-xs font-heading font-semibold transition-all flex items-center gap-2",
-                labMode === "movement"
+                mode === "workouts"
                   ? "bg-emerald-500 text-zinc-950 shadow-sm"
                   : "text-zinc-400 hover:text-zinc-200"
               )}
             >
               <Dumbbell className="w-3.5 h-3.5" />
-              <span>Lift Kinematics</span>
+              <span>Target Muscles</span>
             </button>
             <button
-              onClick={() => setLabMode("transformation")}
+              onClick={() => setMode("transformation")}
               className={cn(
                 "py-2 px-4 rounded-xl text-xs font-heading font-semibold transition-all flex items-center gap-2",
-                labMode === "transformation"
+                mode === "transformation"
                   ? "bg-emerald-500 text-zinc-950 shadow-sm"
                   : "text-zinc-400 hover:text-zinc-200"
               )}
             >
               <TrendingUp className="w-3.5 h-3.5" />
-              <span>12-Week Morph</span>
+              <span>12-Week Results</span>
             </button>
           </div>
         </div>
 
-        {/* MODE 1: LIFT KINEMATICS & MOTOR UNIT RECRUITMENT */}
-        {labMode === "movement" && (
+        {/* VIEW 1: TARGET MUSCLES PER EXERCISE */}
+        {mode === "workouts" && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            {/* Movement Selector Chips */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {MOVEMENTS.map((m) => (
+            {/* Exercise Selector Chips */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {EXERCISES.map((ex) => (
                 <button
-                  key={m.id}
-                  onClick={() => handleSelectMovement(m.id)}
+                  key={ex.id}
+                  onClick={() => handleSelectExercise(ex.id)}
                   className={cn(
                     "p-4 rounded-2xl border text-left transition-all",
-                    selectedMovement === m.id
-                      ? "bg-zinc-900/90 border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
-                      : "bg-zinc-950/60 border-zinc-800/80 hover:border-zinc-700 text-zinc-400"
+                    selectedExercise === ex.id
+                      ? "bg-zinc-900 border-emerald-500/60 shadow-lg text-zinc-100"
+                      : "bg-zinc-950/70 border-zinc-800 text-zinc-400 hover:text-zinc-200"
                   )}
                 >
-                  <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
-                    {m.category}
+                  <div className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">
+                    {ex.focusArea}
                   </div>
-                  <div className={cn("text-sm font-heading font-bold mt-1", selectedMovement === m.id ? "text-emerald-400" : "text-zinc-200")}>
-                    {m.name}
-                  </div>
-                  <div className="text-[11px] text-zinc-400 font-mono mt-1">
-                    Primary: {m.targetZone}
+                  <div className="text-sm font-heading font-bold mt-1 text-zinc-100">
+                    {ex.name}
                   </div>
                 </button>
               ))}
             </div>
 
-            {/* Central Simulator Dashboard */}
+            {/* Main Interactive Showcase */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-              {/* Left Column: Visual Kinetic Silhouette */}
-              <div className="lg:col-span-5 p-6 rounded-3xl bg-zinc-900/50 border border-zinc-800 relative flex flex-col justify-between overflow-hidden">
-                <div className="flex items-center justify-between text-xs font-mono text-zinc-400 border-b border-zinc-800/80 pb-3">
+              {/* Left Column: Visual Highlight Silhouette */}
+              <div className="lg:col-span-5 p-6 rounded-3xl bg-zinc-900/50 border border-zinc-800 flex flex-col justify-between items-center text-center">
+                <div className="w-full flex items-center justify-between text-xs font-mono text-zinc-400 border-b border-zinc-800/80 pb-3">
                   <span className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-emerald-400 animate-pulse" />
-                    NEUROMUSCULAR HEATMAP
+                    <Activity className="w-4 h-4 text-emerald-400" />
+                    ACTIVATED MUSCLE GROUPS
                   </span>
-                  <span className="text-zinc-500">EMG RECRUITMENT</span>
+                  <span className="text-emerald-400 font-semibold">{activeExercise.focusArea}</span>
                 </div>
 
-                {/* Dynamic SVG Anatomical Kinetic Wireframe */}
-                <div className="py-8 flex items-center justify-center relative min-h-[300px]">
-                  {/* Radial Energy Aura that expands with weight */}
-                  <div
-                    style={{
-                      transform: `scale(${0.7 + (biomechanics.motorRecruitmentPct / 100) * 0.6})`,
-                      opacity: 0.2 + (biomechanics.motorRecruitmentPct / 100) * 0.3,
-                    }}
-                    className={cn(
-                      "absolute w-56 h-56 rounded-full blur-3xl transition-all duration-500 pointer-events-none",
-                      biomechanics.motorRecruitmentPct >= 90
-                        ? "bg-rose-500"
-                        : biomechanics.motorRecruitmentPct >= 80
-                        ? "bg-amber-500"
-                        : "bg-emerald-500"
-                    )}
-                  />
-
-                  {/* Anatomical Kinetic Model Vector Graphic */}
+                {/* SVG Visual Body Graphic */}
+                <div className="py-6 flex items-center justify-center relative w-full min-h-[280px]">
                   <svg
-                    viewBox="0 0 200 360"
-                    className="w-44 h-80 transition-all duration-300 drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                    viewBox="0 0 200 340"
+                    className="w-40 h-72 drop-shadow-[0_0_12px_rgba(16,185,129,0.25)]"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    {/* Head / Cranium */}
-                    <circle cx="100" cy="35" r="18" stroke="#52525b" strokeWidth="2" strokeDasharray="3 3" />
-                    <circle cx="100" cy="35" r="8" fill="#10b981" fillOpacity={biomechanics.motorRecruitmentPct / 150} />
+                    {/* Head */}
+                    <circle cx="100" cy="30" r="16" stroke="#52525b" strokeWidth="2" strokeDasharray="3 3" />
+                    <circle cx="100" cy="30" r="6" fill="#10b981" fillOpacity="0.4" />
 
-                    {/* Spine / Axial Kinetic Column */}
-                    <line x1="100" y1="55" x2="100" y2="180" stroke="#34d399" strokeWidth="3" strokeDasharray="4 2" />
+                    {/* Spine / Core Alignment */}
+                    <line x1="100" y1="50" x2="100" y2="170" stroke="#34d399" strokeWidth="2.5" strokeDasharray="4 2" />
 
-                    {/* Shoulders & Clavicle */}
+                    {/* Shoulders */}
                     <path
-                      d="M 60 75 Q 100 65 140 75"
-                      stroke={selectedMovement === "bench" || selectedMovement === "clean" ? "#10b981" : "#52525b"}
-                      strokeWidth={selectedMovement === "bench" || selectedMovement === "clean" ? "5" : "2"}
+                      d="M 60 70 Q 100 60 140 70"
+                      stroke={selectedExercise === "bench" || selectedExercise === "press" ? "#10b981" : "#52525b"}
+                      strokeWidth={selectedExercise === "bench" || selectedExercise === "press" ? "6" : "2"}
                       strokeLinecap="round"
                     />
 
-                    {/* Pectorals / Chest Group */}
+                    {/* Chest Group */}
                     <path
-                      d="M 75 85 Q 100 95 125 85"
-                      stroke={selectedMovement === "bench" ? "#34d399" : "#3f3f46"}
-                      strokeWidth={selectedMovement === "bench" ? "6" : "2"}
+                      d="M 75 80 Q 100 90 125 80"
+                      stroke={selectedExercise === "bench" ? "#10b981" : "#3f3f46"}
+                      strokeWidth={selectedExercise === "bench" ? "6" : "2"}
                     />
 
-                    {/* Core / Abdominal Bracing */}
+                    {/* Core / Midsection */}
                     <rect
                       x="82"
-                      y="110"
+                      y="105"
                       width="36"
-                      height="50"
+                      height="45"
                       rx="8"
-                      stroke={selectedMovement === "squat" || selectedMovement === "deadlift" ? "#38bdf8" : "#3f3f46"}
+                      stroke="#38bdf8"
                       strokeWidth="2"
-                      fill={selectedMovement === "squat" || selectedMovement === "deadlift" ? "#38bdf8" : "transparent"}
-                      fillOpacity={biomechanics.motorRecruitmentPct / 250}
+                      fill="#38bdf8"
+                      fillOpacity="0.2"
                     />
 
-                    {/* Pelvic / Glute Complex */}
+                    {/* Pelvis & Glutes */}
                     <path
-                      d="M 68 180 Q 100 205 132 180"
-                      stroke={selectedMovement === "squat" || selectedMovement === "deadlift" ? "#10b981" : "#52525b"}
-                      strokeWidth={selectedMovement === "squat" || selectedMovement === "deadlift" ? "7" : "3"}
+                      d="M 68 170 Q 100 195 132 170"
+                      stroke={selectedExercise === "squat" || selectedExercise === "deadlift" ? "#10b981" : "#52525b"}
+                      strokeWidth={selectedExercise === "squat" || selectedExercise === "deadlift" ? "7" : "3"}
                       strokeLinecap="round"
                     />
 
-                    {/* Upper Arms / Pressing Limbs */}
+                    {/* Arms */}
                     <line
                       x1="60"
-                      y1="75"
+                      y1="70"
                       x2="40"
-                      y2="135"
-                      stroke={selectedMovement === "bench" || selectedMovement === "clean" ? "#34d399" : "#3f3f46"}
-                      strokeWidth="3"
+                      y2="130"
+                      stroke={selectedExercise === "bench" || selectedExercise === "press" ? "#34d399" : "#3f3f46"}
+                      strokeWidth="3.5"
                     />
                     <line
                       x1="140"
-                      y1="75"
+                      y1="70"
                       x2="160"
-                      y2="135"
-                      stroke={selectedMovement === "bench" || selectedMovement === "clean" ? "#34d399" : "#3f3f46"}
-                      strokeWidth="3"
+                      y2="130"
+                      stroke={selectedExercise === "bench" || selectedExercise === "press" ? "#34d399" : "#3f3f46"}
+                      strokeWidth="3.5"
                     />
+                    <line x1="40" y1="130" x2="30" y2="180" stroke="#71717a" strokeWidth="2.5" />
+                    <line x1="160" y1="130" x2="170" y2="180" stroke="#71717a" strokeWidth="2.5" />
 
-                    {/* Forearms & Grip */}
-                    <line x1="40" y1="135" x2="30" y2="185" stroke="#71717a" strokeWidth="2.5" />
-                    <line x1="160" y1="135" x2="170" y2="185" stroke="#71717a" strokeWidth="2.5" />
-
-                    {/* Femurs / Quadriceps & Hamstrings */}
+                    {/* Thighs & Quads */}
                     <line
                       x1="76"
-                      y1="185"
+                      y1="175"
                       x2="68"
-                      y2="265"
-                      stroke={selectedMovement === "squat" || selectedMovement === "deadlift" ? "#10b981" : "#52525b"}
-                      strokeWidth={selectedMovement === "squat" ? "7" : "4"}
+                      y2="255"
+                      stroke={selectedExercise === "squat" || selectedExercise === "deadlift" ? "#10b981" : "#52525b"}
+                      strokeWidth={selectedExercise === "squat" ? "7" : "4"}
                     />
                     <line
                       x1="124"
-                      y1="185"
+                      y1="175"
                       x2="132"
-                      y2="265"
-                      stroke={selectedMovement === "squat" || selectedMovement === "deadlift" ? "#10b981" : "#52525b"}
-                      strokeWidth={selectedMovement === "squat" ? "7" : "4"}
+                      y2="255"
+                      stroke={selectedExercise === "squat" || selectedExercise === "deadlift" ? "#10b981" : "#52525b"}
+                      strokeWidth={selectedExercise === "squat" ? "7" : "4"}
                     />
 
-                    {/* Lower Legs / Tibia & Calves */}
-                    <line x1="68" y1="265" x2="62" y2="340" stroke="#71717a" strokeWidth="3" />
-                    <line x1="132" y1="265" x2="138" y2="340" stroke="#71717a" strokeWidth="3" />
+                    {/* Lower Legs & Calves */}
+                    <line x1="68" y1="255" x2="62" y2="320" stroke="#71717a" strokeWidth="3" />
+                    <line x1="132" y1="255" x2="138" y2="320" stroke="#71717a" strokeWidth="3" />
                   </svg>
                 </div>
 
-                {/* Bottom Strain Badge */}
-                <div className={cn("p-3 rounded-2xl border text-center text-xs font-mono", biomechanics.strainTier.color)}>
-                  <div className="font-bold uppercase tracking-wider">{biomechanics.strainTier.label}</div>
-                  <div className="text-[11px] opacity-80 mt-0.5">{biomechanics.strainTier.desc}</div>
+                <div className={cn("w-full p-3 rounded-2xl border text-xs font-mono", intensityTier.color)}>
+                  <div className="font-bold">{intensityTier.level}</div>
+                  <div className="text-[11px] opacity-80 mt-0.5">{intensityTier.message}</div>
                 </div>
               </div>
 
-              {/* Right Column: Interactive Load Control & Telemetry */}
+              {/* Right Column: Practical Details & Weight Slider */}
               <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-zinc-900/70 border border-zinc-800 flex flex-col justify-between space-y-6">
-                {/* Movement Description */}
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
-                      Movement Profile
+                    <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider font-semibold">
+                      Exercise Breakdown
                     </span>
-                    <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300">
-                      CNS Fatigue: {activeMovement.cnsFatigueRating}
+                    <span className="text-xs font-mono text-zinc-400">
+                      Burn: {activeExercise.estCaloriesBurned}
                     </span>
                   </div>
-                  <h3 className="text-xl font-heading font-bold text-zinc-100 mt-1">
-                    {activeMovement.name}
+                  <h3 className="text-2xl font-heading font-bold text-zinc-100 mt-1">
+                    {activeExercise.name}
                   </h3>
-                  <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                    {activeMovement.description}
+                  <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+                    {activeExercise.benefit}
                   </p>
                 </div>
 
-                {/* Interactive Barbell Load Slider */}
+                {/* Weight Intensity Slider */}
                 <div className="p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 space-y-3">
-                  <div className="flex justify-between items-center text-xs font-mono text-zinc-400">
+                  <div className="flex justify-between items-center text-xs font-mono text-zinc-300">
                     <span className="flex items-center gap-2">
                       <Dumbbell className="w-4 h-4 text-emerald-400" />
-                      Dynamic Barbell Resistance Load
+                      Select Training Weight:
                     </span>
-                    <span className="font-mono text-xl font-bold text-zinc-100">
-                      {loadKg} <span className="text-xs font-normal text-zinc-400">KG</span>
+                    <span className="text-xl font-bold text-zinc-100 font-mono">
+                      {weightKg} <span className="text-xs text-zinc-400 font-normal">KG</span>
                     </span>
                   </div>
                   <input
                     type="range"
-                    min={activeMovement.minLoadKg}
-                    max={activeMovement.maxLoadKg}
+                    min={activeExercise.minLoadKg}
+                    max={activeExercise.maxLoadKg}
                     step="5"
-                    value={loadKg}
-                    onChange={(e) => setLoadKg(Number(e.target.value))}
+                    value={weightKg}
+                    onChange={(e) => setWeightKg(Number(e.target.value))}
                     className="w-full accent-emerald-500 cursor-pointer h-2 bg-zinc-800 rounded-lg"
                   />
-                  <div className="flex justify-between text-[10px] font-mono text-zinc-500">
-                    <span>Min: {activeMovement.minLoadKg} kg</span>
-                    <span>Median: {Math.round((activeMovement.minLoadKg + activeMovement.maxLoadKg) / 2)} kg</span>
-                    <span>Max: {activeMovement.maxLoadKg} kg</span>
+                  <div className="flex justify-between text-[11px] font-mono text-zinc-500">
+                    <span>Light: {activeExercise.minLoadKg} kg</span>
+                    <span>Moderate: {Math.round((activeExercise.minLoadKg + activeExercise.maxLoadKg) / 2)} kg</span>
+                    <span>Heavy: {activeExercise.maxLoadKg} kg</span>
                   </div>
                 </div>
 
-                {/* Real-Time Telemetry Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                  <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
-                    <div className="text-[10px] font-mono text-zinc-500 uppercase">Peak Kinetic Force</div>
-                    <div className="text-lg font-mono font-bold text-zinc-100 mt-0.5">
-                      {biomechanics.peakForceNewtons} <span className="text-[10px] font-normal text-zinc-400">N</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
-                    <div className="text-[10px] font-mono text-zinc-500 uppercase">Motor Recruitment</div>
-                    <div className="text-lg font-mono font-bold text-emerald-400 mt-0.5">
-                      {biomechanics.motorRecruitmentPct}%
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
-                    <div className="text-[10px] font-mono text-zinc-500 uppercase">Work Output</div>
-                    <div className="text-lg font-mono font-bold text-zinc-100 mt-0.5">
-                      {biomechanics.workJoules} <span className="text-[10px] font-normal text-zinc-400">J</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
-                    <div className="text-[10px] font-mono text-zinc-500 uppercase">Recovery Window</div>
-                    <div className="text-lg font-mono font-bold text-amber-400 mt-0.5">
-                      {biomechanics.cnsRecoveryHours} <span className="text-[10px] font-normal text-zinc-400">hrs</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Primary Movers Breakdown Bars */}
-                <div className="space-y-2 pt-2 border-t border-zinc-800/80">
+                {/* Targeted Muscles Bars */}
+                <div className="space-y-3 pt-1 border-t border-zinc-800">
                   <div className="text-xs font-mono text-zinc-400 uppercase tracking-wider">
-                    Electromyographic (EMG) Muscle Group Recruitment:
+                    Primary Muscle Activation:
                   </div>
                   <div className="space-y-2">
-                    {activeMovement.primaryMovers.map((mover) => {
-                      const scaledActivation = Math.min(
-                        100,
-                        Math.round(mover.activation * (biomechanics.motorRecruitmentPct / 85))
-                      );
-                      return (
-                        <div key={mover.name} className="space-y-1">
-                          <div className="flex justify-between text-xs text-zinc-300">
-                            <span>{mover.name}</span>
-                            <span className="font-mono text-emerald-400 font-bold">{scaledActivation}%</span>
-                          </div>
-                          <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                            <div
-                              style={{ width: `${scaledActivation}%` }}
-                              className="h-full bg-emerald-500 transition-all duration-300 rounded-full"
-                            />
-                          </div>
+                    {activeExercise.musclesWorked.map((muscle) => (
+                      <div key={muscle.name} className="space-y-1">
+                        <div className="flex justify-between text-xs text-zinc-300">
+                          <span>{muscle.name}</span>
+                          <span className="font-mono text-emerald-400 font-semibold">{muscle.percentage}%</span>
                         </div>
-                      );
-                    })}
+                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                          <div
+                            style={{ width: `${muscle.percentage}%` }}
+                            className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Match to Subscription Plan CTA */}
+                {/* Recommends Plan */}
                 <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <div className="text-xs font-semibold text-emerald-300">
-                      Recommended Coaching Tier for this Lift:
+                    <div className="text-xs text-emerald-300 font-medium">
+                      Included with Personal Coaching In:
                     </div>
                     <div className="text-sm font-heading font-bold text-zinc-100">
-                      {activeMovement.matchingPlanName}
+                      {activeExercise.recommendedPlanName}
                     </div>
                   </div>
                   <Link
-                    href={`/checkout/${activeMovement.matchingPlanId}`}
-                    className="py-2 px-3.5 rounded-xl bg-emerald-500 text-zinc-950 font-mono font-bold text-xs hover:bg-emerald-400 transition-all text-center shrink-0 shadow-sm"
+                    href={`/checkout/${activeExercise.recommendedPlanId}`}
+                    className="py-2.5 px-4 rounded-xl bg-emerald-500 text-zinc-950 font-heading font-bold text-xs hover:bg-emerald-400 transition-all text-center shrink-0 shadow-sm"
                   >
-                    SELECT COMMITTED TIER &rarr;
+                    SELECT PLAN &rarr;
                   </Link>
                 </div>
               </div>
@@ -534,30 +442,30 @@ export default function KineticBiomechanicsLab() {
           </div>
         )}
 
-        {/* MODE 2: 12-WEEK METCON TRANSFORMATION SIMULATOR */}
-        {labMode === "transformation" && (
+        {/* VIEW 2: 12-WEEK TRANSFORMATION RESULTS */}
+        {mode === "transformation" && (
           <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 space-y-8 animate-in fade-in duration-300">
             <div className="max-w-2xl">
-              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
-                Hyperbolic Conditioning Slicer
+              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider font-semibold">
+                Real Member Projections
               </span>
-              <h3 className="text-2xl font-heading font-bold text-zinc-100 mt-1">
-                Projected 12-Week Body Recomposition Slicer
+              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-zinc-100 mt-1">
+                Your 12-Week Transformation Journey
               </h3>
               <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                Slide through the 12-week MetCon training timeline to observe projected adipose reduction, myofibrillar tissue expansion, and basal metabolic adaptation.
+                Consistent training 3 to 4 times a week combined with balanced nutrition creates noticeable, sustainable physical results. Slide through the weeks below:
               </p>
             </div>
 
-            {/* Timeline Slider: Week 0 to Week 12 */}
+            {/* Week Slider */}
             <div className="p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-4">
               <div className="flex justify-between items-center text-xs font-mono text-zinc-300">
                 <span className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-emerald-400" />
-                  Training Progression Timeline
+                  Select Week on Program:
                 </span>
                 <span className="text-lg font-bold text-emerald-400 font-mono">
-                  Week {transformWeek} of 12
+                  Week {week} of 12
                 </span>
               </div>
               <input
@@ -565,83 +473,83 @@ export default function KineticBiomechanicsLab() {
                 min="0"
                 max="12"
                 step="1"
-                value={transformWeek}
-                onChange={(e) => setTransformWeek(Number(e.target.value))}
+                value={week}
+                onChange={(e) => setWeek(Number(e.target.value))}
                 className="w-full accent-emerald-500 cursor-pointer h-2.5 bg-zinc-800 rounded-lg"
               />
               <div className="flex justify-between text-[11px] font-mono text-zinc-500">
-                <span>Week 0 (Baseline DEXA)</span>
-                <span>Week 6 (Midway Supercompensation)</span>
-                <span>Week 12 (Peak Conditioning)</span>
+                <span>Week 0 (Getting Started)</span>
+                <span>Week 6 (Visible Definition)</span>
+                <span>Week 12 (Peak Transformation)</span>
               </div>
             </div>
 
-            {/* Projected Metric Cards */}
+            {/* Clear Results Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="p-5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
                 <div className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
-                  Total Adipose Body Fat
+                  Estimated Body Fat
                 </div>
                 <div className="text-3xl font-mono font-bold text-emerald-400">
-                  {transformation.bodyFatPct}%
+                  {transformationMilestones.bodyFat}%
                 </div>
                 <div className="text-[11px] text-zinc-500 font-mono pt-1">
-                  Baseline: 24.0% &rarr; Delta: -{(24.0 - transformation.bodyFatPct).toFixed(1)}%
+                  Starting: 24.0% &rarr; Down by -{(24.0 - transformationMilestones.bodyFat).toFixed(1)}%
                 </div>
               </div>
 
               <div className="p-5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
                 <div className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
-                  Accrued Lean Skeletal Muscle
+                  Lean Muscle Toned
                 </div>
                 <div className="text-3xl font-mono font-bold text-zinc-100">
-                  +{transformation.muscleGainKg} <span className="text-xs font-normal text-zinc-400">KG</span>
+                  +{transformationMilestones.muscleGained} <span className="text-xs font-normal text-zinc-400">KG</span>
                 </div>
                 <div className="text-[11px] text-emerald-400 font-mono pt-1">
-                  Myofibrillar cross-sectional density
+                  Firm, defined muscular shape
                 </div>
               </div>
 
               <div className="p-5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
                 <div className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
-                  Resting Caloric Burn (RMR)
+                  Strength & Performance
                 </div>
                 <div className="text-3xl font-mono font-bold text-zinc-100">
-                  {transformation.rmrKcal} <span className="text-xs font-normal text-zinc-400">kcal</span>
+                  +{transformationMilestones.strengthIncrease}%
                 </div>
                 <div className="text-[11px] text-zinc-500 font-mono pt-1">
-                  +{transformation.rmrKcal - 1840} kcal/day passive expenditure
+                  Higher stamina & lifting capacity
                 </div>
               </div>
 
               <div className="p-5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
                 <div className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
-                  Visceral Adipose Index
+                  Daily Vitality & Energy
                 </div>
-                <div className="text-3xl font-mono font-bold text-amber-400">
-                  Grade {transformation.visceralGrade}
+                <div className="text-3xl font-mono font-bold text-blue-400">
+                  {transformationMilestones.energyLevel}%
                 </div>
                 <div className="text-[11px] text-zinc-500 font-mono pt-1">
-                  Cardiovascular & longevity safety bracket
+                  Better sleep quality & daytime focus
                 </div>
               </div>
             </div>
 
-            {/* Bottom Call to Action */}
+            {/* Bottom Action */}
             <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="text-sm font-heading font-bold text-zinc-100">
-                  Ready to lock in this athletic transformation?
+                  Ready to begin your 12-week transformation?
                 </div>
                 <div className="text-xs text-zinc-400 mt-0.5">
-                  Backed by AgarkarMedia Pvt. Ltd. with partial 50% installment payments and flexible pause privileges.
+                  Flexible plans with partial 50% installment payments and zero cancellation penalties.
                 </div>
               </div>
               <Link
                 href="/#plans"
                 className="py-2.5 px-5 rounded-xl bg-emerald-500 text-zinc-950 font-heading font-bold text-xs hover:bg-emerald-400 transition-all text-center shrink-0 shadow-sm"
               >
-                DISCOVER SUBSCRIPTION PLANS &rarr;
+                VIEW SUBSCRIPTION PLANS &rarr;
               </Link>
             </div>
           </div>
