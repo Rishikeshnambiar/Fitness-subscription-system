@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { settleRemainingBalance } from "@/lib/actions/billing.actions";
+import NutritionArchitecture from "@/components/dashboard/NutritionArchitecture";
 
 interface UserDashboardClientProps {
   subscription: any;
@@ -191,6 +192,9 @@ export default function UserDashboardClient({
           </div>
         </div>
       </div>
+
+      {/* Standout Feature: Biometric Nutrition & Macro Architecture Engine */}
+      <NutritionArchitecture memberTier={subscription?.planNameSnapshot || "Athlete Pro"} />
 
       {/* Discovery Grid: Available Plans for Upgrade/Renewal */}
       <div className="space-y-4 pt-4">

@@ -16,9 +16,11 @@
 - **Evaluator Demo Toolbar**: Floating bottom-right control module allowing immediate role switching (`ADMIN` ⇄ `USER`), live MongoDB connectivity checks, and 3-day expiry simulation without manual database seeding.
 - **Immutable Plan Snapshot Architecture**: Historical transactions and invoices are frozen at the exact millisecond of purchase, ensuring future admin price modifications or plan deactivations never alter financial ledgers.
 - **Standout Product Manager Differentiators**:
-  1. **Interactive Membership ROI & Unit Economics Calculator**: Real-time cost-per-session slider (1–6 days/week) benchmarked against ₹650 single-session boutique drop-ins with dynamic annual savings metrics.
-  2. **Official GST Tax Invoice Engine**: Formatted for **AgarkarMedia Pvt. Ltd.** (`GSTIN: 27AAWCA1536C1ZP`), complete with SAC 999723, state code 27 (Maharashtra), CGST/SGST breakdowns, and dedicated print/PDF stylesheets.
-  3. **Transaction Ledger CSV Export**: One-click download of all subscription payments with admin override audit notes for finance reconciliation.
+  1. **Biometric Macro & Nutrition Architecture Engine**: Personalized daily caloric expenditure (TDEE/BMR via clinical formulas), gram-precision macronutrient targets (Protein, Glycogen Carbs, Hormonal Fats), cellular hydration tracker with +250ml/+750ml logging, nutrient timing protocol (Pre-workout, Intra-workout electrolytes, Post-workout MPS window), and one-click Protocol export.
+  2. **Expanded 6-Hardware 3D Telemetry Suite**: Interactive 3D equipment inspection with dropdown selector and quick-switching across 6 realistic procedural models (Olympic Hex Dumbbell, Competition Kettlebell, Calibrated Bumper Plate, 2.2m Olympic Barbell, Hex Deadlift Trap Bar, Titanium Athlete Shaker) with real-time physical metallurgy, knurl, and calibration specs.
+  3. **Interactive Membership ROI & Unit Economics Calculator**: Real-time cost-per-session slider (1–6 days/week) benchmarked against ₹650 single-session boutique drop-ins with dynamic annual savings metrics.
+  4. **Official GST Tax Invoice Engine**: Formatted for **AgarkarMedia Pvt. Ltd.** (`GSTIN: 27AAWCA1536C1ZP`), complete with SAC 999723, state code 27 (Maharashtra), CGST/SGST breakdowns, and dedicated print/PDF stylesheets.
+  5. **Transaction Ledger CSV Export**: One-click download of all subscription payments with admin override audit notes for finance reconciliation.
 
 ---
 

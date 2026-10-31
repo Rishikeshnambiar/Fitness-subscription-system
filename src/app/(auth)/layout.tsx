@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Dumbbell, ShieldCheck, Zap } from "lucide-react";
+import { Dumbbell, ShieldCheck, Zap, Activity } from "lucide-react";
 
 export default function AuthLayout({
   children,
@@ -7,61 +7,64 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-[#0a0a0f] text-[#f0f0f5]">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-zinc-950 text-zinc-100">
       {/* Left Showcase Panel */}
-      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-[#12121a] via-[#1a1a2e] to-[#0a0a0f] border-r border-white/5 overflow-hidden">
-        {/* Ambient Glows */}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#00f0ff]/15 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-[#ff006e]/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-950 border-r border-zinc-900 overflow-hidden">
+        {/* Subtle Ambient Glow */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
 
         {/* Brand Header */}
         <div className="relative z-10">
           <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00f0ff] to-[#ff006e] p-0.5 transition-transform duration-300 group-hover:scale-105">
-              <div className="w-full h-full bg-[#0a0a0f] rounded-[10px] flex items-center justify-center">
-                <Dumbbell className="w-5 h-5 text-[#00f0ff]" />
-              </div>
+            <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-emerald-400 group-hover:border-emerald-500/50 transition-colors shadow-sm">
+              <Dumbbell className="w-5 h-5" />
             </div>
-            <span className="font-heading font-bold text-xl tracking-wider text-[#f0f0f5]">
-              HYPER<span className="text-[#00f0ff]">GYM</span>
-            </span>
+            <div className="flex flex-col">
+              <span className="font-heading font-black text-xl tracking-tight text-zinc-100 flex items-center gap-1">
+                <span>HYPERGYM</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-0.5 animate-pulse" />
+              </span>
+              <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">
+                ATHLETIC PROTOCOL
+              </span>
+            </div>
           </Link>
         </div>
 
         {/* Center Presentation */}
         <div className="relative z-10 space-y-6 max-w-lg">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00f0ff]/10 border border-[#00f0ff]/20 text-xs font-semibold text-[#00f0ff]">
-            <Zap className="w-3.5 h-3.5" /> Next-Gen Subscription Experience
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300">
+            <Activity className="w-3.5 h-3.5 text-emerald-400" />
+            <span>AGARKARMEDIA ATHLETIC DIVISION // ACCESS PORTAL</span>
           </div>
-          <h1 className="text-4xl font-heading font-bold text-[#f0f0f5] leading-tight">
-            Step into the future of luxury fitness engineering.
+          <h1 className="text-4xl font-heading font-black text-zinc-100 leading-tight">
+            Precision conditioning. Architectural subscription management.
           </h1>
-          <p className="text-[#8888a0] text-sm leading-relaxed">
-            Manage your memberships, enjoy flexible installment payments, unlock exclusive amenities, and take command of your training journey.
+          <p className="text-zinc-400 text-sm leading-relaxed">
+            Manage your memberships, enjoy flexible 50% milestone installment payments, unlock multi-club access, and maintain immutable tax-deductible records.
           </p>
 
           <div className="grid grid-cols-2 gap-4 pt-4">
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 backdrop-blur-sm">
-              <div className="text-2xl font-mono font-bold text-[#00f0ff]">100%</div>
-              <div className="text-xs text-[#8888a0] mt-1">Snapshot-backed invoices</div>
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-sm">
+              <div className="text-2xl font-mono font-bold text-zinc-100">100%</div>
+              <div className="text-xs font-mono text-zinc-400 mt-1">Snapshot-backed tax records</div>
             </div>
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 backdrop-blur-sm">
-              <div className="text-2xl font-mono font-bold text-[#ffd700]">50–90%</div>
-              <div className="text-xs text-[#8888a0] mt-1">Flexible installment options</div>
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-sm">
+              <div className="text-2xl font-mono font-bold text-emerald-400">50% Flex</div>
+              <div className="text-xs font-mono text-zinc-400 mt-1">Milestone installment options</div>
             </div>
           </div>
         </div>
 
-        {/* Footer Guarantee */}
-        <div className="relative z-10 flex items-center gap-2 text-xs text-[#8888a0]">
-          <ShieldCheck className="w-4 h-4 text-[#00e676]" />
-          <span>Enterprise-grade biometric security & encrypted billing</span>
+        {/* Legal & Entity Footer */}
+        <div className="relative z-10 text-xs font-mono text-zinc-400">
+          AgarkarMedia Pvt. Ltd. • GSTIN: 27AAWCA1536C1ZP • SAC: 999723
         </div>
       </div>
 
-      {/* Right Content Panel */}
+      {/* Right Form Container */}
       <div className="flex items-center justify-center p-6 sm:p-12 relative">
-        <div className="w-full max-w-md space-y-6 flex flex-col items-center">
+        <div className="w-full max-w-md">
           {children}
         </div>
       </div>

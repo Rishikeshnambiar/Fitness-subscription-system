@@ -112,6 +112,27 @@ const equipmentSpecs: Record<EquipmentType, { name: string; weight: string; meta
     knurl: "50.4mm Center Bore",
     tolerance: "±5g Certified Accuracy",
   },
+  barbell: {
+    name: "Olympic Competition Barbell",
+    weight: "20.0 KG (2.2m Men's)",
+    metallurgy: "Heat-Treated Chrome-Moly Alloy",
+    knurl: "1.5mm Dual Olympic Knurl Marks",
+    tolerance: "215,000 PSI Tensile Strength",
+  },
+  trapbar: {
+    name: "Hex Deadlift Trap Bar",
+    weight: "30.0 KG (Commercial Hex)",
+    metallurgy: "Heavy-Gauge Tubular Carbon Steel",
+    knurl: "Dual Elevated Knurled Grips",
+    tolerance: "700 KG Load Rating (±10g)",
+  },
+  shaker: {
+    name: "Titanium Athlete Shaker",
+    weight: "750 ML / 340g Dry",
+    metallurgy: "Grade 2 Titanium & BPA-Free Tritan",
+    knurl: "Laser-Etched Grip Scale",
+    tolerance: "Hermetic Vacuum Sealed (24h Cold)",
+  },
 };
 
 export default function HeroSection({
@@ -305,31 +326,59 @@ export default function HeroSection({
                 </div>
               </div>
 
-              {/* Interactive 3D Model Switcher Bar */}
-              <div className="grid grid-cols-3 gap-2 pt-1">
-                {(["dumbbell", "kettlebell", "plate"] as EquipmentType[]).map((type, idx) => {
-                  const labels = {
-                    dumbbell: "01 // DUMBBELL",
-                    kettlebell: "02 // KETTLEBELL",
-                    plate: "03 // BUMPER PLATE",
-                  };
-                  const isSelected = activeEquipment === type;
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setActiveEquipment(type)}
-                      className={cn(
-                        "py-2 px-2.5 rounded-xl text-[10px] font-mono font-semibold transition-all duration-200 text-center border",
-                        isSelected
-                          ? "bg-zinc-800 border-emerald-500/80 text-emerald-400 shadow-sm"
-                          : "bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700"
-                      )}
+              {/* Interactive 3D Model Dropdown & Switcher Bar */}
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                    Hardware Telemetry Suite:
+                  </span>
+                  <div className="relative">
+                    <select
+                      value={activeEquipment}
+                      onChange={(e) => setActiveEquipment(e.target.value as EquipmentType)}
+                      className="appearance-none bg-zinc-900/90 text-emerald-400 border border-zinc-700/80 rounded-lg py-1.5 pl-3 pr-8 text-xs font-mono font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 cursor-pointer transition-colors shadow-inner"
                     >
-                      {labels[type]}
-                    </button>
-                  );
-                })}
+                      <option value="dumbbell">01 // Olympic Hex Dumbbell (24kg)</option>
+                      <option value="kettlebell">02 // Competition Kettlebell (32kg)</option>
+                      <option value="plate">03 // Calibrated Bumper Plate (20kg)</option>
+                      <option value="barbell">04 // Olympic Barbell (2.2m 20kg)</option>
+                      <option value="trapbar">05 // Hex Deadlift Trap Bar (30kg)</option>
+                      <option value="shaker">06 // Titanium Athlete Shaker (750ml)</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-emerald-400 text-xs">
+                      ▼
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Switcher Grid for Instant Access */}
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                  {([
+                    { id: "dumbbell", label: "Dumbbell" },
+                    { id: "kettlebell", label: "Kettlebell" },
+                    { id: "plate", label: "Bumper" },
+                    { id: "barbell", label: "Barbell" },
+                    { id: "trapbar", label: "Trap Bar" },
+                    { id: "shaker", label: "Shaker" },
+                  ] as { id: EquipmentType; label: string }[]).map(({ id, label }, idx) => {
+                    const isSelected = activeEquipment === id;
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => setActiveEquipment(id)}
+                        className={cn(
+                          "py-1.5 px-1.5 rounded-lg text-[10px] font-mono font-medium transition-all duration-200 text-center border truncate",
+                          isSelected
+                            ? "bg-zinc-800 border-emerald-500/90 text-emerald-400 shadow-sm font-semibold"
+                            : "bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700"
+                        )}
+                      >
+                        {String(idx + 1).padStart(2, "0")}. {label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Hardware Spec Telemetry Box */}

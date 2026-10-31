@@ -2,7 +2,7 @@
 
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
-import { Zap, ShieldCheck } from "lucide-react";
+import { Zap, ShieldCheck, UserCheck, Dumbbell } from "lucide-react";
 
 export default function SignInPage() {
   const hasClerkKey = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -18,71 +18,72 @@ export default function SignInPage() {
         <SignIn
           appearance={{
             elements: {
-              card: "bg-[#1a1a2e] border border-white/10 shadow-[0_0_50px_rgba(0,240,255,0.1)] text-[#f0f0f5]",
-              headerTitle: "text-xl font-heading font-bold text-[#f0f0f5]",
-              headerSubtitle: "text-[#8888a0] text-sm",
-              socialButtonsBlockButton: "border-white/10 hover:bg-white/5 text-[#f0f0f5]",
-              formFieldLabel: "text-[#8888a0] text-xs uppercase tracking-wider",
-              formFieldInput: "bg-[#12121a] border-white/10 text-[#f0f0f5] focus:border-[#00f0ff]",
+              card: "bg-zinc-900 border border-zinc-800 shadow-2xl text-zinc-100 rounded-2xl",
+              headerTitle: "text-xl font-heading font-bold text-zinc-100",
+              headerSubtitle: "text-zinc-400 text-sm",
+              socialButtonsBlockButton: "border-zinc-800 hover:bg-zinc-800 text-zinc-100",
+              formFieldLabel: "text-zinc-400 text-xs font-mono uppercase tracking-wider",
+              formFieldInput: "bg-zinc-950 border-zinc-800 text-zinc-100 focus:border-emerald-500 rounded-xl",
               formButtonPrimary:
-                "bg-gradient-to-r from-[#00f0ff] to-[#ff006e] text-white hover:opacity-95 shadow-[0_0_20px_rgba(0,240,255,0.3)]",
-              footerActionLink: "text-[#00f0ff] hover:underline",
+                "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold shadow-sm transition-all rounded-xl",
+              footerActionLink: "text-emerald-400 hover:underline",
             },
           }}
           fallbackRedirectUrl="/auth-callback"
         />
       ) : (
-        <div className="w-full max-w-sm p-6 rounded-2xl bg-[#1a1a2e] border border-white/10 shadow-xl space-y-6 text-center">
-          <div className="w-12 h-12 rounded-xl bg-[#00f0ff]/10 border border-[#00f0ff]/20 mx-auto flex items-center justify-center text-[#00f0ff]">
-            <Zap className="w-6 h-6" />
+        <div className="w-full max-w-sm p-7 rounded-3xl bg-zinc-900/80 border border-zinc-800 shadow-2xl space-y-6 text-center backdrop-blur-xl">
+          <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 mx-auto flex items-center justify-center text-emerald-400 shadow-sm">
+            <Dumbbell className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-heading font-bold text-[#f0f0f5]">
+            <h2 className="text-xl font-heading font-black text-zinc-100">
               Welcome to HyperGym
             </h2>
-            <p className="text-xs text-[#8888a0] mt-1.5 leading-relaxed">
-              Experience the platform with full role-based access. Pick a persona to sign in instantly.
+            <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed font-mono">
+              Evaluator Access: Select persona to test RBAC workflows instantly.
             </p>
           </div>
 
           <div className="space-y-3 pt-2">
             <button
               onClick={() => handleDemoLogin("USER")}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#0099ff] text-[#0a0a0f] font-semibold text-sm hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-sm"
             >
-              Sign In as Member (User Dashboard)
+              <UserCheck className="w-4 h-4" />
+              AUTHENTICATE AS MEMBER
             </button>
             <button
               onClick={() => handleDemoLogin("ADMIN")}
-              className="w-full py-3 px-4 rounded-xl bg-[#12121a] border border-white/10 text-[#f0f0f5] font-semibold text-sm hover:border-[#ffd700] hover:text-[#ffd700] transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 font-mono font-bold text-xs hover:text-emerald-400 transition-all flex items-center justify-center gap-2"
             >
-              <ShieldCheck className="w-4 h-4 text-[#ffd700]" />
-              Sign In as Admin (Management Console)
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              AUTHENTICATE AS ADMIN
             </button>
           </div>
 
-          <div className="text-[11px] text-[#8888a0] pt-2 border-t border-white/5">
-            Tip: Configure Clerk API keys in <code className="text-[#00f0ff]">.env.local</code> for full production authentication.
+          <div className="text-[11px] font-mono text-zinc-400 pt-3 border-t border-zinc-800/80">
+            Clerk Auth active when <code className="text-emerald-400">CLERK_SECRET_KEY</code> is set in .env.local
           </div>
         </div>
       )}
 
       {/* Quick Demo Switcher link below Clerk if enabled */}
       {hasClerkKey && (
-        <div className="mt-4 flex gap-3 text-xs text-[#8888a0]">
-          <span>Or test demo:</span>
+        <div className="mt-4 flex gap-3 text-xs font-mono text-zinc-400">
+          <span>Evaluator Demo:</span>
           <button
             onClick={() => handleDemoLogin("USER")}
-            className="text-[#00f0ff] hover:underline"
+            className="text-emerald-400 hover:underline"
           >
-            Demo Member
+            Member View
           </button>
           <span>•</span>
           <button
             onClick={() => handleDemoLogin("ADMIN")}
-            className="text-[#ffd700] hover:underline"
+            className="text-emerald-400 hover:underline"
           >
-            Demo Admin
+            Admin View
           </button>
         </div>
       )}
