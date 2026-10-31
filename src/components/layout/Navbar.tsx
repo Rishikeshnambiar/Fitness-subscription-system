@@ -13,11 +13,12 @@ interface NavbarProps {
 }
 
 const navLinks = [
-  { href: "/#biomechanics", label: "3D Biomechanics" },
+  { href: "/#biomechanics", label: "3D Arena" },
+  { href: "/#configurator", label: "Club Configurator" },
   { href: "/#nutrition-lab", label: "Nutrition Lab" },
   { href: "/#plans", label: "Memberships" },
   { href: "/#roi-calculator", label: "Unit Economics" },
-  { href: "/about", label: "Mission & Facilities" },
+  { href: "/about", label: "Facilities" },
 ];
 
 export default function Navbar({

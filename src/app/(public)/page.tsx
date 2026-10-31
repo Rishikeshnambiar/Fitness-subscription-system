@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/landing/HeroSection";
+import InteractiveClubConfigurator from "@/components/landing/InteractiveClubConfigurator";
+import NutritionArchitecture from "@/components/dashboard/NutritionArchitecture";
 import PlanPreview from "@/components/landing/PlanPreview";
 import TestimonialSlider from "@/components/landing/TestimonialSlider";
 import Footer from "@/components/layout/Footer";
-import NutritionArchitecture from "@/components/dashboard/NutritionArchitecture";
 
 export const metadata: Metadata = {
   title: "HyperGym Fitness | Transform Your Body, Elevate Your Life",
@@ -14,11 +15,16 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <div className="bg-zinc-950 text-zinc-100 min-h-screen">
-      {/* Interactive 3D Biomechanics & Hardware Telemetry Hero Section */}
+      {/* 1. Commercial 3D Machine Apparatus & Biomechanics Digital Twin */}
       <HeroSection />
 
-      {/* Standout TPM Feature: Interactive Biometric Nutrition & Macro Architecture Lab */}
-      <section id="nutrition-lab" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 2. Standout TPM Innovation: Interactive Club Floor & Tier Configurator */}
+      <section id="configurator" className="border-b border-zinc-900 bg-zinc-950/50">
+        <InteractiveClubConfigurator />
+      </section>
+
+      {/* 3. Flagship Athletic Science Module: Biometric Nutrition & Macro Lab */}
+      <section id="nutrition-lab" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-zinc-900">
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 font-mono">
             FLAGSHIP ATHLETIC SCIENCE MODULE
@@ -34,15 +40,15 @@ export default function LandingPage() {
         <NutritionArchitecture memberTier="Athlete Pro (Public Protocol Preview)" />
       </section>
 
-      {/* Plans, Milestone Installment & ROI Unit Economics Section */}
+      {/* 4. Plans, Milestone Installment & ROI Unit Economics Section */}
       <section id="plans">
         <PlanPreview />
       </section>
 
-      {/* Performance Records & Testimonials */}
+      {/* 5. Performance Records & Testimonials */}
       <TestimonialSlider />
 
-      {/* Executive Legal & Audit Footer */}
+      {/* 6. Executive Legal & Audit Footer */}
       <Footer />
     </div>
   );

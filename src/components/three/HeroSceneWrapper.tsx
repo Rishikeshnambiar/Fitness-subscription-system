@@ -22,7 +22,7 @@ export interface HeroSceneWrapperProps {
 }
 
 export default function HeroSceneWrapper({
-  activeEquipment = "dumbbell",
+  activeEquipment = "power_rack",
   stageMode = "orbit",
   className,
 }: HeroSceneWrapperProps) {

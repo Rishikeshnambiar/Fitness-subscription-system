@@ -17,6 +17,8 @@ import {
   Layers,
   Dumbbell,
   CheckCircle2,
+  Cpu,
+  Target,
 } from "lucide-react";
 import HeroSceneWrapper from "@/components/three/HeroSceneWrapper";
 import type { EquipmentType, StageMode } from "@/components/three/FloatingEquipment";
@@ -67,89 +69,89 @@ function AnimatedCounter({
 
 interface EquipmentTelemetry {
   name: string;
-  weight: string;
+  category: string;
+  loadCapacity: string;
   metallurgy: string;
-  knurl: string;
-  tolerance: string;
+  linearMechanism: string;
   primaryMuscle: string;
   secondaryMuscle: string;
   kineticVector: string;
   stimulusRating: string;
-  liftExercise: string;
+  exerciseSimulation: string;
+  tierAccess: string;
+  tierColor: string;
 }
 
 const equipmentSpecs: Record<EquipmentType, EquipmentTelemetry> = {
-  dumbbell: {
-    name: "Olympic Hex Dumbbell",
-    weight: "24.0 KG (Calibrated)",
-    metallurgy: "316 Stainless Steel & Urethane",
-    knurl: "1.2mm Volcano Diamond",
-    tolerance: "±10g Competition Standard",
-    primaryMuscle: "Biceps Brachii & Anterior Deltoid",
-    secondaryMuscle: "Brachialis & Core Stabilizers",
-    kineticVector: "Unilateral Arc (180° Free ROM)",
-    stimulusRating: "9.6 / 10 Hypertrophic Index",
-    liftExercise: "Standing Strict Hammer Curl",
+  power_rack: {
+    name: "Commercial Olympic Power Cage",
+    category: "Heavy Structural Resistance",
+    loadCapacity: "1,000 KG Structural Test Rating",
+    metallurgy: "11-Gauge 3\"x3\" Robot-Welded Steel",
+    linearMechanism: "Laser-Numbered 1\" Westside Spacing & Pin-Pipes",
+    primaryMuscle: "Quadriceps, Gluteus Maximus & Spinal Erectors",
+    secondaryMuscle: "Hamstrings, Core Transverse Abdominis & Traps",
+    kineticVector: "Bilateral Closed Kinetic Chain Axial Drive",
+    stimulusRating: "10 / 10 Maximal Compound Motor Unit Recruitment",
+    exerciseSimulation: "Olympic Back Squat & Overhead Lockout",
+    tierAccess: "Athlete Pro & Executive Elite",
+    tierColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   },
-  kettlebell: {
-    name: "Competition Kettlebell",
-    weight: "32.0 KG (Eleiko Spec)",
-    metallurgy: "Cast Iron Sphere & Steel Horn",
-    knurl: "Milled Raw Steel 35mm",
-    tolerance: "±15g Olympic Standard",
-    primaryMuscle: "Gluteus Maximus & Hamstrings",
-    secondaryMuscle: "Latissimus Dorsi & Transverse Abdominis",
-    kineticVector: "Ballistic Hip Hinge (Peak Power Arc)",
-    stimulusRating: "9.8 / 10 Power Output",
-    liftExercise: "Russian Explosive Swing",
+  cable_crossover: {
+    name: "Commercial Dual Pulley Functional Trainer",
+    category: "Cable Mechanics & Constant Tension",
+    loadCapacity: "Dual 100 KG Precision Weight Stacks (200kg Total)",
+    metallurgy: "Aircraft-Grade 6mm Nylon Coated Steel Cables",
+    linearMechanism: "36-Position Laser-Cut Swivel Pulley Column",
+    primaryMuscle: "Pectoralis Major (Sternal & Clavicular Heads)",
+    secondaryMuscle: "Anterior Deltoid & Serratus Anterior",
+    kineticVector: "Variable Horizontal Convergent Tension Arc",
+    stimulusRating: "9.8 / 10 Continuous Muscle Tension Curve",
+    exerciseSimulation: "Standing Convergent Cable Chest Flye",
+    tierAccess: "Athlete Pro & Executive Elite",
+    tierColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   },
-  plate: {
-    name: "Calibrated Bumper Plate",
-    weight: "20.0 KG (450mm IWF)",
-    metallurgy: "Chrome Hub & Vulcanized Rubber",
-    knurl: "50.4mm Center Bore",
-    tolerance: "±5g Certified Accuracy",
-    primaryMuscle: "Core Anti-Rotation & Grip Force",
-    secondaryMuscle: "Rotator Cuff & Deltoids",
-    kineticVector: "Radial Center-of-Mass Balance",
-    stimulusRating: "9.2 / 10 Structural Tension",
-    liftExercise: "Overhead Plate Ground-to-Lockout",
+  bench_press: {
+    name: "Olympic Competition Flat Bench Station",
+    category: "Free Weight Competition Floor",
+    loadCapacity: "650 KG Total Weight Payload Standard",
+    metallurgy: "Heavy Commercial Box Tubing & Diamond Spotter Deck",
+    linearMechanism: "Dual-Tier Laser Chamfered Bar Hooks",
+    primaryMuscle: "Pectoralis Major & Triceps Brachii",
+    secondaryMuscle: "Anterior Deltoids & Scapular Retractors",
+    kineticVector: "Horizontal Closed Kinetic Upper Body Press",
+    stimulusRating: "9.7 / 10 Upper Body Hypertrophic Index",
+    exerciseSimulation: "Powerlifting Competition Flat Barbell Press",
+    tierAccess: "All Tiers (Foundation, Pro, Elite)",
+    tierColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   },
-  barbell: {
-    name: "Olympic Competition Barbell",
-    weight: "20.0 KG (2.2m Men's)",
-    metallurgy: "Heat-Treated Chrome-Moly Alloy",
-    knurl: "1.5mm Dual Olympic Knurl Marks",
-    tolerance: "215,000 PSI Tensile Strength",
-    primaryMuscle: "Pectoralis Major & Quadriceps",
-    secondaryMuscle: "Triceps Brachii & Spinal Erectors",
-    kineticVector: "Bilateral Closed Kinetic Chain",
-    stimulusRating: "10 / 10 Compound Peak Tension",
-    liftExercise: "Olympic Clean & Jerk / Front Squat",
+  leg_press: {
+    name: "45° Linear Incline Plate-Loaded Leg Press",
+    category: "Isolated Lower Extremity Hypertrophy",
+    loadCapacity: "800 KG Sled Load Limit (Quad Horns)",
+    metallurgy: "Solid 40mm Hard-Chrome Linear Shafts",
+    linearMechanism: "Industrial Sealed Linear Recirculating Ball Bearings",
+    primaryMuscle: "Vastus Lateralis, Rectus Femoris & Gluteus",
+    secondaryMuscle: "Adductor Magnus & Soleus / Gastrocnemius",
+    kineticVector: "45-Degree Fixed Guide Plane (-100% Lumbar Shear)",
+    stimulusRating: "9.9 / 10 Isolated Quad Mechanical Tension",
+    exerciseSimulation: "Heavy 45° Linear Sled Leg Press",
+    tierAccess: "Athlete Pro & Executive Elite",
+    tierColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   },
-  trapbar: {
-    name: "Hex Deadlift Trap Bar",
-    weight: "30.0 KG (Commercial Hex)",
-    metallurgy: "Heavy-Gauge Tubular Carbon Steel",
-    knurl: "Dual Elevated Knurled Grips",
-    tolerance: "700 KG Load Rating (±10g)",
-    primaryMuscle: "Glutes, Quads & Trapezius",
-    secondaryMuscle: "Lumbopelvic Hip Complex & Grip",
-    kineticVector: "Neutral Spine Axial Drive (-28% shear)",
-    stimulusRating: "9.9 / 10 Axial Force Loading",
-    liftExercise: "Maximal Effort Hex Deadlift",
-  },
-  shaker: {
-    name: "Titanium Athlete Shaker",
-    weight: "750 ML / 340g Dry",
-    metallurgy: "Grade 2 Titanium & BPA-Free Tritan",
-    knurl: "Laser-Etched Grip Scale",
-    tolerance: "Hermetic Vacuum Sealed (24h Cold)",
-    primaryMuscle: "Cellular Anabolic Nutrient Delivery",
-    secondaryMuscle: "Intra-Workout Hydration Replenishment",
-    kineticVector: "Vortex Fluid Dispersion & Hydrolysis",
-    stimulusRating: "10 / 10 Recovery Rate Index",
-    liftExercise: "Hydrolyzed Whey & Creatine Dispersion",
+  dumbbell_rack: {
+    name: "Commercial 2-Tier Heavy Dumbbell Matrix",
+    category: "Unilateral Free Weights Complex",
+    loadCapacity: "10 KG to 40 KG Polyurethane Graduated Pairs",
+    metallurgy: "316 Stainless Steel Volcano Diamond Knurl",
+    linearMechanism: "High-Impact Acoustic Shock-Absorbing Saddles",
+    primaryMuscle: "Multi-Plane Unilateral Joint Stabilizers",
+    secondaryMuscle: "Wrist Flexors, Rotator Cuff & Forearms",
+    kineticVector: "Tri-Planar Free Range of Motion Joint Articulation",
+    stimulusRating: "9.6 / 10 Neuromuscular Joint Stability",
+    exerciseSimulation: "Synchronized Dumbbell Incline Press & Curls",
+    tierAccess: "All Tiers (Foundation, Pro, Elite)",
+    tierColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   },
 };
 
@@ -157,28 +159,27 @@ export default function HeroSection({
   onExplorePlans,
   className,
 }: HeroSectionProps) {
-  const [activeEquipment, setActiveEquipment] = useState<EquipmentType>("dumbbell");
+  const [activeEquipment, setActiveEquipment] = useState<EquipmentType>("power_rack");
   const [stageMode, setStageMode] = useState<StageMode>("orbit");
-  const [loadWeight, setLoadWeight] = useState<number>(24);
 
   const currentSpec = equipmentSpecs[activeEquipment];
 
-  // Synthesize authentic metallic iron acoustic click using Web Audio API
+  // Synthesize authentic heavy gym iron acoustic click via Web Audio API
   const playIronAcoustics = () => {
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(820, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.28);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.22);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.28);
+      osc.stop(ctx.currentTime + 0.22);
     } catch {}
   };
 
@@ -195,17 +196,17 @@ export default function HeroSection({
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-zinc-400">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-zinc-200 font-semibold">HYPERGYM PROTOCOL // 2026</span>
+            <span className="text-zinc-200 font-semibold">HYPERGYM COMMERCIAL ARENA // 2026</span>
             <span className="text-zinc-600">|</span>
-            <span className="hidden sm:inline">12 METRO CLUBS OPERATIONAL</span>
+            <span className="hidden sm:inline">ELEIKO & TECHNOGYM DIGITAL TWIN</span>
           </div>
 
           <div className="flex items-center gap-4 text-zinc-400">
-            <span className="hidden md:inline">CONTRAST THERAPY: 3°C / 90°C</span>
+            <span className="hidden md:inline">12 METRO CLUBS OPERATIONAL</span>
             <span className="text-zinc-600 hidden md:inline">|</span>
             <span>GSTIN: <span className="text-zinc-300">27AAWCA1536C1ZP</span></span>
             <span className="text-zinc-600">|</span>
-            <span className="text-emerald-400 font-medium">SYSTEM HEALTH: 100%</span>
+            <span className="text-emerald-400 font-medium">STATUS: ALL STATIONS ONLINE</span>
           </div>
         </div>
       </div>
@@ -224,7 +225,7 @@ export default function HeroSection({
               className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 font-mono shadow-sm"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="font-medium">INDIA&apos;S PREMIER HYBRID FITNESS ECOSYSTEM</span>
+              <span className="font-medium">COMMERCIAL APPARATUS & GYM FLOOR TELEMETRY</span>
             </motion.div>
 
             {/* Editorial Headline */}
@@ -235,9 +236,9 @@ export default function HeroSection({
               className="space-y-2"
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black tracking-tight text-zinc-100 leading-[1.08]">
-                <span>PRECISION TRAINING.</span>
+                <span>COMMERCIAL IRON.</span>
                 <br />
-                <span className="text-emerald-400">UNCOMPROMISING LIVING.</span>
+                <span className="text-emerald-400">ARCHITECTURAL DEPTH.</span>
               </h1>
             </motion.div>
 
@@ -248,7 +249,7 @@ export default function HeroSection({
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed font-sans"
             >
-              Experience an executive athletic tier engineered with Olympic lifting platforms, cryogenic recovery suites, and personalized biometric macro architecture. Flexible commitments with milestone installment payments.
+              Step into India&apos;s most advanced training floor. Explore our full suite of 11-gauge Olympic power cages, dual-pulley functional trainers, and linear incline leg presses in true 3D space with real-time biomechanics simulations.
             </motion.p>
 
             {/* Action Buttons */}
@@ -263,7 +264,7 @@ export default function HeroSection({
                 onClick={onExplorePlans}
                 className="py-3 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono font-bold text-xs transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-emerald-500/20 active:scale-[0.98]"
               >
-                <span>EXPLORE MEMBERSHIPS</span>
+                <span>CHOOSE YOUR MEMBERSHIP</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
@@ -284,19 +285,19 @@ export default function HeroSection({
               className="grid grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80 max-w-lg"
             >
               <div>
-                <span className="text-[10px] uppercase font-mono text-zinc-400 block">Active Members</span>
+                <span className="text-[10px] uppercase font-mono text-zinc-400 block">Commercial Stations</span>
                 <span className="text-xl font-heading font-bold text-zinc-100 font-mono">
-                  <AnimatedCounter to={10000} suffix="+" />
+                  120+ Machines
                 </span>
               </div>
               <div>
-                <span className="text-[10px] uppercase font-mono text-zinc-400 block">Retention Rate</span>
+                <span className="text-[10px] uppercase font-mono text-zinc-400 block">Member Retention</span>
                 <span className="text-xl font-heading font-bold text-emerald-400 font-mono">
                   <AnimatedCounter to={98} suffix=".4%" />
                 </span>
               </div>
               <div>
-                <span className="text-[10px] uppercase font-mono text-zinc-400 block">Access Hours</span>
+                <span className="text-[10px] uppercase font-mono text-zinc-400 block">Facility Access</span>
                 <span className="text-xl font-heading font-bold text-zinc-100 font-mono">
                   24/7/365
                 </span>
@@ -304,7 +305,7 @@ export default function HeroSection({
             </motion.div>
           </div>
 
-          {/* RIGHT COLUMN: The Interactive 3D Biomechanics & Hardware Studio */}
+          {/* RIGHT COLUMN: The Interactive 3D Commercial Apparatus Studio */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -319,7 +320,7 @@ export default function HeroSection({
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-xs font-mono font-bold tracking-wider text-zinc-200">
-                    3D BIOMECHANICS STUDIO
+                    3D COMMERCIAL MACHINE DIGITAL TWIN
                   </span>
                 </div>
                 
@@ -327,7 +328,7 @@ export default function HeroSection({
                 <div className="flex items-center gap-1 bg-zinc-950 border border-zinc-800 p-0.5 rounded-lg text-[10px] font-mono">
                   {[
                     { id: "orbit", label: "360° Studio", icon: RotateCcw },
-                    { id: "kinetic", label: "Kinetic Lift", icon: Play },
+                    { id: "kinetic", label: "Kinetic Motion", icon: Play },
                     { id: "xray", label: "X-Ray Core", icon: Layers },
                   ].map((mode) => (
                     <button
@@ -360,34 +361,34 @@ export default function HeroSection({
                 />
 
                 {/* Status Overlays */}
-                <div className="absolute top-3 left-3 text-[10px] font-mono text-zinc-400 pointer-events-none flex items-center gap-1.5 bg-zinc-900/80 px-2 py-0.5 rounded-md border border-zinc-800">
+                <div className="absolute top-3 left-3 text-[10px] font-mono text-zinc-400 pointer-events-none flex items-center gap-1.5 bg-zinc-900/80 px-2.5 py-1 rounded-md border border-zinc-800">
                   <Activity className="w-3 h-3 text-emerald-400" />
                   <span>MODE: {stageMode.toUpperCase()}</span>
                 </div>
 
-                <div className="absolute top-3 right-3 text-[10px] font-mono text-emerald-400 pointer-events-none bg-zinc-900/80 px-2 py-0.5 rounded-md border border-zinc-800">
-                  {currentSpec.liftExercise}
+                <div className="absolute top-3 right-3 text-[10px] font-mono text-emerald-400 pointer-events-none bg-zinc-900/80 px-2.5 py-1 rounded-md border border-zinc-800">
+                  {currentSpec.exerciseSimulation}
                 </div>
 
                 <div className="absolute bottom-3 left-3 text-[10px] font-mono text-zinc-400 pointer-events-none">
-                  DRAG CURSOR TO ORBIT • PBR SHADER ACTIVE
+                  DRAG CURSOR TO ROTATE 360° • PBR METALLIC ENGINE
                 </div>
 
                 <button
                   type="button"
                   onClick={playIronAcoustics}
                   className="absolute bottom-3 right-3 p-1.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-emerald-400 transition-colors shadow-sm"
-                  title="Test Olympic Iron Acoustic Response"
+                  title="Test Heavy Commercial Steel Acoustics"
                 >
                   <Volume2 className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Hardware Switcher Bar */}
+              {/* Commercial Apparatus Selector Bar */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                    Select Hardware Model:
+                    Select Commercial Apparatus:
                   </span>
                   <div className="relative">
                     <select
@@ -398,12 +399,11 @@ export default function HeroSection({
                       }}
                       className="appearance-none bg-zinc-900/90 text-emerald-400 border border-zinc-700/80 rounded-lg py-1.5 pl-3 pr-8 text-xs font-mono font-medium focus:outline-none focus:border-emerald-500 cursor-pointer shadow-inner"
                     >
-                      <option value="dumbbell">01 // Olympic Hex Dumbbell (24kg)</option>
-                      <option value="kettlebell">02 // Competition Kettlebell (32kg)</option>
-                      <option value="plate">03 // Calibrated Bumper Plate (20kg)</option>
-                      <option value="barbell">04 // Olympic Barbell (2.2m 20kg)</option>
-                      <option value="trapbar">05 // Hex Deadlift Trap Bar (30kg)</option>
-                      <option value="shaker">06 // Titanium Athlete Shaker (750ml)</option>
+                      <option value="power_rack">01 // Olympic Power Cage & Squat Station</option>
+                      <option value="cable_crossover">02 // Dual-Pulley Cable Functional Trainer</option>
+                      <option value="bench_press">03 // Olympic Competition Flat Bench Station</option>
+                      <option value="leg_press">04 // 45° Linear Incline Leg Press Machine</option>
+                      <option value="dumbbell_rack">05 // Commercial 2-Tier Dumbbell Saddle Matrix</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-emerald-400 text-xs">
                       ▼
@@ -411,15 +411,14 @@ export default function HeroSection({
                   </div>
                 </div>
 
-                {/* Quick Selector Pills */}
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                {/* Quick Selector Pills for 5 Machines */}
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                   {([
-                    { id: "dumbbell", label: "Dumbbell" },
-                    { id: "kettlebell", label: "Kettlebell" },
-                    { id: "plate", label: "Bumper" },
-                    { id: "barbell", label: "Barbell" },
-                    { id: "trapbar", label: "Trap Bar" },
-                    { id: "shaker", label: "Shaker" },
+                    { id: "power_rack", label: "Power Cage" },
+                    { id: "cable_crossover", label: "Cable Machine" },
+                    { id: "bench_press", label: "Olympic Bench" },
+                    { id: "leg_press", label: "45° Leg Press" },
+                    { id: "dumbbell_rack", label: "Dumbbell Rack" },
                   ] as { id: EquipmentType; label: string }[]).map(({ id, label }, idx) => {
                     const isSelected = activeEquipment === id;
                     return (
@@ -431,7 +430,7 @@ export default function HeroSection({
                           playIronAcoustics();
                         }}
                         className={cn(
-                          "py-1.5 px-1 rounded-lg text-[10px] font-mono font-medium transition-all duration-200 text-center border truncate",
+                          "py-2 px-1.5 rounded-lg text-[10px] font-mono font-medium transition-all duration-200 text-center border truncate",
                           isSelected
                             ? "bg-zinc-800 border-emerald-500/90 text-emerald-400 font-bold shadow-sm"
                             : "bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200"
@@ -444,34 +443,34 @@ export default function HeroSection({
                 </div>
               </div>
 
-              {/* Dynamic Anatomical Biomechanics & Telemetry Box */}
-              <div className="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs font-mono space-y-2">
+              {/* Dynamic Engineering & Biomechanics Telemetry Box */}
+              <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs font-mono space-y-2.5">
                 <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
                   <div className="flex items-center gap-1.5 text-zinc-200 font-semibold">
-                    <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Target Muscle Activation</span>
+                    <Target className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{currentSpec.name}</span>
                   </div>
-                  <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    {currentSpec.stimulusRating}
+                  <span className={cn("text-[10px] font-mono font-semibold px-2 py-0.5 rounded border", currentSpec.tierColor)}>
+                    {currentSpec.tierAccess}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-0.5">
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">PRIMARY MOVER:</span>
-                    <span className="text-emerald-400 font-semibold">{currentSpec.primaryMuscle}</span>
+                    <span className="text-zinc-400 block text-[10px]">PAYLOAD & SPECIFICATION:</span>
+                    <span className="text-emerald-400 font-semibold">{currentSpec.loadCapacity}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">SECONDARY / STABILIZER:</span>
-                    <span className="text-zinc-300">{currentSpec.secondaryMuscle}</span>
+                    <span className="text-zinc-400 block text-[10px]">STRUCTURAL METALLURGY:</span>
+                    <span className="text-zinc-300">{currentSpec.metallurgy}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">KINETIC VECTOR:</span>
+                    <span className="text-zinc-400 block text-[10px]">TARGET MUSCLE GROUPS:</span>
+                    <span className="text-zinc-200 font-medium">{currentSpec.primaryMuscle}</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-400 block text-[10px]">KINETIC PLANE & VECTOR:</span>
                     <span className="text-zinc-300">{currentSpec.kineticVector}</span>
-                  </div>
-                  <div>
-                    <span className="text-zinc-400 block text-[10px]">METALLURGY & TOLERANCE:</span>
-                    <span className="text-zinc-300">{currentSpec.tolerance}</span>
                   </div>
                 </div>
               </div>

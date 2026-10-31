@@ -54,7 +54,7 @@ function SceneRig() {
  * SceneContent - Studio lighting with metallic reflections, contact shadows & OrbitControls
  */
 function SceneContent({
-  activeEquipment = 'dumbbell',
+  activeEquipment = 'power_rack',
   stageMode = 'orbit',
 }: {
   activeEquipment?: EquipmentType;
@@ -126,7 +126,7 @@ function SceneContent({
 
 export function HeroScene({
   className = '',
-  activeEquipment = 'dumbbell',
+  activeEquipment = 'power_rack',
   stageMode = 'orbit',
   children,
 }: HeroSceneProps) {
