@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/landing/HeroSection";
+import KineticTicker from "@/components/landing/KineticTicker";
 import InteractiveClubConfigurator from "@/components/landing/InteractiveClubConfigurator";
+import BiometricDexaScanner from "@/components/landing/BiometricDexaScanner";
+import DigitalNfcPassSimulator from "@/components/landing/DigitalNfcPassSimulator";
 import NutritionArchitecture from "@/components/dashboard/NutritionArchitecture";
 import PlanPreview from "@/components/landing/PlanPreview";
 import TestimonialSlider from "@/components/landing/TestimonialSlider";
@@ -18,12 +21,25 @@ export default function LandingPage() {
       {/* 1. Commercial 3D Machine Apparatus & Biomechanics Digital Twin */}
       <HeroSection />
 
-      {/* 2. Standout TPM Innovation: Interactive Club Floor & Tier Configurator */}
+      {/* 2. Kinetic Athletic Telemetry Marquee */}
+      <KineticTicker />
+
+      {/* 3. Standout TPM Innovation: Interactive Club Floor & Tier Configurator */}
       <section id="configurator" className="border-b border-zinc-900 bg-zinc-950/50">
         <InteractiveClubConfigurator />
       </section>
 
-      {/* 3. Flagship Athletic Science Module: Biometric Nutrition & Macro Lab */}
+      {/* 4. Standout Innovation: Interactive Biometric DEXA & Movement Scanner */}
+      <section id="dexa-scanner" className="border-b border-zinc-900 bg-zinc-950">
+        <BiometricDexaScanner />
+      </section>
+
+      {/* 5. Standout Innovation: 3D Gyroscope NFC Turnstile Pass Simulator */}
+      <section id="nfc-pass" className="border-b border-zinc-900 bg-zinc-950/60">
+        <DigitalNfcPassSimulator />
+      </section>
+
+      {/* 6. Flagship Athletic Science Module: Biometric Nutrition & Macro Lab */}
       <section id="nutrition-lab" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-zinc-900">
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 font-mono">
@@ -40,15 +56,15 @@ export default function LandingPage() {
         <NutritionArchitecture memberTier="Athlete Pro (Public Protocol Preview)" />
       </section>
 
-      {/* 4. Plans, Milestone Installment & ROI Unit Economics Section */}
+      {/* 7. Plans, Milestone Installment & ROI Unit Economics Section */}
       <section id="plans">
         <PlanPreview />
       </section>
 
-      {/* 5. Performance Records & Testimonials */}
+      {/* 8. Performance Records & Testimonials */}
       <TestimonialSlider />
 
-      {/* 6. Executive Legal & Audit Footer */}
+      {/* 9. Executive Legal & Audit Footer */}
       <Footer />
     </div>
   );
