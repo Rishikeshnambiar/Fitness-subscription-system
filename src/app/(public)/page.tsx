@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import HeroSection from "@/components/landing/HeroSection";
 import KineticTicker from "@/components/landing/KineticTicker";
 import InteractiveClubConfigurator from "@/components/landing/InteractiveClubConfigurator";
-import BiometricDexaScanner from "@/components/landing/BiometricDexaScanner";
+import KineticBiomechanicsLab from "@/components/landing/KineticBiomechanicsLab";
 import DigitalNfcPassSimulator from "@/components/landing/DigitalNfcPassSimulator";
 import NutritionArchitecture from "@/components/dashboard/NutritionArchitecture";
 import PlanPreview from "@/components/landing/PlanPreview";
@@ -29,9 +29,9 @@ export default function LandingPage() {
         <InteractiveClubConfigurator />
       </section>
 
-      {/* 4. Standout Innovation: Interactive Biometric DEXA & Movement Scanner */}
-      <section id="dexa-scanner" className="border-b border-zinc-900 bg-zinc-950">
-        <BiometricDexaScanner />
+      {/* 4. Flagship Athletic Science Innovation: Kinetic Biomechanics & Muscle Recruitment Lab */}
+      <section id="biometrics" className="border-b border-zinc-900 bg-zinc-950">
+        <KineticBiomechanicsLab />
       </section>
 
       {/* 5. Standout Innovation: 3D Gyroscope NFC Turnstile Pass Simulator */}

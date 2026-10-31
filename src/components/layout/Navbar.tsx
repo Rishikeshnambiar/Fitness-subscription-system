@@ -15,7 +15,7 @@ interface NavbarProps {
 const navLinks = [
   { href: "/#biomechanics", label: "3D Arena" },
   { href: "/#configurator", label: "Configurator" },
-  { href: "/#dexa-scanner", label: "Body Scanner" },
+  { href: "/#biometrics", label: "Muscle Lab" },
   { href: "/#nutrition-lab", label: "Nutrition Lab" },
   { href: "/#plans", label: "Memberships" },
   { href: "/about", label: "Facilities" },

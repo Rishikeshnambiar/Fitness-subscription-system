@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   Dumbbell,
@@ -12,6 +13,9 @@ import {
   CreditCard,
   Sparkles,
   Zap,
+  QrCode,
+  Wifi,
+  Radio,
 } from "lucide-react";
 import { toast } from "sonner";
 import { settleRemainingBalance } from "@/lib/actions/billing.actions";
@@ -28,6 +32,13 @@ export default function UserDashboardClient({
 }: UserDashboardClientProps) {
   const hasBalanceDue = subscription?.balanceDue > 0;
   const isExpiringSoon = subscription?.isExpiringSoon;
+  const [checkinSuccess, setCheckinSuccess] = useState(false);
+
+  const handleSimulateTurnstile = () => {
+    setCheckinSuccess(true);
+    toast.success("NFC Handshake Verified: Turnstile 04 (South Port) Unlocked.");
+    setTimeout(() => setCheckinSuccess(false), 3000);
+  };
 
   const handleSettleBalance = async () => {
     toast.info("Processing remaining installment balance...");
@@ -190,6 +201,58 @@ export default function UserDashboardClient({
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Contactless Club Pass & Apple Wallet Credential */}
+      <div className="p-6 sm:p-7 rounded-2xl bg-zinc-900/50 border border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-2 max-w-md">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-semibold text-emerald-400 font-mono">
+            <Radio className="w-3 h-3 animate-pulse" /> CONTACTLESS NFC CLUB PASS
+          </div>
+          <h3 className="text-xl font-heading font-bold text-zinc-100">
+            Digital Access Credential
+          </h3>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            Your encrypted multi-club access pass. Compatible with Apple Wallet, Google Wallet, and front-desk biometric turnstile scanners.
+          </p>
+          <div className="flex items-center gap-3 pt-1 text-xs text-zinc-400 font-mono">
+            <span>Pass ID: HG-ATH-8842</span>
+            <span>•</span>
+            <span className="text-emerald-400 font-semibold">Status: Active Authorization</span>
+          </div>
+        </div>
+
+        {/* Interactive Pass Card Pill */}
+        <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-4">
+          <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center gap-4 w-full sm:w-auto">
+            <div className="w-12 h-12 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300">
+              <QrCode className="w-7 h-7 text-emerald-400" />
+            </div>
+            <div>
+              <div className="text-xs font-mono font-bold text-zinc-200">
+                {subscription?.userName || "Alex Rider"}
+              </div>
+              <div className="text-[11px] text-zinc-500 font-mono">
+                {subscription?.planNameSnapshot || "Pro Performance Pass"}
+              </div>
+              <div className="text-[10px] text-emerald-400 font-mono mt-0.5">
+                ● 24/7 Universal Metro Access
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={handleSimulateTurnstile}
+            className={`w-full sm:w-auto py-3 px-5 rounded-xl font-mono text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 ${
+              checkinSuccess
+                ? "bg-emerald-500 text-zinc-950"
+                : "bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700"
+            }`}
+          >
+            <Wifi className="w-4 h-4 text-emerald-400" />
+            <span>{checkinSuccess ? "ACCESS GRANTED: GATE 04" : "TEST TURNSTILE TAP"}</span>
+          </button>
         </div>
       </div>
 

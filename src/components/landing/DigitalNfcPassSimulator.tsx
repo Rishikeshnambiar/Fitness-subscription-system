@@ -72,13 +72,13 @@ export default function DigitalNfcPassSimulator() {
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 font-mono">
-          <Radio className="w-3.5 h-3.5 animate-pulse" /> UNIVERSAL NFC DIGITAL TURNSTILE PASS
+          <Radio className="w-3.5 h-3.5 animate-pulse" /> CONTACTLESS CLUB ENTRY & SMART ECOSYSTEM
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black tracking-tight text-zinc-100">
-          Instant Biometric Turnstile Access
+          Zero Plastic Cards. Frictionless Turnstile Access.
         </h2>
         <p className="text-sm text-zinc-400 max-w-xl mx-auto font-sans leading-relaxed">
-          Every active subscription issues an Apple Wallet / Google Wallet compatible NFC Pass. Hover over the card to experience 3D gyroscope physics, or click to test turnstile entry.
+          Every active subscription automatically provisions an encrypted credential for your Apple Wallet or Google Wallet. Tap your smartphone or watch for 24/7 access to all 12 metro clubs.
         </p>
       </div>
 
