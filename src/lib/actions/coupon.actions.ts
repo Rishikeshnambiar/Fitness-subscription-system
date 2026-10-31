@@ -4,53 +4,7 @@ import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "@/lib/db";
 import { Coupon, ICouponDocument } from "@/models/Coupon";
 import { couponSchema, type CouponFormData } from "@/lib/validations";
-
-const DEFAULT_COUPONS = [
-  {
-    _id: "coupon_welcome10",
-    code: "WELCOME10",
-    discountType: "PERCENTAGE" as const,
-    discountValue: 10,
-    minPurchaseAmount: 1000,
-    maxUsage: 500,
-    usedCount: 14,
-    expiresAt: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
-    isActive: true,
-  },
-  {
-    _id: "coupon_fithalf",
-    code: "FITHALF",
-    discountType: "PERCENTAGE" as const,
-    discountValue: 50,
-    minPurchaseAmount: 2000,
-    maxUsage: 50,
-    usedCount: 8,
-    expiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-    isActive: true,
-  },
-  {
-    _id: "coupon_flat1000",
-    code: "FLAT1000",
-    discountType: "FLAT" as const,
-    discountValue: 1000,
-    minPurchaseAmount: 5000,
-    maxUsage: 200,
-    usedCount: 42,
-    expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-    isActive: true,
-  },
-  {
-    _id: "coupon_hypervip",
-    code: "HYPERVIP",
-    discountType: "PERCENTAGE" as const,
-    discountValue: 25,
-    minPurchaseAmount: 4000,
-    maxUsage: 100,
-    usedCount: 19,
-    expiresAt: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000),
-    isActive: true,
-  },
-];
+import { DEFAULT_COUPONS } from "@/lib/constants/defaults";
 
 export async function getCoupons() {
   try {
