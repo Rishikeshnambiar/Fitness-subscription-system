@@ -13,7 +13,8 @@ interface NavbarProps {
 }
 
 const navLinks = [
-  { href: "/", label: "Overview" },
+  { href: "/#biomechanics", label: "3D Biomechanics" },
+  { href: "/#nutrition-lab", label: "Nutrition Lab" },
   { href: "/#plans", label: "Memberships" },
   { href: "/#roi-calculator", label: "Unit Economics" },
   { href: "/about", label: "Mission & Facilities" },

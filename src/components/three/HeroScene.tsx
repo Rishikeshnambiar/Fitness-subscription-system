@@ -5,12 +5,13 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import { motion } from 'motion/react';
-import { FloatingEquipment, type EquipmentType } from './FloatingEquipment';
+import { FloatingEquipment, type EquipmentType, type StageMode } from './FloatingEquipment';
 import { ParticleField } from './ParticleField';
 
 export interface HeroSceneProps {
   className?: string;
   activeEquipment?: EquipmentType;
+  stageMode?: StageMode;
   children?: React.ReactNode;
 }
 
@@ -52,7 +53,13 @@ function SceneRig() {
 /**
  * SceneContent - Studio lighting with metallic reflections, contact shadows & OrbitControls
  */
-function SceneContent({ activeEquipment = 'dumbbell' }: { activeEquipment?: EquipmentType }) {
+function SceneContent({
+  activeEquipment = 'dumbbell',
+  stageMode = 'orbit',
+}: {
+  activeEquipment?: EquipmentType;
+  stageMode?: StageMode;
+}) {
   return (
     <>
       <ambientLight intensity={0.6} />
@@ -86,7 +93,7 @@ function SceneContent({ activeEquipment = 'dumbbell' }: { activeEquipment?: Equi
       <ParticleField totalCount={60} />
 
       {/* Interactive 3D Equipment Piece */}
-      <FloatingEquipment activeType={activeEquipment} />
+      <FloatingEquipment activeType={activeEquipment} stageMode={stageMode} />
 
       {/* Contact Shadow on Virtual Pedestal */}
       <ContactShadows
@@ -102,7 +109,7 @@ function SceneContent({ activeEquipment = 'dumbbell' }: { activeEquipment?: Equi
       <OrbitControls
         enableZoom={false}
         enablePan={false}
-        autoRotate
+        autoRotate={stageMode === 'orbit'}
         autoRotateSpeed={1.0}
         dampingFactor={0.06}
         maxPolarAngle={Math.PI / 1.7}
@@ -117,7 +124,12 @@ function SceneContent({ activeEquipment = 'dumbbell' }: { activeEquipment?: Equi
   );
 }
 
-export function HeroScene({ className = '', activeEquipment = 'dumbbell', children }: HeroSceneProps) {
+export function HeroScene({
+  className = '',
+  activeEquipment = 'dumbbell',
+  stageMode = 'orbit',
+  children,
+}: HeroSceneProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -139,7 +151,7 @@ export function HeroScene({ className = '', activeEquipment = 'dumbbell', childr
         }}
         className="w-full h-full cursor-grab active:cursor-grabbing"
       >
-        <SceneContent activeEquipment={activeEquipment} />
+        <SceneContent activeEquipment={activeEquipment} stageMode={stageMode} />
       </Canvas>
 
       {children && (

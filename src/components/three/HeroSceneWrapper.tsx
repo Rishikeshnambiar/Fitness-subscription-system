@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { EquipmentType } from "./FloatingEquipment";
+import type { EquipmentType, StageMode } from "./FloatingEquipment";
 
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
   ssr: false,
@@ -17,9 +17,14 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
 
 export interface HeroSceneWrapperProps {
   activeEquipment?: EquipmentType;
+  stageMode?: StageMode;
   className?: string;
 }
 
-export default function HeroSceneWrapper({ activeEquipment = "dumbbell", className }: HeroSceneWrapperProps) {
-  return <HeroScene activeEquipment={activeEquipment} className={className} />;
+export default function HeroSceneWrapper({
+  activeEquipment = "dumbbell",
+  stageMode = "orbit",
+  className,
+}: HeroSceneWrapperProps) {
+  return <HeroScene activeEquipment={activeEquipment} stageMode={stageMode} className={className} />;
 }
