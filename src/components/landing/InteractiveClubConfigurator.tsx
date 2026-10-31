@@ -150,10 +150,10 @@ export default function InteractiveClubConfigurator() {
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 font-mono">
-          <Sparkles className="w-3.5 h-3.5" /> INTERACTIVE CLUB CONFIGURATOR // 2026
+          <Sparkles className="w-3.5 h-3.5" /> CUSTOMIZE YOUR MEMBERSHIP
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black tracking-tight text-zinc-100">
-          Build Your Custom Athletic Architecture
+          Build Your Custom Club Plan
         </h2>
         <p className="text-sm text-zinc-400 max-w-xl mx-auto font-sans leading-relaxed">
           Configure your access privileges across our commercial gym floor, contrast recovery suites, and coaching cages with live dynamic billing, term discounts, and 50% milestone installments.
@@ -168,12 +168,12 @@ export default function InteractiveClubConfigurator() {
           {/* Base Tier Selector Strip */}
           <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold flex items-center gap-2">
+              <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold flex items-center gap-2">
                 <Layers className="w-4 h-4 text-emerald-400" />
                 Select Base Membership Tier
               </span>
-              <span className="text-[11px] font-mono text-emerald-400">
-                GSTIN: 27AAWCA1536C1ZP
+              <span className="text-[11px] font-mono text-zinc-400">
+                Cancel or upgrade anytime
               </span>
             </div>
 

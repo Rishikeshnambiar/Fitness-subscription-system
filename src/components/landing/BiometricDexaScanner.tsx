@@ -33,75 +33,75 @@ interface BiometricHotspot {
 
 const BIOMETRIC_HOTSPOTS: BiometricHotspot[] = [
   {
-    id: "cns",
-    label: "Cranial CNS & Neural Drive",
-    topPct: 11,
+    id: "shoulders",
+    label: "Shoulders & Deltoids",
+    topPct: 20,
     leftPct: 50,
-    metric: "Motor Unit Firing Velocity",
-    metricValue: "96.4 ms",
-    fiberDensity: "High Alpha-Motor Synchronization",
-    recommendedStation: "Olympic Power Cage / Heavy Compound Lifts",
-    kineticRole: "Recruits high-threshold Type-IIb motor units during 1RM attempts.",
-    tierAccess: "Pro & Elite Master Coaching",
+    metric: "Upper Body Pressing Force",
+    metricValue: "880 N",
+    fiberDensity: "Balanced Type-I & Type-II Fibers",
+    recommendedStation: "Olympic Power Cage / Overhead Press",
+    kineticRole: "Stabilizes overhead bar path and delivers upper body vertical drive.",
+    tierAccess: "Available All Tiers",
   },
   {
     id: "chest",
-    label: "Pectoralis Major & Deltoids",
-    topPct: 28,
+    label: "Chest & Pectoralis Major",
+    topPct: 30,
     leftPct: 44,
-    metric: "Lean Tissue Cross-Section",
+    metric: "Lean Muscular Mass",
     metricValue: "44.8 cm²",
-    fiberDensity: "62% Type-II Fast Twitch Density",
+    fiberDensity: "65% Fast-Twitch Glycolytic",
     recommendedStation: "Olympic Flat Bench Station & Cable Crossover",
-    kineticRole: "Prime horizontal adduction driver with 9.8/10 hypertrophy response.",
+    kineticRole: "Drives horizontal pressing power and continuous cable adduction tension.",
     tierAccess: "Available All Tiers",
   },
   {
     id: "core",
-    label: "Visceral Adipose & Transverse Core",
+    label: "Core & Abdominals",
     topPct: 44,
     leftPct: 50,
-    metric: "Intra-Abdominal Pressure",
+    metric: "Core Bracing Pressure",
     metricValue: "185 mmHg",
-    fiberDensity: "Type-I Postural & Anti-Rotation Endurance",
-    recommendedStation: "Commercial Power Cage Spotter Bars",
-    kineticRole: "Prevents lumbar shear stress by stabilizing axial spine vectors.",
+    fiberDensity: "Postural Endurance & Anti-Rotation",
+    recommendedStation: "Power Cage Pull-up & Suspension Station",
+    kineticRole: "Transfers kinetic force between upper and lower body while safeguarding the spine.",
     tierAccess: "Available All Tiers",
   },
   {
-    id: "lumbopelvic",
-    label: "Gluteus Maximus & Posterior Chain",
+    id: "glutes",
+    label: "Glutes & Posterior Chain",
     topPct: 55,
     leftPct: 55,
     metric: "Peak Explosive Power Output",
     metricValue: "1,940 Watts",
-    fiberDensity: "74% Explosive Glycolytic Power",
+    fiberDensity: "74% Explosive Power Fibers",
     recommendedStation: "45° Linear Incline Leg Press & Trap Bar",
-    kineticRole: "Primary hip extension propulsion generator for sprint & deadlift power.",
-    tierAccess: "Pro & Elite",
+    kineticRole: "Primary hip extension propulsion driver for squats, deadlifts, and athletic sprints.",
+    tierAccess: "Athlete Pro & Elite",
   },
   {
     id: "quads",
-    label: "Vastus Lateralis & Patellar Complex",
+    label: "Quadriceps & Hamstrings",
     topPct: 70,
     leftPct: 43,
     metric: "Isokinetic Quad Torque",
     metricValue: "340 Nm",
-    fiberDensity: "Hypertrophic Type-IIa/x Blend",
-    recommendedStation: "45° Linear Incline Leg Press & Squat Cage",
-    kineticRole: "Deceleration brake and knee extension driver under deep loads.",
-    tierAccess: "Pro & Elite",
+    fiberDensity: "High Hypertrophic Growth Blend",
+    recommendedStation: "45° Linear Incline Leg Press & Olympic Squat Cage",
+    kineticRole: "Absorbs landing forces and provides maximal leg drive under heavy resistance.",
+    tierAccess: "Athlete Pro & Elite",
   },
   {
     id: "calves",
-    label: "Achilles & Triceps Surae Recoil",
+    label: "Calves & Ankle Complex",
     topPct: 88,
     leftPct: 53,
     metric: "Elastic Fascial Energy Return",
     metricValue: "91.8%",
-    fiberDensity: "High Elastic Collagen Matrix",
-    recommendedStation: "Linear Sled Toe Raises & Plyometric Platform",
-    kineticRole: "Stores kinetic recoil energy for ground reaction force propulsion.",
+    fiberDensity: "High-Density Achilles Collagen",
+    recommendedStation: "Linear Sled Platform & Plyometric Floor",
+    kineticRole: "Stores kinetic energy for dynamic ground contact and athletic spring.",
     tierAccess: "Available All Tiers",
   },
 ];
@@ -135,13 +135,13 @@ export default function BiometricDexaScanner() {
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 font-mono">
-          <Scan className="w-3.5 h-3.5" /> INTERACTIVE BIOMETRIC DEXA SCANNER
+          <Scan className="w-3.5 h-3.5" /> BODY COMPOSITION & MOVEMENT LAB
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black tracking-tight text-zinc-100">
-          Precision Athletic Movement Architecture
+          Targeted Muscular Analysis & Equipment Match
         </h2>
         <p className="text-sm text-zinc-400 max-w-xl mx-auto font-sans leading-relaxed">
-          Interactive full-body movement analysis. Click any anatomical telemetry node to inspect muscle fiber density, recommended commercial apparatus, and required membership tier.
+          Interactive anatomical scanner. Click any muscle group to view force outputs, recommended commercial apparatus, and optimal training tier.
         </p>
       </div>
 

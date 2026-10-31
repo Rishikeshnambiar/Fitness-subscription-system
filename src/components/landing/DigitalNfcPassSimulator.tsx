@@ -163,15 +163,15 @@ export default function DigitalNfcPassSimulator() {
                 </span>
               </div>
 
-              {/* Bottom Row: Member Info & SAC Compliance */}
+              {/* Bottom Row: Member Info & Pass Serial */}
               <div className="border-t border-zinc-800/80 pt-2 flex items-end justify-between text-xs font-mono">
                 <div>
                   <span className="text-[9px] text-zinc-500 block uppercase">MEMBER NAME</span>
                   <span className="text-zinc-200 font-semibold text-xs tracking-wider">RISHIKESH NAMBIAR</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[9px] text-zinc-500 block uppercase">SAC 999723</span>
-                  <span className="text-[10px] text-zinc-400 font-bold">27AAWCA1536C1ZP</span>
+                  <span className="text-[9px] text-zinc-500 block uppercase">PASS SERIAL</span>
+                  <span className="text-[10px] text-emerald-400 font-bold">HG-8842-NFC</span>
                 </div>
               </div>
             </div>
@@ -282,3 +282,4 @@ export default function DigitalNfcPassSimulator() {
     </section>
   );
 }
+

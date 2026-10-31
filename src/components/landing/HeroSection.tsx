@@ -196,17 +196,17 @@ export default function HeroSection({
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-zinc-400">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-zinc-200 font-semibold">HYPERGYM COMMERCIAL ARENA // 2026</span>
+            <span className="text-zinc-200 font-semibold">HYPERGYM ATHLETIC ARENA</span>
             <span className="text-zinc-600">|</span>
-            <span className="hidden sm:inline">ELEIKO & TECHNOGYM DIGITAL TWIN</span>
+            <span className="hidden sm:inline">12 METRO CLUBS OPERATIONAL</span>
           </div>
 
           <div className="flex items-center gap-4 text-zinc-400">
-            <span className="hidden md:inline">12 METRO CLUBS OPERATIONAL</span>
+            <span className="hidden md:inline">OLYMPIC ELEIKO & TECHNOGYM PLATFORMS</span>
             <span className="text-zinc-600 hidden md:inline">|</span>
-            <span>GSTIN: <span className="text-zinc-300">27AAWCA1536C1ZP</span></span>
-            <span className="text-zinc-600">|</span>
-            <span className="text-emerald-400 font-medium">STATUS: ALL STATIONS ONLINE</span>
+            <span className="hidden sm:inline">CONTRAST THERAPY: 3°C / 90°C</span>
+            <span className="text-zinc-600 hidden sm:inline">|</span>
+            <span className="text-emerald-400 font-medium">24/7 BIOMETRIC NFC ACCESS</span>
           </div>
         </div>
       </div>
@@ -225,7 +225,7 @@ export default function HeroSection({
               className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 font-mono shadow-sm"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="font-medium">COMMERCIAL APPARATUS & GYM FLOOR TELEMETRY</span>
+              <span className="font-medium">PREMIUM ATHLETIC CLUB & CONDITIONING SUITE</span>
             </motion.div>
 
             {/* Editorial Headline */}
@@ -236,9 +236,9 @@ export default function HeroSection({
               className="space-y-2"
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black tracking-tight text-zinc-100 leading-[1.08]">
-                <span>COMMERCIAL IRON.</span>
+                <span>WORLD-CLASS TRAINING.</span>
                 <br />
-                <span className="text-emerald-400">ARCHITECTURAL DEPTH.</span>
+                <span className="text-emerald-400">UNCOMPROMISING RESULTS.</span>
               </h1>
             </motion.div>
 
@@ -249,7 +249,7 @@ export default function HeroSection({
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed font-sans"
             >
-              Step into India&apos;s most advanced training floor. Explore our full suite of 11-gauge Olympic power cages, dual-pulley functional trainers, and linear incline leg presses in true 3D space with real-time biomechanics simulations.
+              Step into India&apos;s premier performance training floor. Inspect our commercial Olympic power cages, dual-pulley functional trainers, and 45° incline leg presses in interactive 3D, and configure your plan with flexible 50% milestone installments.
             </motion.p>
 
             {/* Action Buttons */}
@@ -320,16 +320,16 @@ export default function HeroSection({
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-xs font-mono font-bold tracking-wider text-zinc-200">
-                    3D COMMERCIAL MACHINE DIGITAL TWIN
+                    3D APPARATUS INSPECTOR
                   </span>
                 </div>
                 
                 {/* Stage Mode Tabs (Orbit / Kinetic / X-Ray) */}
                 <div className="flex items-center gap-1 bg-zinc-950 border border-zinc-800 p-0.5 rounded-lg text-[10px] font-mono">
                   {[
-                    { id: "orbit", label: "360° Studio", icon: RotateCcw },
-                    { id: "kinetic", label: "Kinetic Motion", icon: Play },
-                    { id: "xray", label: "X-Ray Core", icon: Layers },
+                    { id: "orbit", label: "360° View", icon: RotateCcw },
+                    { id: "kinetic", label: "Lift Motion", icon: Play },
+                    { id: "xray", label: "X-Ray Specs", icon: Layers },
                   ].map((mode) => (
                     <button
                       key={mode.id}
@@ -371,7 +371,7 @@ export default function HeroSection({
                 </div>
 
                 <div className="absolute bottom-3 left-3 text-[10px] font-mono text-zinc-400 pointer-events-none">
-                  DRAG CURSOR TO ROTATE 360° • PBR METALLIC ENGINE
+                  DRAG TO ROTATE 360° • CLICK TABS FOR SPECS
                 </div>
 
                 <button
@@ -457,19 +457,19 @@ export default function HeroSection({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-0.5">
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">PAYLOAD & SPECIFICATION:</span>
+                    <span className="text-zinc-400 block text-[10px]">LOAD CAPACITY:</span>
                     <span className="text-emerald-400 font-semibold">{currentSpec.loadCapacity}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">STRUCTURAL METALLURGY:</span>
+                    <span className="text-zinc-400 block text-[10px]">FRAME & BUILD:</span>
                     <span className="text-zinc-300">{currentSpec.metallurgy}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">TARGET MUSCLE GROUPS:</span>
+                    <span className="text-zinc-400 block text-[10px]">PRIMARY MUSCLES:</span>
                     <span className="text-zinc-200 font-medium">{currentSpec.primaryMuscle}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-400 block text-[10px]">KINETIC PLANE & VECTOR:</span>
+                    <span className="text-zinc-400 block text-[10px]">MOVEMENT PATTERN:</span>
                     <span className="text-zinc-300">{currentSpec.kineticVector}</span>
                   </div>
                 </div>
