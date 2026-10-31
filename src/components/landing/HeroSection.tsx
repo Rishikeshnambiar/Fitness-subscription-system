@@ -167,30 +167,10 @@ export default function HeroSection({
     <section
       id="biomechanics"
       className={cn(
-        "relative min-h-screen flex flex-col justify-between pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden bg-zinc-950 text-zinc-100 border-b border-zinc-900",
+        "relative min-h-screen flex flex-col justify-center pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden bg-zinc-950 text-zinc-100 border-b border-zinc-900",
         className
       )}
     >
-      {/* Top Live Athletic Telemetry Strip */}
-      <div className="w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md py-2 px-4 sm:px-8">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-zinc-400">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-zinc-200 font-semibold">HYPERGYM ATHLETIC ARENA</span>
-            <span className="text-zinc-600">|</span>
-            <span className="hidden sm:inline">12 METRO CLUBS OPERATIONAL</span>
-          </div>
-
-          <div className="flex items-center gap-4 text-zinc-400">
-            <span className="hidden md:inline">OLYMPIC ELEIKO & TECHNOGYM PLATFORMS</span>
-            <span className="text-zinc-600 hidden md:inline">|</span>
-            <span className="hidden sm:inline">CONTRAST THERAPY: 3°C / 90°C</span>
-            <span className="text-zinc-600 hidden sm:inline">|</span>
-            <span className="text-emerald-400 font-medium">24/7 BIOMETRIC NFC ACCESS</span>
-          </div>
-        </div>
-      </div>
-
       {/* Main Dual-Column Hero Grid */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
