@@ -11,19 +11,25 @@ export async function GET() {
   try {
     await connectToDatabase();
 
-    // Check & seed Plans
-    let planCount = await SubscriptionPlan.countDocuments();
-    if (planCount === 0) {
-      await SubscriptionPlan.insertMany(DEFAULT_PLANS);
-      planCount = await SubscriptionPlan.countDocuments();
+    // Check & seed Plans via idempotent upsert
+    for (const plan of DEFAULT_PLANS) {
+      await SubscriptionPlan.findByIdAndUpdate(
+        plan._id,
+        { $set: plan },
+        { upsert: true, new: true }
+      );
     }
+    const planCount = await SubscriptionPlan.countDocuments();
 
-    // Check & seed Coupons
-    let couponCount = await Coupon.countDocuments();
-    if (couponCount === 0) {
-      await Coupon.insertMany(DEFAULT_COUPONS);
-      couponCount = await Coupon.countDocuments();
+    // Check & seed Coupons via idempotent upsert
+    for (const coupon of DEFAULT_COUPONS) {
+      await Coupon.findByIdAndUpdate(
+        coupon._id,
+        { $set: coupon },
+        { upsert: true, new: true }
+      );
     }
+    const couponCount = await Coupon.countDocuments();
 
     // Check & seed Sample Demonstration Transaction
     let transactionCount = await Transaction.countDocuments();

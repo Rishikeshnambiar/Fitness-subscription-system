@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export interface ISubscriptionPlanDocument extends Document {
+export interface ISubscriptionPlanDocument extends Document<string> {
+  _id: string;
   name: string;
   description: string;
   durationMonths: number;
@@ -18,6 +19,10 @@ export interface ISubscriptionPlanDocument extends Document {
 
 const SubscriptionPlanSchema = new Schema<ISubscriptionPlanDocument>(
   {
+    _id: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString(),
+    },
     name: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
     durationMonths: {

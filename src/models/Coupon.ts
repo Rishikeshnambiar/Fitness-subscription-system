@@ -1,7 +1,8 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import type { CouponDiscountType } from "@/types";
 
-export interface ICouponDocument extends Document {
+export interface ICouponDocument extends Document<string> {
+  _id: string;
   code: string;
   discountType: CouponDiscountType;
   discountValue: number;
@@ -16,6 +17,10 @@ export interface ICouponDocument extends Document {
 
 const CouponSchema = new Schema<ICouponDocument>(
   {
+    _id: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString(),
+    },
     code: {
       type: String,
       required: true,
