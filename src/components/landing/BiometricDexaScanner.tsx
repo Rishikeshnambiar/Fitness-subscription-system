@@ -111,25 +111,6 @@ export default function BiometricDexaScanner() {
   const [isScanning, setIsScanning] = useState<boolean>(true);
   const [scanLayer, setScanLayer] = useState<"muscular" | "skeletal" | "thermal">("muscular");
 
-  // Synthetic beep on hotspot selection
-  const playHotspotSound = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(1100, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1650, ctx.currentTime + 0.12);
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.12);
-    } catch {}
-  };
-
   return (
     <section id="dexa-scanner" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
@@ -256,7 +237,6 @@ export default function BiometricDexaScanner() {
                     type="button"
                     onClick={() => {
                       setSelectedHotspot(hotspot);
-                      playHotspotSound();
                     }}
                     style={{
                       top: `${hotspot.topPct}%`,
@@ -366,7 +346,6 @@ export default function BiometricDexaScanner() {
                       type="button"
                       onClick={() => {
                         setSelectedHotspot(h);
-                        playHotspotSound();
                       }}
                       className={cn(
                         "py-1.5 px-2 rounded-lg text-[10px] font-mono transition-all truncate border",

@@ -11,7 +11,6 @@ import {
   RotateCcw,
   Activity,
   Flame,
-  Volume2,
   Eye,
   Play,
   Layers,
@@ -164,25 +163,6 @@ export default function HeroSection({
 
   const currentSpec = equipmentSpecs[activeEquipment];
 
-  // Synthesize authentic heavy gym iron acoustic click via Web Audio API
-  const playIronAcoustics = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(440, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.22);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.22);
-    } catch {}
-  };
-
   return (
     <section
       id="biomechanics"
@@ -334,10 +314,7 @@ export default function HeroSection({
                     <button
                       key={mode.id}
                       type="button"
-                      onClick={() => {
-                        setStageMode(mode.id as StageMode);
-                        playIronAcoustics();
-                      }}
+                      onClick={() => setStageMode(mode.id as StageMode)}
                       className={cn(
                         "px-2 py-1 rounded-md transition-colors flex items-center gap-1",
                         stageMode === mode.id
@@ -373,15 +350,6 @@ export default function HeroSection({
                 <div className="absolute bottom-3 left-3 text-[10px] font-mono text-zinc-400 pointer-events-none">
                   DRAG TO ROTATE 360° • CLICK TABS FOR SPECS
                 </div>
-
-                <button
-                  type="button"
-                  onClick={playIronAcoustics}
-                  className="absolute bottom-3 right-3 p-1.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-emerald-400 transition-colors shadow-sm"
-                  title="Test Heavy Commercial Steel Acoustics"
-                >
-                  <Volume2 className="w-3.5 h-3.5" />
-                </button>
               </div>
 
               {/* Commercial Apparatus Selector Bar */}
@@ -393,10 +361,7 @@ export default function HeroSection({
                   <div className="relative">
                     <select
                       value={activeEquipment}
-                      onChange={(e) => {
-                        setActiveEquipment(e.target.value as EquipmentType);
-                        playIronAcoustics();
-                      }}
+                      onChange={(e) => setActiveEquipment(e.target.value as EquipmentType)}
                       className="appearance-none bg-zinc-900/90 text-emerald-400 border border-zinc-700/80 rounded-lg py-1.5 pl-3 pr-8 text-xs font-mono font-medium focus:outline-none focus:border-emerald-500 cursor-pointer shadow-inner"
                     >
                       <option value="power_rack">01 // Olympic Power Cage & Squat Station</option>
@@ -425,10 +390,7 @@ export default function HeroSection({
                       <button
                         key={id}
                         type="button"
-                        onClick={() => {
-                          setActiveEquipment(id);
-                          playIronAcoustics();
-                        }}
+                        onClick={() => setActiveEquipment(id)}
                         className={cn(
                           "py-2 px-1.5 rounded-lg text-[10px] font-mono font-medium transition-all duration-200 text-center border truncate",
                           isSelected

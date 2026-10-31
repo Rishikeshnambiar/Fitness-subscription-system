@@ -50,34 +50,9 @@ export default function DigitalNfcPassSimulator() {
     y.set(0);
   };
 
-  // Play authentic dual-frequency NFC chime via Web Audio API
-  const playNfcChime = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AudioCtx();
-      
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc1.type = "sine";
-      osc1.frequency.setValueAtTime(880, ctx.currentTime);
-      osc1.frequency.setValueAtTime(1320, ctx.currentTime + 0.08);
-
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-
-      osc1.connect(gain);
-      gain.connect(ctx.destination);
-      osc1.start();
-      osc1.stop(ctx.currentTime + 0.35);
-    } catch {}
-  };
-
   const handleSimulateTap = () => {
     if (tapStatus !== "idle") return;
     setTapStatus("tapping");
-    playNfcChime();
 
     setTimeout(() => {
       setTapStatus("success");
