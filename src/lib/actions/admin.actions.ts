@@ -4,7 +4,113 @@ import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "@/lib/db";
 import { Transaction } from "@/models/Transaction";
 import { User } from "@/models/User";
+import { SubscriptionPlan } from "@/models/SubscriptionPlan";
+import { Coupon } from "@/models/Coupon";
 import { getSessionUser } from "@/lib/auth";
+
+export async function getAdminDashboardMetrics() {
+  try {
+    await connectToDatabase();
+
+    const [transactions, users, plans, coupons] = await Promise.all([
+      Transaction.find().sort({ createdAt: -1 }).lean(),
+      User.find().sort({ createdAt: -1 }).lean(),
+      SubscriptionPlan.find().sort({ durationMonths: 1 }).lean(),
+      Coupon.find().sort({ createdAt: -1 }).lean(),
+    ]);
+
+    let totalRevenue = 0;
+    let totalGrossVolume = 0;
+    let pendingReceivables = 0;
+    let completedPaymentsCount = 0;
+    let partialPaymentsCount = 0;
+
+    for (const tx of transactions) {
+      totalRevenue += tx.amountPaid || 0;
+      totalGrossVolume += tx.totalAmount || 0;
+      pendingReceivables += tx.remainingBalance || 0;
+      if (tx.paymentStatus === "COMPLETED") {
+        completedPaymentsCount++;
+      } else if (tx.paymentStatus === "PARTIAL") {
+        partialPaymentsCount++;
+      }
+    }
+
+    let totalMembersCount = 0;
+    let totalAdminsCount = 0;
+    let activeSubscribersCount = 0;
+
+    for (const u of users) {
+      if (u.role === "ADMIN") {
+        totalAdminsCount++;
+      } else {
+        totalMembersCount++;
+      }
+      const sub = u.subscription || u.activeSubscription;
+      if (sub && (sub.status === "ACTIVE" || sub.status === "PENDING_COMPLETION")) {
+        activeSubscribersCount++;
+      }
+    }
+
+    const totalPlansCount = plans.length;
+    const activePlansCount = plans.filter((p: any) => p.isActive).length;
+    const totalCouponsCount = coupons.length;
+    const activeCouponsCount = coupons.filter((c: any) => c.isActive).length;
+    const totalCouponsUsedCount = coupons.reduce(
+      (acc: number, c: any) => acc + (c.usedCount || 0),
+      0
+    );
+
+    return {
+      success: true,
+      data: {
+        totalRevenue,
+        totalGrossVolume,
+        pendingReceivables,
+        totalTransactionsCount: transactions.length,
+        completedPaymentsCount,
+        partialPaymentsCount,
+        totalUsersCount: users.length,
+        totalMembersCount,
+        totalAdminsCount,
+        activeSubscribersCount,
+        totalPlansCount,
+        activePlansCount,
+        totalCouponsCount,
+        activeCouponsCount,
+        totalCouponsUsedCount,
+        recentUsers: JSON.parse(JSON.stringify(users.slice(0, 6))),
+        recentTransactions: JSON.parse(JSON.stringify(transactions.slice(0, 6))),
+        plans: JSON.parse(JSON.stringify(plans)),
+      },
+    };
+  } catch (error: any) {
+    console.warn("Could not fetch live admin dashboard metrics from MongoDB:", error);
+    return {
+      success: false,
+      data: {
+        totalRevenue: 19266,
+        totalGrossVolume: 22168,
+        pendingReceivables: 2902,
+        totalTransactionsCount: 3,
+        completedPaymentsCount: 2,
+        partialPaymentsCount: 1,
+        totalUsersCount: 4,
+        totalMembersCount: 3,
+        totalAdminsCount: 1,
+        activeSubscribersCount: 3,
+        totalPlansCount: 4,
+        activePlansCount: 4,
+        totalCouponsCount: 4,
+        activeCouponsCount: 4,
+        totalCouponsUsedCount: 14,
+        recentUsers: [],
+        recentTransactions: [],
+        plans: [],
+      },
+    };
+  }
+}
 
 export async function getAllTransactions() {
   try {

@@ -136,6 +136,7 @@ export async function settleRemainingBalance(transactionId: string) {
 
     revalidatePath("/dashboard");
     revalidatePath("/billing");
+    revalidatePath("/admin/dashboard");
     revalidatePath("/admin/transactions");
 
     return { success: true };

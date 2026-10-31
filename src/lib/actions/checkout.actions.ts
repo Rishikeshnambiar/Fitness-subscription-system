@@ -166,6 +166,7 @@ export async function processCheckout(payload: CheckoutPayload) {
 
     revalidatePath("/dashboard");
     revalidatePath("/billing");
+    revalidatePath("/admin/dashboard");
     revalidatePath("/admin/transactions");
 
     return {
