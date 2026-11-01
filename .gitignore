@@ -27,3 +27,9 @@ pnpm-debug.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local Private Candidate & Prep Notes (Never committed to Git)
+LOCAL_PREPARATION_NOTES.md
+*prep*.md
+candidate-notes/
+private/
