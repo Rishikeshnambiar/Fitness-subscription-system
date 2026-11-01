@@ -37,7 +37,7 @@ export default function KineticTicker() {
           <div key={idx} className="flex items-center gap-3 text-xs font-mono text-zinc-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
             <span className="tracking-wider">{item}</span>
-            <span className="text-zinc-700">///</span>
+            <span className="text-zinc-700">{"///"}</span>
           </div>
         ))}
       </motion.div>
