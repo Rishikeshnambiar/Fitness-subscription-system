@@ -1,5 +1,11 @@
 # 🏋️ HyperGym Fitness Subscription Management System
 
+[![CI Code Quality & Build Verification](https://github.com/Rishikeshnambiar/Fitness-subscription-system/actions/workflows/ci.yml/badge.svg)](https://github.com/Rishikeshnambiar/Fitness-subscription-system/actions/workflows/ci.yml)
+![Next.js](https://img.shields.io/badge/Next.js-16.4.3-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?logo=tailwindcss)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47a248?logo=mongodb)
+
 > **AgarkarMedia Technical Documentation**  
 > **Production URL**: [https://fitness-subscription-system-19yd.vercel.app](https://fitness-subscription-system-19yd.vercel.app)  
 > **Operating Entity**: AgarkarMedia Pvt. Ltd. (GSTIN: `27AAWCA1536C1ZP` | SAC: `999723` | State Code: `27 - Maharashtra`)  
@@ -9,14 +15,25 @@
 
 ## 📑 Table of Contents
 1. [Executive Overview & Design Direction](#-executive-overview--design-direction)
-2. [End-to-End System Features](#-end-to-end-system-features)
-3. [Technology Stack & Architectural Rationale](#-technology-stack--architectural-rationale)
-4. [System Architecture & Data Flows](#-system-architecture--data-flows)
-5. [Database Architecture & Snapshot Strategy](#-database-architecture--snapshot-strategy)
-6. [Environment Variables & Setup Guide](#-environment-variables--setup-guide)
-7. [API & Server Actions Specification](#-api--server-actions-specification)
-8. [Production Deployment & Verification](#-production-deployment--verification)
-9. [Future Roadmap & Scale Strategy](#-future-roadmap--scale-strategy)
+2. [Automated CI/CD Quality Pipeline](#-automated-cicd-quality-pipeline)
+3. [End-to-End System Features](#-end-to-end-system-features)
+4. [Technology Stack & Architectural Rationale](#-technology-stack--architectural-rationale)
+5. [System Architecture & Data Flows](#-system-architecture--data-flows)
+6. [Database Architecture & Snapshot Strategy](#-database-architecture--snapshot-strategy)
+7. [Environment Variables & Setup Guide](#-environment-variables--setup-guide)
+8. [API & Server Actions Specification](#-api--server-actions-specification)
+9. [Production Deployment & Verification](#-production-deployment--verification)
+10. [Future Roadmap & Scale Strategy](#-future-roadmap--scale-strategy)
+
+---
+
+## ⚡ Automated CI/CD Quality Pipeline
+
+This repository runs an automated **GitHub Actions CI Pipeline** on every `push` and `pull_request` targeting `main` and `develop`:
+- **Static Code Analysis & Linting**: ESLint checks across React 19 and Next.js 16 rules.
+- **Type Safety Verification**: Strict TypeScript `tsc --noEmit` validation across all models and server actions.
+- **Production Build Integrity**: Full Next.js production build (`next build --webpack`) with simulated environment variables to catch bundling or tree-shaking failures prior to deployment.
+
 
 ---
 
