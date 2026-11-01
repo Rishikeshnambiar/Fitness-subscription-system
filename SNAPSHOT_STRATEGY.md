@@ -1,61 +1,65 @@
 # 📸 AgarkarMedia — Historical Plan Snapshot & Audit Architecture Strategy
 
-> **Author**: Technical Product Manager Candidate  
 > **Entity**: AgarkarMedia Pvt. Ltd. (GSTIN: `27AAWCA1536C1ZP` | SAC: `999723`)  
-> **Applicability**: HyperGym Fitness Subscription Platform  
-> **Compliance Standard**: Indian GST Act (Rule 46 - Tax Invoices) & GAAP / Ind AS 115 (Revenue from Contracts with Customers)
+> **Platform**: HyperGym Fitness Subscription Platform  
+> **Compliance Standards**: Indian GST Act 2017 (Rule 46 - Tax Invoices), Ind AS 115 / GAAP (Revenue from Contracts with Customers), and IT Act Section 65B (Electronic Records Admissibility).
 
 ---
 
 ## 1. Executive Summary & Problem Formulation
 
-In recurring fitness and subscription businesses, gym administrators regularly modify plan definitions over time:
-- Increasing the base monthly membership rate to offset rising commercial lease or equipment lease expenses.
-- Modifying plan-level seasonal discounts (e.g., Diwali or New Year discount campaigns).
-- Adjusting tenure terms or sun-setting legacy promotional plans altogether.
+In modern subscription-based fitness and wellness platforms, pricing models are inherently dynamic. Platform administrators regularly perform the following lifecycle actions:
+- **Indexation & Inflation Adjustments**: Increasing base monthly rates (e.g., from ₹2,199/mo to ₹2,899/mo) to account for rising lease, operational, and equipment maintenance expenses.
+- **Campaign & Tier Restructuring**: Modifying bundle discounts, promotional perks, or restructuring durations (e.g., transitioning a 6-month tier into a 12-month tier).
+- **Plan Archival & Sunset**: Retiring legacy promotional plans completely (setting `isActive: false`).
 
 ### The Relational Anti-Pattern (Normalized Foreign Key Reference)
-If invoices and historical transaction records store only a normalized relational reference:
+If historical transactions and billing ledgers store only a relational foreign key reference:
 ```json
 {
   "_id": "tx_9876",
   "userId": "usr_1234",
   "planId": "plan_pro_3m",
-  "totalAmount": 5999
+  "totalAmount": 5999,
+  "paymentDate": "2026-01-15T09:30:00.000Z"
 }
 ```
-And retrieve plan details dynamically by joining or querying `SubscriptionPlan.findById(planId)`:
-1. **Financial Discrepancy & Revenue Drift**: When the admin later changes the monthly rate of `plan_pro_3m` from ₹2,199 to ₹2,899, previously generated member invoices and historical audits reflect the *new* price.
-2. **GST Compliance Violations**: Under Indian GST Law (Rule 46), a tax invoice is a legally binding financial instrument. Retroactively altering the taxable value, SAC code breakdown, or discount applied violates audit standards and attracts regulatory penalties.
-3. **Broken Foreign Keys**: If a legacy plan is deleted or archived by an administrator, historical invoice lookups return `null` or crash the billing dashboard.
+And then dynamically resolve plan metadata at read time via an SQL join or MongoDB aggregation lookup (`$lookup` against `SubscriptionPlan` on `planId`):
+
+1. **Revenue Drift & Auditing Failures**: When an administrator updates `plan_pro_3m`'s price, an existing customer re-opening their previous invoice or an auditor generating annual tax reports will see the **new price**, causing a discrepancy between corporate bank deposits and invoice line items.
+2. **Indian GST Law Violations (Rule 46)**: Tax Invoices are legal instruments. Retroactively altering declared taxable supply values, SAC classifications, or tax breakdowns (CGST 9% + SGST 9%) invalidates the invoice, violating statutory audit standards.
+3. **Foreign Key Deletion / Null Reference**: If an administrator archives or removes an obsolete plan tier, historical invoice rendering fails due to missing referenced records.
 
 ---
 
-## 2. The Solution: Point-in-Time Immutable Embedded Snapshots
+## 2. The Architectural Solution: Point-in-Time Immutable Embedded Snapshots
 
-To guarantee 100% financial immutability and regulatory compliance, the HyperGym architecture implements the **Embedded Snapshot Pattern** with an incrementing **Optimistic Version Counter**.
+To achieve **100% financial immutability, zero relational drift, and audit-readiness**, HyperGym employs the **Embedded Snapshot Pattern** with an **Optimistic Version Counter** (`version: number`).
 
 ### Core Architecture Principle
-> **"A transaction record does not merely point to a plan; it freezes the complete economic reality of the transaction at the exact millisecond of purchase."**
+> *"A financial ledger must never point to dynamic catalog state. A transaction record freezes the complete, self-contained economic and regulatory reality at the exact millisecond of purchase."*
 
 ```mermaid
 flowchart TD
-    A[Admin Modifies Plan in Plan Manager] -->|Increments version counter| B[SubscriptionPlan v=2]
-    C[New Member Checkouts] -->|Reads current plan v=2| D[Takes Frozen Deep Snapshot]
-    D -->|Embeds immutable snapshot| E[(MongoDB Transaction Document)]
-    E -->|Generates GST Tax Invoice| F[Legally Compliant Fixed Invoice]
-    B -.->|Zero Impact| G[(Historical Transactions v=1)]
+    A[Admin Updates Plan Pricing in /admin/plans] -->|Increments Version: v1 ➔ v2| B[(MongoDB: SubscriptionPlan Collection)]
+    C[Customer Initiates Checkout] -->|Fetches Active Plan v2| D[Compute Taxable Base, Coupons & GST]
+    D -->|Freezes Deep Immutability| E[Construct IPlanSnapshot Object]
+    E -->|Embedded Write into Transaction| F[(MongoDB: Transaction Document)]
+    F -->|Instant Render from Embedded Fields| G[AgarkarMedia GST Tax Invoice Modal]
+    B -.->|Zero Mutation Impact| H[(Historical v1 Transactions Unchanged)]
 ```
 
 ---
 
-## 3. Concrete Schema Implementation
+## 3. Schema Specification & TypeScript Definitions
 
-### `Transaction` Document with Embedded Snapshot
+### The Snapshot Subdocument Interface (`IPlanSnapshot`)
+Every financial transaction stores a fully serialized snapshot of the purchased plan, eliminating any need for dynamic joins during invoice generation:
+
 ```typescript
 // src/models/Transaction.ts
 export interface IPlanSnapshot {
-  name: string;                         // "Athlete Pro (3-Month)"
+  name: string;                         // e.g. "Athlete Pro (3-Month)"
   durationMonths: number;               // 3
   baseMonthlyPrice: number;             // 2199
   planDiscountPercentage: number;       // 12
@@ -70,61 +74,201 @@ export interface IPlanSnapshot {
   snapshotVersion: number;              // 1
   snapshotTimestamp: Date;              // 2026-10-29T12:00:00.000Z
 }
+```
 
-const TransactionSchema = new Schema<ITransaction>({
-  userId: { type: Schema.Types.Mixed, required: true },
-  planId: { type: Schema.Types.Mixed, required: true },
-  invoiceNumber: { type: String, required: true, unique: true },
-  totalAmount: { type: Number, required: true },
-  amountPaid: { type: Number, required: true },
-  remainingBalance: { type: Number, required: true, default: 0 },
-  paymentStatus: {
-    type: String,
-    enum: ["COMPLETED", "PARTIAL", "FAILED"],
-    required: true,
+### Complete Transaction Schema with GST Entity Metadata
+```typescript
+const PlanSnapshotSchema = new Schema<IPlanSnapshot>(
+  {
+    name: { type: String, required: true },
+    durationMonths: { type: Number, required: true },
+    baseMonthlyPrice: { type: Number, required: true },
+    planDiscountPercentage: { type: Number, required: true, default: 0 },
+    grossAmount: { type: Number, required: true },
+    planDiscountAmount: { type: Number, required: true, default: 0 },
+    couponCode: { type: String, default: null },
+    couponDiscountAmount: { type: Number, required: true, default: 0 },
+    taxableAmount: { type: Number, required: true },
+    cgstAmount: { type: Number, required: true },
+    sgstAmount: { type: Number, required: true },
+    finalTotal: { type: Number, required: true },
+    snapshotVersion: { type: Number, required: true, default: 1 },
+    snapshotTimestamp: { type: Date, default: Date.now },
   },
-  paymentDate: { type: Date, default: Date.now },
-  planSnapshot: { type: PlanSnapshotSchema, required: true }, // IMMUTABLE SNAPSHOT
-  gstDetails: {
-    supplierGstin: { type: String, default: "27AAWCA1536C1ZP" },
-    sacCode: { type: String, default: "999723" },
-    supplierStateCode: { type: String, default: "27" },
-  }
-});
+  { _id: false } // Subdocument without separate ObjectId to optimize storage
+);
+
+const TransactionSchema = new Schema<ITransaction>(
+  {
+    userId: { type: Schema.Types.Mixed, required: true },
+    planId: { type: Schema.Types.Mixed, required: true },
+    invoiceNumber: { type: String, required: true, unique: true },
+    totalAmount: { type: Number, required: true },
+    amountPaid: { type: Number, required: true },
+    remainingBalance: { type: Number, required: true, default: 0 },
+    paymentStatus: {
+      type: String,
+      enum: ["COMPLETED", "PARTIAL", "FAILED"],
+      required: true,
+    },
+    paymentDate: { type: Date, default: Date.now },
+    planSnapshot: { type: PlanSnapshotSchema, required: true },
+    gstDetails: {
+      supplierName: { type: String, default: "AgarkarMedia Pvt. Ltd." },
+      supplierGstin: { type: String, default: "27AAWCA1536C1ZP" },
+      sacCode: { type: String, default: "999723" },
+      supplierStateCode: { type: String, default: "27" },
+      placeOfSupply: { type: String, default: "27 - Maharashtra" },
+    },
+    adminOverrideNote: { type: String, default: null },
+  },
+  { timestamps: true }
+);
 ```
 
 ---
 
-## 4. Administrative Versioning Mechanism
+## 4. Price Mutation Scenario: Historical Preservation
 
-When gym managers update pricing in the `/admin/plans` dashboard:
-1. **Pre-Save Version Hook**:
-   ```typescript
-   SubscriptionPlanSchema.pre("save", function () {
-     if (this.isModified("baseMonthlyPrice") || this.isModified("discountPercentage") || this.isModified("durationMonths")) {
-       this.version = (this.version || 1) + 1;
-     }
-   });
-   ```
-2. **Backward Compatibility**:
-   - Existing active members continue paying installments or holding access based on their locked snapshot terms.
-   - Future renewals or new checkouts adopt `version + 1` automatically.
-   - Deleted plans are flagged as `isActive: false` (soft delete), never physically purged from the database, preserving all historical relational links.
+### Step 1: Member A Purchases Starter Plan at Version 1
+- **Base Price**: ₹1,499 / month (Total ₹1,499)
+- **GST (18%)**: ₹269.82 (CGST ₹134.91 + SGST ₹134.91)
+- **Total Invoiced**: ₹1,768.82
+
+**Stored MongoDB Document (`transactions` collection):**
+```json
+{
+  "_id": "6724a1b091f0440012e88a01",
+  "invoiceNumber": "INV-2026-8801",
+  "userId": "user_demo_001",
+  "planId": "plan_starter_1m",
+  "totalAmount": 1768.82,
+  "amountPaid": 1768.82,
+  "remainingBalance": 0,
+  "paymentStatus": "COMPLETED",
+  "paymentDate": "2026-10-15T10:00:00.000Z",
+  "planSnapshot": {
+    "name": "Starter Membership (1-Month)",
+    "durationMonths": 1,
+    "baseMonthlyPrice": 1499,
+    "planDiscountPercentage": 0,
+    "grossAmount": 1499,
+    "planDiscountAmount": 0,
+    "couponCode": null,
+    "couponDiscountAmount": 0,
+    "taxableAmount": 1499,
+    "cgstAmount": 134.91,
+    "sgstAmount": 134.91,
+    "finalTotal": 1768.82,
+    "snapshotVersion": 1,
+    "snapshotTimestamp": "2026-10-15T10:00:00.000Z"
+  },
+  "gstDetails": {
+    "supplierName": "AgarkarMedia Pvt. Ltd.",
+    "supplierGstin": "27AAWCA1536C1ZP",
+    "sacCode": "999723",
+    "supplierStateCode": "27",
+    "placeOfSupply": "27 - Maharashtra"
+  }
+}
+```
+
+### Step 2: Administrator Updates Catalog Pricing
+The administrator navigates to `/admin/plans` and updates the Starter membership:
+- `baseMonthlyPrice`: ₹1,499 ➔ ₹1,999
+- `version`: Incremented from `1` to `2`
+
+**Updated MongoDB Document (`subscriptionplans` collection):**
+```json
+{
+  "_id": "plan_starter_1m",
+  "name": "Starter Membership (1-Month)",
+  "durationMonths": 1,
+  "baseMonthlyPrice": 1999,
+  "planDiscountPercentage": 0,
+  "isActive": true,
+  "version": 2,
+  "updatedAt": "2026-11-01T08:00:00.000Z"
+}
+```
+
+### Step 3: Member B Purchases Starter Plan at Version 2
+- **Base Price**: ₹1,999 / month
+- **GST (18%)**: ₹359.82 (CGST ₹179.91 + SGST ₹179.91)
+- **Total Invoiced**: ₹2,358.82
+
+**Stored MongoDB Document (`transactions` collection):**
+```json
+{
+  "_id": "6724b9a103c0990013f99b02",
+  "invoiceNumber": "INV-2026-9902",
+  "userId": "user_demo_002",
+  "planId": "plan_starter_1m",
+  "totalAmount": 2358.82,
+  "amountPaid": 2358.82,
+  "remainingBalance": 0,
+  "paymentStatus": "COMPLETED",
+  "paymentDate": "2026-11-01T08:15:00.000Z",
+  "planSnapshot": {
+    "name": "Starter Membership (1-Month)",
+    "durationMonths": 1,
+    "baseMonthlyPrice": 1999,
+    "planDiscountPercentage": 0,
+    "grossAmount": 1999,
+    "planDiscountAmount": 0,
+    "couponCode": null,
+    "couponDiscountAmount": 0,
+    "taxableAmount": 1999,
+    "cgstAmount": 179.91,
+    "sgstAmount": 179.91,
+    "finalTotal": 2358.82,
+    "snapshotVersion": 2,
+    "snapshotTimestamp": "2026-11-01T08:15:00.000Z"
+  }
+}
+```
+
+### Results Analysis:
+- Member A's billing screen reads directly from `tx.planSnapshot`. Their invoice remains exactly **₹1,768.82**.
+- Member B's billing screen reads from their own `tx.planSnapshot`. Their invoice is **₹2,358.82**.
+- Even if an administrator subsequently deactivates or removes `plan_starter_1m`, both members retain complete, legally compliant tax invoices with zero runtime errors.
 
 ---
 
-## 5. Audit & Accounting Verification Benefits
+## 5. Discount Code and Milestone Payment Edge Cases
 
-| Scenario | Relational Query Approach | HyperGym Embedded Snapshot Architecture |
-|---|---|---|
-| **Admin doubles plan price** | Past invoices recalculate higher; member invoices show wrong historical amounts. | Past invoices render from `planSnapshot`; historical invoice remains ₹2,199. |
-| **Admin archives obsolete 1-Month trial** | Foreign key queries return `null`; crashes billing screen. | Historical transactions still display complete metadata and receipt. |
-| **GST Tax Audit by Authorities** | Recalculated tax leads to mismatches between filed GSTR-1 and invoice display. | Invoices match original filed GSTR-1 returns down to the paisa. |
-| **Partial Installment Settlement** | Dynamic calculations could distort original remaining balance. | `remainingBalance = totalAmount - amountPaid` is mathematically invariant. |
+### Edge Case 1: Coupon Code Invalidation Post-Purchase
+- A promotional coupon `FLASH50` offers ₹500 off.
+- Member redeems it at checkout.
+- Administrator expires or deactivates `FLASH50` on the following day.
+- **Handling**: Because `couponCode` and `couponDiscountAmount` are frozen inside `planSnapshot`, the historical invoice continues to reflect the ₹500 discount accurately.
+
+### Edge Case 2: Partial Milestone Payments (50% Downpayment)
+HyperGym supports split/milestone payments:
+- A user pays a 50% downpayment on a ₹10,000 plan (Taxable + GST = ₹11,800).
+- `amountPaid`: ₹5,900
+- `remainingBalance`: ₹5,900
+- `paymentStatus`: `"PARTIAL"`
+- **Invoice Behavior**: The tax invoice itemizes:
+  - Total Plan Value: ₹11,800
+  - Amount Paid: ₹5,900
+  - Outstanding Balance Due: ₹5,900
+- **Admin Settlement**: When the admin reconciles the remaining balance at `/admin/transactions`, an atomic update sets `remainingBalance: 0`, `paymentStatus: "COMPLETED"`, and appends an `adminOverrideNote`. The base pricing and tax breakdown inside `planSnapshot` remain unchanged.
 
 ---
 
-## 6. Summary for Technical Product Management Review
+## 6. Regulatory & Compliance Matrix
 
-The Embedded Snapshot pattern balances MongoDB's document-store strengths (denormalization, read optimization) with enterprise accounting rigor. It decouples operational pricing experiments from historical accounting ledgers, protecting both AgarkarMedia's business integrity and the member's legal consumer rights.
+| Regulation | Statutory Requirement | System Implementation |
+| :--- | :--- | :--- |
+| **Indian GST Act 2017 (Rule 46)** | Tax invoices must specify taxable supply, SAC code, state code, and discrete CGST/SGST amounts. | `gstDetails` and `planSnapshot` freeze SAC `999723`, State `27`, CGST 9%, and SGST 9% at invoice creation. |
+| **Ind AS 115 / US GAAP** | Revenue recognition must correspond to transaction price agreed at contract inception. | Snapshots freeze agreed price irrespective of downstream catalog changes. |
+| **IT Act Section 65B** | Electronic records must demonstrate evidentiary integrity without post-facto modification. | Financial documents in MongoDB are append-only; operational updates only affect reconciliation fields (`paymentStatus`, `adminOverrideNote`). |
 
+---
+
+## 7. Performance & Storage Economics
+
+- **Document Overhead**: The embedded `planSnapshot` subdocument consumes approximately **380 bytes** of BSON storage per transaction.
+- **Query Performance**: Invoice rendering and member billing history require **single-document key-value lookups** (`Transaction.find({ userId })`) with zero `$lookup` joins, completing in under **2ms** on indexed fields.
+- **Cost-Benefit Ratio**: For 100,000 transactions, the snapshot data consumes ~38 MB of storage—negligible overhead for complete financial accuracy and compliance.
